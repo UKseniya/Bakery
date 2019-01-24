@@ -19,7 +19,7 @@
         </c:if>
     </div>
 
-    <table id="products">
+    <table id="productsList">
         <tr>
         <th>&nbsp;</th>
         <th><fmt:message key="name"/> </th>

@@ -57,6 +57,12 @@ li {
   font-size: 150%;
   padding-right: 2px;
 }
+
+#productsList table, tr, td {
+    border: none;
+    margin-left: 20px;
+    text-align: center;
+}
 #column-right {
   /*background: #efe5d0;*/
   text-align: right;
