@@ -2,7 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:requestEncoding value="UTF-8"/>
-<fmt:setLocale value="${cookie['lang'].value}"/>
+<fmt:setLocale value="${userLocale}"/>
+<%--<fmt:setLocale value="${cookie['lang'].value}"/>--%>
 <fmt:bundle basename="resources">
     <jsp:include page="../includes/header.jsp"/>
     <jsp:include page="../includes/column_right_home.jsp"/>
@@ -17,32 +18,33 @@
             <a href="controller?command=logout"><fmt:message key="logout"/></a>
         </c:if>
     </div>
-<section>
+
     <table id="products">
         <tr>
+        <th>&nbsp;</th>
         <th><fmt:message key="name"/> </th>
         <th><fmt:message key="code"/> </th>
-        <th><fmt:message key="unit"/> </th>
         <th><fmt:message key="price"/> </th>
         <th>&nbsp;</th>
         </tr>
         <c:forEach var="product" items="${availableProducts}">
             <tr>
-        <td>${product.name}</td>
+        <td><img src="/Bakery/jsp/style/pictures/${product.name}.jpg" width="100" height="100"></td>
+        <td><fmt:message key="product.name.${product.formatedName}"/></td>
         <td>${product.code}</td>
-        <td>${product.unit}</td>
         <td>${product.priceCurrencyFormat}</td>
         <td>
-            <form name="productSelection" method="POST" action="controller">
+            <form name="productList" method="POST" action="controller">
             <input type="hidden" name="command" value="addToCart">
-            <input type="submit" value="<fmt:message key="button.add"/> ">
+            <input type="submit" value="<fmt:message key="button.add"/>" >
         </form>
         </td>
             </tr>
 </c:forEach>
 
     </table>
-</section>
+    <br/><br/><br/>
+
     </body>
     <jsp:include page="../includes/footer.jsp"/>
 </fmt:bundle>

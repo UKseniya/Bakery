@@ -2,12 +2,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <fmt:requestEncoding value="UTF-8" />
-<fmt:setLocale value="${cookie['lang'].value}" />
+<fmt:setLocale value="${userLocale}"/>
+<%--<fmt:setLocale value="${cookie['lang'].value}" />--%>
 <fmt:bundle basename="resources">
 
     <!DOCTYPE html>
 
-    <html lang="${cookie['lang'].value}">
+    <html lang="${userLocale}">
         <head>
             <title>Home Bakery</title>
             <meta charset="utf-8">

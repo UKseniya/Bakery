@@ -2,6 +2,7 @@ package entities;
 
 import java.io.Serializable;
 import java.text.NumberFormat;
+import java.util.Locale;
 
 public class Product extends Entity implements Serializable {
     private String code;
@@ -42,6 +43,12 @@ public class Product extends Entity implements Serializable {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getFormatedName() {
+        String formatedName = null;
+        formatedName = this.name.toLowerCase().replace(" ", "");
+        return formatedName;
     }
 
     public String getPriceCurrencyFormat()

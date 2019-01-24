@@ -32,7 +32,6 @@ public class ProductDAO extends AbstractDAO<Product> {
                 product.setId(resultSet.getInt("product_id"));
                 product.setCode(resultSet.getString("code"));
                 product.setName(resultSet.getString("name"));
-                product.setUnit(resultSet.getString("unit"));
                 product.setPrice(resultSet.getDouble("price"));
                 products.add(product);
             }

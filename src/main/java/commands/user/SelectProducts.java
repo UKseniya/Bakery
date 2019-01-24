@@ -3,6 +3,7 @@ package commands.user;
 import commands.Command;
 import dao.ProductDAO;
 import entities.Product;
+import entities.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -13,10 +14,14 @@ public class SelectProducts implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
+
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+
         ProductDAO productDAO = new ProductDAO();
         availableProducts = productDAO.findAll();
 
-        HttpSession session = request.getSession(true);
+//        HttpSession session = request.getSession(true);
         session.setAttribute("availableProducts", availableProducts);
 
         page = "/jsp/user/make_order.jsp";

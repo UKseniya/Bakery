@@ -19,26 +19,26 @@ public class LocaleFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
-//        HttpServletRequest req = (HttpServletRequest) servletRequest;
-//        req.setCharacterEncoding(Constants.ENCODING);
-//        if (req.getSession().getAttribute(Constants.LOCALE) == null) {
-//            req.getSession().setAttribute(Constants.LOCALE,req.getLocale());
-//        }
-//        String language = servletRequest.getParameter(Constants.LANGUAGE);
-//        if (language != null) {
-//            Locale locale = new Locale(language);
-//            req.getSession().setAttribute(Constants.LOCALE, locale);
-//        }
-//        filterChain.doFilter(servletRequest, servletResponse);
-
         HttpServletRequest req = (HttpServletRequest) servletRequest;
-        HttpServletResponse res = (HttpServletResponse) servletResponse;
-        if (req.getParameter("cookieLocale") != null) {
-            Cookie cookie = new Cookie("lang", req.getParameter("cookieLocale"));
-            res.addCookie(cookie);
+        req.setCharacterEncoding(Constants.ENCODING);
+        if (req.getSession().getAttribute(Constants.LOCALE) == null) {
+            req.getSession().setAttribute(Constants.LOCALE,req.getLocale());
         }
-
+        String language = servletRequest.getParameter(Constants.LANGUAGE);
+        if (language != null) {
+            Locale locale = new Locale(language);
+            req.getSession().setAttribute(Constants.LOCALE, locale);
+        }
         filterChain.doFilter(servletRequest, servletResponse);
+
+//        HttpServletRequest req = (HttpServletRequest) servletRequest;
+//        HttpServletResponse res = (HttpServletResponse) servletResponse;
+//        if (req.getParameter("cookieLocale") != null) {
+//            Cookie cookie = new Cookie("lang", req.getParameter("cookieLocale"));
+//            res.addCookie(cookie);
+//        }
+//
+//        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     @Override
