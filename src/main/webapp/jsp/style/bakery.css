@@ -1,0 +1,157 @@
+body {
+  background-color: rgba(243, 215, 154, 0.3);
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: medium;
+  margin: 0px;
+  width: 100%;
+  min-height:100%;
+}
+
+#wrap {
+  min-height:100%;
+  position:relative;
+  padding-bottom: 30px;
+}
+/*#description img {*/
+  /*width: 5px;*/
+  /*height: 5px;*/
+/*}*/
+
+section {
+  text-align: center;
+  font-size: 16px;
+}
+
+header {
+  display: block;
+  background-color: rgba(243, 229, 201, 0.6);
+  color: rgba(191, 52, 67, 0.66);
+  text-align: center;
+  padding-top: 10px;
+  font-size: 260%;
+  margin-top: -10px;
+  width: 100%;
+}
+
+
+.menu-main {
+  display: block;
+  background: #efe5d0;
+}
+
+li {
+  display: inline;
+}
+.login-option {
+  font-size: 180%;
+  float: left;
+  margin-top: 0%;
+  margin-left: 10px;
+}
+
+.login-option a:link, a:visited {
+  border-bottom: none;
+}
+
+.lang {
+  font-size: 150%;
+  padding-right: 2px;
+}
+#column-right {
+  /*background: #efe5d0;*/
+  text-align: right;
+  font-size: 100%;
+  margin-right: 20px;
+  margin-left: 10px;
+  float: right;
+}
+
+#left {
+  font-size: 150%;
+  margin-left: 10px;
+  float: left;
+}
+
+#user {
+  font-size: 150%;
+  margin-left: 10px;
+  /*float: left;*/
+}
+
+/*#logout {*/
+  /*margin-left: 10px;*/
+/*}*/
+
+#main {
+  display: block;
+  background: #efe5d0;
+  font-size: 105%;
+  width: 50%;
+  padding: 15px;
+  margin: 10px 10px 10px 10px;
+  margin-right: 10px;
+  margin-left: 195px;
+}
+
+.right {
+  float: right;
+}
+
+footer {
+  display: block;
+  background-color: #675c47;
+  color: #efe5d0;
+  text-align: center;
+  padding-top: 10px;
+  font-size: 90%;
+  clear: both;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 30px;
+}
+
+
+h1 {
+  font-size: 120%;
+  text-align: center;
+  color: #954b4b;
+}
+
+h3 {
+  font-size: 110%;
+  text-align: center;
+  padding-left: 10%;
+  padding-right: 10%;
+
+}
+
+a:link {
+  color: #b76666;
+  font-size: 60%;
+  border-bottom: thin dotted #b76666;
+  text-decoration: none;
+  margin-right: 15px;
+}
+
+a:hover {
+  color: #b7393e;
+}
+a:visited {
+  color: rgba(138, 9, 4, 0.82);
+  text-decoration: none;
+  border-bottom: thin dotted #675c47;
+}
+
+table  {
+  margin-left: 20px;
+  margin-right: 20px;
+  border: thin dotted gray;
+  border-collapse: collapse;
+}
+
+td, th {
+  border: thin dotted gray;
+  padding: 5px;
+}
