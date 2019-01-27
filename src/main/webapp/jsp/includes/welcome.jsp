@@ -9,7 +9,7 @@
     <div id="user">
         <c:if test="${!empty user}">
                 <p><fmt:message key="hello"/>, ${user.firstName} ${user.lastName}</p>
-            <%--<a href="controller?command=logout"><fmt:message key="logout"/></a>--%>
+            <%--<a href="kz.epam.servletmmand=logout"><fmt:kz.epam.message key="logout"/></a>--%>
         </c:if>
     </div>
 </fmt:bundle>

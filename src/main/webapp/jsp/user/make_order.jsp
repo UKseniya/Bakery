@@ -22,7 +22,7 @@
         <tr>
         <th>&nbsp;</th>
         <th><fmt:message key="name"/> </th>
-        <%--<th><fmt:message key="code"/> </th>--%>
+        <%--<th><fmt:kz.epam.message key="code"/> </th>--%>
         <th><fmt:message key="price"/> </th>
         <th>&nbsp;</th>
         </tr>

@@ -19,17 +19,13 @@
     </c:if>
     </div>
 
-    <table id="cart">
+    <table id="cart" border="0">
 
         <tr>
             <th><fmt:message key="name"/> </th>
-                <%--<th><fmt:message key="code"/> </th>--%>
             <th><fmt:message key="price"/> </th>
-            <th>&nbsp;</th>
-            <th><fmt:message key="quantity"/> </th>
-            <th>&nbsp;</th>
+            <th colspan="3"><fmt:message key="quantity"/> </th>
             <th><fmt:message key="sum"/></th>
-            <th>&nbsp;</th>
         </tr>
         <c:forEach var="item" items="${cart.items}">
             <form name="update" method="POST" action="controller">
@@ -44,27 +40,36 @@
                     <td><input type="hidden" name="productCode" value="${item.product.code}">
                         <input type="hidden" name="quantity" value="${item.quantity}">
                         <input type="submit" name="removeButton" value="-"></td>
-                    <td>${item.total}</td>
+                    <td>${item.itemTotal}</td>
                 </tr>
             </form>
         </c:forEach>
         <tr>
-            <td colspan="3">
-                <p><b>To change the quantity for an item</b>, enter the new quantity
-                    and click on the Update button.</p>
-                <p><b>To remove an item</b>, click on the Remove button.</p>
+            <td colspan="5" align="left"><fmt:message key="total"/> </td>
+            <td>${cart.total}</td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <fmt:message key="cart.information.quantity.increase"/><br/>
+                <fmt:message key="cart.information.decrease"/>
             </td>
         </tr>
+        <tr>
+            <td colspan="3"><form name="cart" method="POST" action="controller">
+                <input type="hidden" name="command" value="add_to_cart">
+                <input type="submit" value="<fmt:message key="button.order"/>">
+            </form> </td>
+            <td colspan="3"><form name="cart" method="POST" action="controller">
+                <input type="hidden" name="command", value="select_products">
+                <input type="submit" value="<fmt:message key="button.continue"/> ">
+            </form> </td>
+
+        </tr>
     </table>
-    <form name="cart" method="POST" action="controller">
-        <input type="hidden" name="command" value="add_to_cart">
-        <input type="submit" value="<fmt:message key="button.order"/>">
-    </form>
+    <br>
+
     <br/>
-    <form name="cart" method="POST" action="controller">
-        <input type="hidden" name="command", value="select_products">
-        <input type="submit" value="<fmt:message key="button.continue"/> ">
-    </form>
+
 
     <br/><br/><br/>
 

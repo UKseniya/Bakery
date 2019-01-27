@@ -22,14 +22,14 @@
                     <li><a href="/Bakery/index.jsp"><fmt:message key="main.page"/></a></li>
                     <li><a href="/Bakery/jsp/menu/products.jsp"><fmt:message key="products"/></a></li>
                     <li><a href="/Bakery/jsp/menu/contacts.jsp"><fmt:message key="contacts"/></a></li>
-                    <%--<jsp:useBean id="role" class="entities.User"/>--%>
+                    <%--<jsp:useBean id="role" class="kz.epam.entities.User"/>--%>
                     <%--<c:forEach var="role" items="${role}">--%>
                         <%--<c:if test="${role == 'user'}" scope="session">--%>
-                            <%--<li class="right"><a href="/Bakery/jsp/cart.jsp"><fmt:message key="cart"/></a></li>--%>
-                            <%--<li class="right"><a href="/Bakery/jsp/userOrder.jsp"><fmt:message key="orders"/></a></li>--%>
+                            <%--<li class="right"><a href="/Bakery/jsp/cart.jsp"><fmt:kz.epam.message key="cart"/></a></li>--%>
+                            <%--<li class="right"><a href="/Bakery/jsp/userOrder.jsp"><fmt:kz.epam.message key="orders"/></a></li>--%>
                         <%--</c:if>--%>
                         <%--<c:if test="${role == 'administrator'}" scope="session">--%>
-                            <%--<li class="right"><a href="/Bakery/jsp/adminOrder.jsp"><fmt:message key="orders"/></a></li>--%>
+                            <%--<li class="right"><a href="/Bakery/jsp/adminOrder.jsp"><fmt:kz.epam.message key="orders"/></a></li>--%>
                         <%--</c:if>--%>
                     <%--</c:forEach>--%>
                 </ul>

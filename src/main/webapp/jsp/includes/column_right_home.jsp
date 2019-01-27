@@ -26,8 +26,8 @@
                             dateStyle="medium" />
         </p>
         <%--<c:if test="${!empty  user}">--%>
-            <%--<p><strong><fmt:message key="logged.in.as"/>: ${user.firstName} ${user.lastName} ID:${user.id}</strong></p>--%>
-            <%--<a href="controller?command=logout"><fmt:message key="logout"/></a>--%>
+            <%--<p><strong><fmt:kz.epam.message key="logged.in.as"/>: ${user.firstName} ${user.lastName} ID:${user.id}</strong></p>--%>
+            <%--<a href="kz.epam.servletmmand=logout"><fmt:kz.epam.message key="logout"/></a>--%>
         <%--</c:if>--%>
 
     </div>
