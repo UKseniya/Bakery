@@ -7,6 +7,7 @@ public class LineItem extends Entity implements Serializable {
 
     private Product product;
     private int quantity;
+    private double total;
 
     public LineItem() {
     }

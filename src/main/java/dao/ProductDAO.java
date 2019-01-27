@@ -2,10 +2,7 @@ package dao;
 
 import entities.Product;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +12,8 @@ import pool.ConnectionPool;
 public class ProductDAO extends AbstractDAO<Product> {
     private Logger log = Logger.getRootLogger();
     private static final String SQL_SELECT_ALL_PRODUCTS = "SELECT * FROM product";
+    private static final String SQL_SELECT_PRODUCT_BY_PRODUCT_CODE = "SELECT * FROM product " +
+            "WHERE code = ?";
 
 
     @Override
@@ -42,6 +41,28 @@ public class ProductDAO extends AbstractDAO<Product> {
         return products;
     }
 
+    public Product findProductbyCode(String code) {
+        Product product = null;
+        ConnectionPool pool = ConnectionPool.getInstance();
+
+        try (Connection connection = ConnectionPool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_PRODUCT_BY_PRODUCT_CODE)) {
+            preparedStatement.setString(1, code);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()) {
+                product = new Product();
+                product.setId(resultSet.getInt("product_id"));
+                product.setName(resultSet.getString("name"));
+                product.setCode(resultSet.getString("code"));
+                product.setPrice(resultSet.getDouble("price"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            log.error("SQL error " + e.toString());
+        }
+        return product;
+    }
     @Override
     public Product findEntityById(int id) {
         return null;

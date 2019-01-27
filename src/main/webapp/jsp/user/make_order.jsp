@@ -18,31 +18,38 @@
             <a href="controller?command=logout"><fmt:message key="logout"/></a>
         </c:if>
     </div>
-
     <table id="productsList">
         <tr>
         <th>&nbsp;</th>
         <th><fmt:message key="name"/> </th>
-        <th><fmt:message key="code"/> </th>
+        <%--<th><fmt:message key="code"/> </th>--%>
         <th><fmt:message key="price"/> </th>
         <th>&nbsp;</th>
         </tr>
         <c:forEach var="product" items="${availableProducts}">
+        <form name="productList" method="POST" action="controller">
+            <input type="hidden" name="command" value="add_to_cart">
             <tr>
-        <td><img src="/Bakery/jsp/style/pictures/${product.name}.jpg" width="100" height="100"></td>
+        <td><img src="/Bakery/jsp/style/pictures/${product.name}.jpg" width="100" height="100">
+            </td>
         <td><fmt:message key="product.name.${product.formatedName}"/></td>
-        <td>${product.code}</td>
-        <td>${product.priceCurrencyFormat}</td>
+        <td>${product.price}</td>
         <td>
-            <form name="productList" method="POST" action="controller">
-            <input type="hidden" name="command" value="addToCart">
-            <input type="submit" value="<fmt:message key="button.add"/>" >
-        </form>
+            <input type="hidden" name="productCode" value="${product.code}">
+            <input type="submit" value="<fmt:message key="button.cart.add"/>" >
+
         </td>
             </tr>
+        </form>
 </c:forEach>
 
     </table>
+
+    <form name="cart" method="POST" action="controller">
+        <input type="hidden" name="command" value="review_cart">
+        <input type="submit" value="<fmt:message key="button.cart.go"/> ">
+    </form>
+
     <br/><br/><br/>
 
     </body>

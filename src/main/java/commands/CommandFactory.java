@@ -1,6 +1,9 @@
 package commands;
 
+import commands.user.AddToCart;
+import commands.user.ReviewCart;
 import commands.user.SelectProducts;
+import commands.user.UpdateCart;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -8,7 +11,8 @@ public class CommandFactory {
     private static CommandFactory instance = null;
     enum CommandEnum {
 
-        LOGIN, LOGOUT, REGISTRATION, REGISTRATION_FORM, USER_PAGE, SELECT_PRODUCTS;
+        LOGIN, LOGOUT, REGISTRATION, REGISTRATION_FORM, USER_PAGE, SELECT_PRODUCTS,
+        ADD_TO_CART, REVIEW_CART, UPDATE_CART;
     }
 
     public static CommandFactory getInstance() {
@@ -38,20 +42,16 @@ public class CommandFactory {
                 return new UserPage();
             case SELECT_PRODUCTS:
                 return new SelectProducts();
+            case ADD_TO_CART:
+                return new AddToCart();
+            case REVIEW_CART:
+                return new ReviewCart();
+            case UPDATE_CART:
+                return new UpdateCart();
 //            case CONFIRM_ORDER:
 //                return new ConfirmOrder();
 //            case ORDER:
 //                return new OrderCommand();
-//            case SHOW_USER_ORDERS:
-//                return new ShowUserOrders();
-//            case SHOW_DRINKS:
-//                return new ShowDrinks();
-//            case SHOW_INGREDIENTS:
-//                return new ShowIngredients();
-//            case REFILL_DRINKS:
-//                return new RefillDrinks();
-//            case REFILL_INGREDIENTS:
-//                return new RefillIngredients();
             default:
                 throw new EnumConstantNotPresentException(
                         current.getDeclaringClass(), current.name());

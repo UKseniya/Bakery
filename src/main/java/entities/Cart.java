@@ -8,7 +8,7 @@ public class Cart extends Entity implements Serializable {
 
     private List<LineItem> items;
 
-    public Cart(List<LineItem> items) {
+    public Cart() {
         items = new ArrayList<>();
     }
 
