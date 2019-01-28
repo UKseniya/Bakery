@@ -45,8 +45,9 @@ public class Cart extends Entity implements Serializable {
             LineItem lineItem = items.get(i);
             if (lineItem.getProduct().getCode().equals(code))
             {
+                quantity++;
                 lineItem.setQuantity(quantity);
-//                return;
+                break;
             }
         }
         items.add(item);

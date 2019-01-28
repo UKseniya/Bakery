@@ -11,15 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class AddToCart implements Command {
-//    static int itemQuantity = 1;
+
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
         int itemQuantity = 1;
 
         String productCode = request.getParameter("productCode");
-//        String addButton = request.getParameter("addButton");
-//        String removeButton = request.getParameter("removeButton");
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
@@ -37,32 +35,10 @@ public class AddToCart implements Command {
         session.setAttribute("product", product);
 
         if (product != null) {
-            if (cart.getItems().size() != 0) {
-                boolean newProduct = false;
-                for (LineItem item : cart.getItems()) {
-                    if (item.getProduct().getCode().equals(productCode)) {
-                        int quantity = item.getQuantity();
-                        quantity++;
-                        item.setQuantity(quantity);
-                    }
-                    else {
-                        newProduct = true;
-
-                    }
-                }
-                if (newProduct) {
-                    LineItem item = new LineItem();
-                    item.setProduct(product);
-                    item.setQuantity(itemQuantity);
-                    cart.addItem(item);
-                }
-            }
-            else {
-                LineItem item = new LineItem();
-                item.setProduct(product);
-                item.setQuantity(itemQuantity);
-                cart.addItem(item);
-            }
+            LineItem lineItem = new LineItem();
+            lineItem.setProduct(product);
+            lineItem.setQuantity(itemQuantity);
+                cart.addItem(lineItem);
         }
 
         session.setAttribute("cart", cart);
