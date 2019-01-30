@@ -20,12 +20,37 @@
             <%----%>
             <%--<jsp:include page="../includes/column_left.jsp"/>--%>
     </div>
+    <section class="checkout">
+        <form name="confirm_order" method="POST" action="controller">
+            <input type="hidden" name="command" value="confirm_order"> <br/>
+            <p><fmt:message key="customer"/>: ${user.firstName} ${user.lastName}</p>
+            <p><fmt:message key="order"/>: </p>
 
-    <section>
-        <h3><fmt:message key="ordering.instruction"/></h3><br>
-        <h3><fmt:message key="order.review.instruction"/></h3><br>
-        <h3><fmt:message key="order.confirm.instruction"/></h3><br>
+            <table>
+                <tr>
+                    <th><fmt:message key="products"/></th>
+                    <th><fmt:message key="quantity"/></th>
+                </tr>
+                <c:forEach var="item" items="${cart.items}">
+                    <tr>
+                        <td>${item.product.name}</td>
+                        <td>${item.quantity}</td>
+                    </tr>
+                </c:forEach>
+            </table>
+
+            <br/>
+                ${dateErrorMessage}
+            <br/>
+            <p><fmt:message key="order.date"/>: <input type="date" name="date" value="" required></p>
+            <br/>
+            <p>Total: ${cart.total}</p>
+            <input type="submit" value="<fmt:message key="order.confirm"/> ">
+        </form>
     </section>
     </body>
+    <br/>
+    <br/>
+    <br/>
     <jsp:include page="../includes/footer.jsp"/>
 </fmt:bundle>

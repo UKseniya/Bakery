@@ -19,8 +19,8 @@
         </c:if>
     </div>
     <c:choose>
-        <c:when test="${empty cart}">
-            <p><fmt:message key="cart.empty"/></p>
+        <c:when test="${empty order}">
+            <p><fmt:message key="order.empty"/></p>
 
         </c:when>
         <c:otherwise>

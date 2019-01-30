@@ -17,15 +17,15 @@
             <a href="controller?command=review_cart"><fmt:message key="cart"/> </a> <br>
             <a href="controller?command=logout"><fmt:message key="logout"/></a>
         </c:if>
-            <%----%>
-            <%--<jsp:include page="../includes/column_left.jsp"/>--%>
     </div>
-
-    <section>
-        <h3><fmt:message key="ordering.instruction"/></h3><br>
-        <h3><fmt:message key="order.review.instruction"/></h3><br>
-        <h3><fmt:message key="order.confirm.instruction"/></h3><br>
+    <section class="support">
+        <p><fmt:message key="order.confirm.information"/> <br>
+            <fmt:message key="email"/><a href="mailto:customer.support@test.com">customer.support@test.com</a><br/>
+            <fmt:message key="phone"/> +7 701 777 7777. </p>
     </section>
+
+    <br/><br/><br/>
+
     </body>
     <jsp:include page="../includes/footer.jsp"/>
 </fmt:bundle>

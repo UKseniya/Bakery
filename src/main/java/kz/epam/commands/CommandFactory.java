@@ -1,9 +1,6 @@
 package kz.epam.commands;
 
-import kz.epam.commands.user.AddToCart;
-import kz.epam.commands.user.ReviewCart;
-import kz.epam.commands.user.SelectProducts;
-import kz.epam.commands.user.UpdateCart;
+import kz.epam.commands.user.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,7 +9,7 @@ public class CommandFactory {
     enum CommandEnum {
 
         LOGIN, LOGOUT, REGISTRATION, REGISTRATION_FORM, USER_PAGE, SELECT_PRODUCTS,
-        ADD_TO_CART, REVIEW_CART, UPDATE_CART;
+        ADD_TO_CART, REVIEW_CART, UPDATE_CART, CHECKOUT, CONFIRM_ORDER;
     }
 
     public static CommandFactory getInstance() {
@@ -48,8 +45,10 @@ public class CommandFactory {
                 return new ReviewCart();
             case UPDATE_CART:
                 return new UpdateCart();
-//            case CONFIRM_ORDER:
-//                return new ConfirmOrder();
+            case CHECKOUT:
+                return new Checkout();
+            case CONFIRM_ORDER:
+                return new ConfirmOrder();
 //            case ORDER:
 //                return new OrderCommand();
             default:

@@ -47,7 +47,7 @@ public class Cart extends Entity implements Serializable {
             {
                 quantity++;
                 lineItem.setQuantity(quantity);
-                break;
+                return;
             }
         }
         items.add(item);

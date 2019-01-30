@@ -21,6 +21,8 @@ body {
 section {
   text-align: center;
   font-size: 16px;
+  margin-left: 15%;
+  margin-right: 15%;
 }
 
 header {
@@ -34,6 +36,27 @@ header {
   width: 100%;
 }
 
+section form {
+  text-align: left;
+  font-size: 100%;
+}
+
+section .support {
+  padding-right: 10px;
+  padding-left: 10px;
+  text-align: left;
+}
+
+section .checkout table, th, td{
+  border: 2px transparent;
+}
+
+section a:link {
+  color: #b76666;
+  font-size: 100%;
+  border-bottom: none;
+  text-decoration: none;
+}
 
 .menu-main {
   display: block;
@@ -64,6 +87,7 @@ li {
     margin-left: 20px;
     text-align: center;
 }
+
 #column-right {
   /*background: #efe5d0;*/
   text-align: right;
@@ -103,6 +127,7 @@ li {
 .right {
   float: right;
 }
+
 
 footer {
   display: block;
@@ -161,4 +186,6 @@ table  {
 td, th {
   border: thin dotted gray;
   padding: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
 }
