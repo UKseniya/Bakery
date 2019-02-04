@@ -1,6 +1,5 @@
 package kz.epam.commands.user;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
 import kz.epam.commands.Command;
 import kz.epam.dao.OrderDAO;
 import kz.epam.entities.Cart;
@@ -15,8 +14,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 public class ConfirmOrder implements Command {
+    private static int MAXIMUM_ORDERS = 100000;
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
@@ -38,12 +40,22 @@ public class ConfirmOrder implements Command {
         OrderDAO orderDAO = new OrderDAO();
 
         if (date != null) {
-            for (LineItem item : cart.getItems()) {
-                Order order = new Order();
-                order.setUser(user);
-                order.setItem(item);
-                order.setRequestedDate(date);
-                boolean created = orderDAO.create(order);
+            Random random = new Random();
+            int order_number = random.nextInt(MAXIMUM_ORDERS);
+            List<Integer> usedNumbers = orderDAO.findAllOrderNumbers();
+            while (usedNumbers.contains(order_number)) {
+                order_number = random.nextInt(MAXIMUM_ORDERS);
+                if (!usedNumbers.contains(order_number)) {
+                        Order order = new Order();
+                        order.setOrderNumber(order_number);
+                        order.setUser(user);
+                        order.setItems(cart.getItems());
+                        order.setRequestedDate(date);
+                        order.setStatus("in progress");
+                        boolean created = orderDAO.create(order);
+                        break;
+
+                }
             }
             page = "/jsp/user/confirmed_order.jsp";
         }

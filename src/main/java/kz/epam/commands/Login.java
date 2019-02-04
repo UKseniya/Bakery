@@ -25,12 +25,11 @@ public class Login implements Command{
             user = userDAO.findUserByLoginAndPassword(login, password);
             session.setAttribute("user", user);
 
-
             if (user.getRole().equals("user")) {
                 page = "/jsp/user/user.jsp";
             }
-            else if (user.getRole().equals("kz/epam/admin")){
-                page = "/jsp/kz.epam.admin/kz.epam.admin.jsp";
+            else if (user.getRole().equals("admin")){
+                page = "/jsp/admin/admin.jsp";
             }
             session.setAttribute("user", user);
         }

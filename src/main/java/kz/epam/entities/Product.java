@@ -1,7 +1,13 @@
 package kz.epam.entities;
 
+import kz.epam.constants.Constants;
+import sun.util.locale.LocaleUtils;
+
 import java.io.Serializable;
 import java.text.NumberFormat;
+import java.util.Currency;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class Product extends Entity implements Serializable {
     private String code;
@@ -35,15 +41,23 @@ public class Product extends Entity implements Serializable {
         this.price = price;
     }
 
-    public String getFormatedName() {
-        String formatedName = null;
-        formatedName = this.name.toLowerCase().replace(" ", "");
-        return formatedName;
+    public String getFormattedName() {
+        String formattedname = null;
+        formattedname = this.name.toLowerCase().replace(" ", "");
+        return formattedname;
     }
 
-    public String getPriceCurrencyFormat()
-    {
-        NumberFormat currency = NumberFormat.getCurrencyInstance();
-        return currency.format(price);
+    public String getPriceCurrencyFormat() {
+
+        Locale locale = new Locale("ru", "KZ");
+
+//        NumberFormat formater = NumberFormat.getNumberInstance();
+//        return formater.format(price);
+
+        NumberFormat formater = NumberFormat.getCurrencyInstance(locale);
+        return formater.format(price);
+
     }
+
+
 }

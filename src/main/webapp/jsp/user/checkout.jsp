@@ -33,7 +33,7 @@
                 </tr>
                 <c:forEach var="item" items="${cart.items}">
                     <tr>
-                        <td>${item.product.name}</td>
+                        <td><fmt:message key="product.name.${item.product.formattedName}"/></td>
                         <td>${item.quantity}</td>
                     </tr>
                 </c:forEach>
@@ -42,7 +42,8 @@
             <br/>
                 ${dateErrorMessage}
             <br/>
-            <p><fmt:message key="order.date"/>: <input type="date" name="date" value="" required></p>
+            <p><fmt:message key="order.date"/>: <input type="date" name="date" value="" oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
+                                                       oninput="this.setCustomValidity('')" ></p>
             <br/>
             <p>Total: ${cart.total}</p>
             <input type="submit" value="<fmt:message key="order.confirm"/> ">

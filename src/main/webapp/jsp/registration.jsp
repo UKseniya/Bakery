@@ -13,15 +13,22 @@
         <form name="registrationForm" method="POST" action="controller">
             <input type="hidden" name="command" value="registration_form"/>
             <fmt:message key="first.name"/>:<br/>
-            <input type="text" name="firstName" value="" required/>
+            <input type="text" name="firstName" value="" oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
+                   oninput="this.setCustomValidity('')" required/>
             <br/><fmt:message key="last.name"/>:<br/>
-            <input type="text" name="lastName" value="" required/>
+            <input type="text" name="lastName" value="" oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
+                   oninput="this.setCustomValidity('')" required/>
             <br/><fmt:message key="email"/>:<br/>
-            <input type="email" name="email" value="" required/>
+            <input type="email" name="email" value=""/>
+            <br/><fmt:message key="phone"/>:<br/>
+            <input type="text" name="phone" value="" oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
+                   oninput="this.setCustomValidity('')" required/>
             <br/><fmt:message key="login"/>:<br/>
-            <input type="text" name="login" value="" required/>
+            <input type="text" name="login" value="" oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
+                   oninput="this.setCustomValidity('')" required/>
             <br/><fmt:message key="password"/>:<br/>
-            <input type="password" name="password" value="" required/>
+            <input type="password" name="password" value="" oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
+                   oninput="this.setCustomValidity('')" required/>
             <br/>
                 ${registrationErrorMessage}
             <br/>

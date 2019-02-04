@@ -9,8 +9,8 @@
 
             <ul class="locale">
                 <li>Language &nbsp;</li>
-                <li class="lang"><a href="?lang=en"><fmt:message key="en.lang" /></a></li>
-                <li class="lang"><a href="?lang=ru"><fmt:message key="ru.lang" /></a></li>
+                <li class="lang"><a href="?lang=en&country=UK"><fmt:message key="en.lang" /></a></li>
+                <li class="lang"><a href="?lang=ru&country=KZ"><fmt:message key="ru.lang" /></a></li>
             </ul>
 
         <ul class="locale"/>

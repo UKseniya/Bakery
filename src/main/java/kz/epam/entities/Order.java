@@ -3,14 +3,24 @@ package kz.epam.entities;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class Order extends Entity implements Serializable {
+    private int orderNumber;
     private User user;
-    private LineItem item;
+    private List<LineItem> items;
     private Date requestedDate;
     private String status;
 
     public Order() {
+    }
+
+    public int getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(int orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     public User getUser() {
@@ -21,13 +31,12 @@ public class Order extends Entity implements Serializable {
         this.user = user;
     }
 
-
-    public LineItem getItem() {
-        return item;
+    public List<LineItem> getItems() {
+        return items;
     }
 
-    public void setItem(LineItem item) {
-        this.item = item;
+    public void setItems(List<LineItem> items) {
+        this.items = items;
     }
 
     public Date getRequestedDate() {
@@ -61,13 +70,13 @@ public class Order extends Entity implements Serializable {
         return invoiceDateFormatted;
     }
 
-//    public double getOrderTotal() {
-//        double orderTotal = 0.0;
-//        for (LineItem item : items) {
-//            orderTotal += item.getProduct().getPrice();
-//        }
-//        return orderTotal;
-//    }
+    public double getOrderTotal() {
+        double orderTotal = 0.0;
+        for (LineItem item : items) {
+            orderTotal += item.getProduct().getPrice();
+        }
+        return orderTotal;
+    }
 
 //    public String getOrderTotalCurrencyFormat() {
 //        double total = this.getOrderTotal();

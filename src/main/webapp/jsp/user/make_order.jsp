@@ -33,8 +33,8 @@
                     <tr>
                         <td><img src="/Bakery/jsp/style/pictures/${product.name}.jpg" width="100" height="100">
                         </td>
-                        <td><fmt:message key="product.name.${product.formatedName}"/></td>
-                        <td>${product.price}</td>
+                        <td><fmt:message key="product.name.${product.formattedName}"/></td>
+                        <td>${product.priceCurrencyFormat}</td>
                         <td>
                             <input type="hidden" name="productCode" value="${product.code}">
                             <input type="submit" value="<fmt:message key="button.cart.add"/>">

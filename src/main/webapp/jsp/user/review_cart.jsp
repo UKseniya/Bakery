@@ -35,7 +35,7 @@
                     <form name="update" method="POST" action="controller">
                         <input type="hidden" name="command" value="update_cart">
                         <tr>
-                            <td><fmt:message key="product.name.${item.product.formatedName}"/></td>
+                            <td><fmt:message key="product.name.${item.product.formattedName}"/></td>
                             <td>${item.product.price}</td>
                             <td><input type="hidden" name="productCode" value="${item.product.code}">
                                 <input type="hidden" name="quantity" value="${item.quantity}">

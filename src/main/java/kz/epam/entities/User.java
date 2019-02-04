@@ -9,6 +9,7 @@ public class User extends Entity implements Serializable {
     private String login;
     private String password;
     private String email;
+    private String phoneNumber;
     private String role;
 
     public User() {
@@ -54,6 +55,14 @@ public class User extends Entity implements Serializable {
         this.email = email;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getRole() {
         return role;
     }
@@ -67,15 +76,17 @@ public class User extends Entity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(login, user.login) &&
-                Objects.equals(password, user.password) &&
+        return phoneNumber == user.phoneNumber &&
                 Objects.equals(firstName, user.firstName) &&
                 Objects.equals(lastName, user.lastName) &&
+                Objects.equals(login, user.login) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(email, user.email) &&
                 Objects.equals(role, user.role);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(login, password, firstName, lastName, role);
+        return Objects.hash(firstName, lastName, login, password, email, phoneNumber, role);
     }
 }

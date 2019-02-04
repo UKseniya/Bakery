@@ -1,15 +1,16 @@
 package kz.epam.pool;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import org.apache.log4j.Logger;
 
 public class ConnectionPool {
 
+    private Logger log = Logger.getRootLogger();
     private static ConnectionPool instance;
     private final String DRIVER_NAME;
     private ArrayList<Connection> freeConnections = new ArrayList<>();
@@ -25,14 +26,8 @@ public class ConnectionPool {
         this.password = password;
         this.maxConn = maxConn;
         loadDrivers();
-    }
-
-    private void loadDrivers() {
-        try {
-            Driver driver = (Driver) Class.forName(DRIVER_NAME).newInstance();
-            DriverManager.registerDriver(driver);
-        } catch (Exception e) {
-
+        for (int i = 0; i < maxConn; i++) {
+            freeConnections.add(newConnection());
         }
     }
 
@@ -43,10 +38,20 @@ public class ConnectionPool {
         return instance;
     }
 
+    private void loadDrivers() {
+        try {
+            Driver driver = (Driver) Class.forName(DRIVER_NAME).newInstance();
+            DriverManager.registerDriver(driver);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Driver loading error " + e.toString());
+        }
+    }
+
     public synchronized Connection getConnection() {
         Connection connection = null;
 
-        /*if (!freeConnections.isEmpty()) {
+        if (!freeConnections.isEmpty()) {
             connection = (Connection) freeConnections.get(freeConnections.size() - 1);
             freeConnections.remove(connection);
             try {
@@ -58,10 +63,19 @@ public class ConnectionPool {
             } catch (Exception e) {
                 connection = getConnection();
             }
-        } else {
-        */
-            connection = newConnection();
-        //}
+        }
+        else {
+            try {
+                synchronized (freeConnections) {
+                    while (freeConnections.isEmpty()) {
+                        freeConnections.wait();
+                    }
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                log.error("Waiting error " + e.toString());
+            }
+        }
         return connection;
     }
 
@@ -75,14 +89,23 @@ public class ConnectionPool {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
+            log.error("Connection creation error " + ex.toString());
             return null;
         }
         return connection;
     }
 
-    public synchronized void setFreeConnection(Connection connection) {
+    public synchronized void freeConnection(Connection connection) {
         if ((connection != null) && (freeConnections.size() <= maxConn)) {
-            freeConnections.add(connection);
+            try {
+                synchronized (freeConnections) {
+                    freeConnections.add(connection);
+                    freeConnections.notifyAll();
+                }
+            } catch (IllegalMonitorStateException ex) {
+                ex.printStackTrace();
+                log.error("Illegal Monitor State Exception " + ex.toString());
+            }
         }
     }
 
@@ -94,13 +117,14 @@ public class ConnectionPool {
                 connection.close();
             }
             catch (SQLException e) {
-
+                e.printStackTrace();
+                log.error("Connection release error " + e.toString());
             }
         }
         freeConnections.clear();
     }
 
-    //    private ConnectionPool() {
+//        private ConnectionPool() {
 //
 //    }
 //    private static ConnectionPool instance = null;

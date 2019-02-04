@@ -9,13 +9,14 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import kz.epam.pool.ConnectionPool;
-import org.omg.PortableInterceptor.ServerRequestInfo;
 
 public class ProductDAO extends AbstractDAO<Product> {
     private Logger log = Logger.getRootLogger();
-    private static final String SQL_SELECT_ALL_PRODUCTS = "SELECT * FROM product";
-    private static final String SQL_SELECT_PRODUCT_BY_PRODUCT_CODE = "SELECT * FROM product " +
+    private static final String SQL_FIND_ALL_PRODUCTS = "SELECT * FROM product";
+    private static final String SQL_FIND_PRODUCT_BY_PRODUCT_CODE = "SELECT * FROM product " +
             "WHERE code = ?";
+    private static final String SQL_FIND_PRODUCT_BY_PRODUCT_ID = "SELECT * FROM product " +
+            "WHERE product_id = ?";
 
     private static String driverName = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_DRIVER_NAME);
     private static String url = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_URL);
@@ -30,9 +31,8 @@ public class ProductDAO extends AbstractDAO<Product> {
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
         Connection connection = pool.getConnection();
 
-        try (
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_PRODUCTS);){
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(SQL_FIND_ALL_PRODUCTS);){
             products = new ArrayList<>();
 
             while (resultSet.next()) {
@@ -43,12 +43,12 @@ public class ProductDAO extends AbstractDAO<Product> {
                 product.setPrice(resultSet.getDouble("price"));
                 products.add(product);
             }
+
+            pool.freeConnection(connection);
+
         } catch (SQLException e) {
             e.printStackTrace();
             log.error("SQL error " + e.toString());
-        } finally {
-            pool.release();
-            pool.setFreeConnection(connection);
         }
         return products;
     }
@@ -59,24 +59,25 @@ public class ProductDAO extends AbstractDAO<Product> {
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
         Connection connection = pool.getConnection();
 
-        try (
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_PRODUCT_BY_PRODUCT_CODE)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_PRODUCT_BY_PRODUCT_CODE)) {
             preparedStatement.setString(1, code);
-            ResultSet resultSet = preparedStatement.executeQuery();
 
-            if(resultSet.next()) {
-                product = new Product();
-                product.setId(resultSet.getInt("product_id"));
-                product.setName(resultSet.getString("name"));
-                product.setCode(resultSet.getString("code"));
-                product.setPrice(resultSet.getDouble("price"));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if(resultSet.next()) {
+                    product = new Product();
+                    product.setId(resultSet.getInt("product_id"));
+                    product.setName(resultSet.getString("name"));
+                    product.setCode(resultSet.getString("code"));
+                    product.setPrice(resultSet.getDouble("price"));
+                }
+                pool.freeConnection(connection);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                log.error("SQL error " + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
             log.error("SQL error " + e.toString());
-        } finally {
-            pool.release();
-            pool.setFreeConnection(connection);
         }
         return product;
     }
@@ -87,26 +88,80 @@ public class ProductDAO extends AbstractDAO<Product> {
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
         Connection connection = pool.getConnection();
 
-        try (
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_PRODUCT_BY_PRODUCT_CODE)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_PRODUCT_BY_PRODUCT_CODE)) {
             preparedStatement.setString(1, product.getCode());
-            ResultSet resultSet = preparedStatement.executeQuery();
 
-            if(resultSet.next()) {
-                productID = resultSet.getInt("product_id");
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if(resultSet.next()) {
+                    productID = resultSet.getInt("product_id");
+                }
+                pool.freeConnection(connection);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                log.error("SQL error " + e.toString());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            log.error("SQL error " + e.toString());
+        }
+        return productID;
+    }
+
+    public String findProductNamebyID(int productID) {
+        String productName = null;
+
+        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
+        Connection connection = pool.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_PRODUCT_BY_PRODUCT_CODE)) {
+            preparedStatement.setInt(1, productID);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if(resultSet.next()) {
+                    productName = resultSet.getString("product_name");
+                }
+                pool.freeConnection(connection);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                log.error("SQL error " + e.toString());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            log.error("SQL error " + e.toString());
+        }
+        return productName;
+    }
+
+    @Override
+    public Product findEntityById(int id) {
+        Product product = null;
+
+        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
+        Connection connection = pool.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_PRODUCT_BY_PRODUCT_CODE)) {
+            preparedStatement.setInt(1, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if(resultSet.next()) {
+                    product = new Product();
+                    product.setId(resultSet.getInt("product_id"));
+                    product.setName(resultSet.getString("name"));
+                    product.setCode(resultSet.getString("code"));
+                    product.setPrice(resultSet.getDouble("price"));
+                }
+                pool.freeConnection(connection);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                log.error("SQL error " + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
             log.error("SQL error " + e.toString());
-        } finally {
-            pool.release();
-            pool.setFreeConnection(connection);
         }
-        return productID;
-    }
-    @Override
-    public Product findEntityById(int id) {
-        return null;
+        return product;
     }
 
     @Override
