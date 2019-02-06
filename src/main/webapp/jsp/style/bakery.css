@@ -8,6 +8,9 @@ body {
 
 }
 
+#left {
+  min-height: 108px;
+}
 #wrap {
   min-height:100%;
   position:relative;
@@ -17,12 +20,24 @@ body {
   /*width: 5px;*/
   /*height: 5px;*/
 /*}*/
-
-section {
+/*p {*/
+  /*margin-top: 0px;*/
+  /*margin-bottom: 0px;*/
+/*}*/
+.center section {
   text-align: center;
   font-size: 16px;
   margin-left: 15%;
   margin-right: 15%;
+  color: #000000;
+}
+
+section {
+  text-align: left;
+  font-size: 16px;
+  margin-left: 15%;
+  margin-right: 15%;
+  color: #000000;
 }
 
 header {
@@ -62,9 +77,12 @@ section a:link {
   display: block;
   background: #efe5d0;
 }
-
+ul {
+  margin-top: 0px;
+}
 li {
   display: inline;
+  margin-bottom: 3px;
 }
 .login-option {
   font-size: 180%;
@@ -194,3 +212,32 @@ td, th {
   margin-left: 5px;
   margin-right: 5px;
 }
+
+.tab1 {
+  position:absolute;
+  left:350px;
+}
+
+.tab2 {
+  position:absolute;
+  left:600px;
+}
+
+/*.clicker {*/
+  /*width:100px;*/
+  /*height:100px;*/
+  /*outline:none;*/
+  /*cursor:pointer;*/
+/*}*/
+
+/*.hiddendiv{*/
+  /*display:none;*/
+  /*height:200px;*/
+/*}*/
+
+/*.clicker:focus + .hiddendiv{*/
+  /*display:block;*/
+/*}*/
+
+.hidden { display: none; }
+.unhidden { display: block; }

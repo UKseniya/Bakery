@@ -114,7 +114,7 @@ public class ProductDAO extends AbstractDAO<Product> {
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
         Connection connection = pool.getConnection();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_PRODUCT_BY_PRODUCT_CODE)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_PRODUCT_BY_PRODUCT_ID)) {
             preparedStatement.setInt(1, productID);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -141,7 +141,7 @@ public class ProductDAO extends AbstractDAO<Product> {
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
         Connection connection = pool.getConnection();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_PRODUCT_BY_PRODUCT_CODE)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_PRODUCT_BY_PRODUCT_ID)) {
             preparedStatement.setInt(1, id);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {

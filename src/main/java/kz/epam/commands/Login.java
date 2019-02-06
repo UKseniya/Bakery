@@ -29,6 +29,7 @@ public class Login implements Command{
                 page = "/jsp/user/user.jsp";
             }
             else if (user.getRole().equals("admin")){
+
                 page = "/jsp/admin/admin.jsp";
             }
             session.setAttribute("user", user);

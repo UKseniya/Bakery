@@ -2,6 +2,7 @@ package kz.epam.entities;
 
 import java.io.Serializable;
 import java.text.NumberFormat;
+import java.util.Locale;
 
 public class LineItem extends Entity implements Serializable {
 
@@ -35,7 +36,8 @@ public class LineItem extends Entity implements Serializable {
 
     public String getTotalCurrencyFormat()
     {
-        NumberFormat currency = NumberFormat.getCurrencyInstance();
+        Locale locale = new Locale("ru", "KZ");
+        NumberFormat currency = NumberFormat.getCurrencyInstance(locale);
         return currency.format(this.getItemTotal());
     }
 }

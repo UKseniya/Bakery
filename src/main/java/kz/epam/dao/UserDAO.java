@@ -23,7 +23,7 @@ public class UserDAO extends AbstractDAO<User> {
             "WHERE role_name = ?";
     private static final String SQL_FIND_ROLE_NAME_BY_ID = "SELECT * FROM user_role " +
             "WHERE role_id = ?";
-    private static final String SQL_FIND_USER_BY_LOGIN_AND_PASSWORD = "SELECT first_name, last_name, login, " +
+    private static final String SQL_FIND_USER_BY_LOGIN_AND_PASSWORD = "SELECT user_id, first_name, last_name, login, " +
             "password, email, phone, role_name FROM user AS u JOIN user_role AS ur ON ur.role_id = u.user_id " +
             "WHERE login = ? AND password = ?";
     private static final String SQL_FIND_USER_BY_LOGIN = "SELECT * FROM user " +
@@ -112,6 +112,7 @@ public class UserDAO extends AbstractDAO<User> {
 
                 while (resultSet.next()) {
                     user = new User();
+                    user.setId(resultSet.getInt("user_id"));
                     user.setFirstName(resultSet.getString("first_name"));
                     user.setLastName(resultSet.getString("last_name"));
                     user.setLogin(resultSet.getString("login"));

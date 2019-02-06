@@ -22,7 +22,7 @@
     <a href="controller?command=user_page"/><fmt:message key="page.account"/> </c:otherwise>
     </c:choose>
 </ul>
-<section>
+<section class="center">
     <br><br>
     <h3><fmt:message key="welcome"/></h3><br>
     <h3><fmt:message key="info.selection"/></h3><br>

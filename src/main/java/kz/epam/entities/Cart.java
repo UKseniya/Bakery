@@ -1,8 +1,10 @@
 package kz.epam.entities;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Cart extends Entity implements Serializable {
 
@@ -35,6 +37,16 @@ public class Cart extends Entity implements Serializable {
         }
         return total;
     }
+
+    public String getTotalCurrencyFormat() {
+
+        Locale locale = new Locale("ru", "KZ");
+        double total = this.getTotal();
+        NumberFormat currency = NumberFormat.getCurrencyInstance(locale);
+        String formattedTotal = currency.format(total);
+        return formattedTotal;
+    }
+
     public void addItem(LineItem item)
     {
         //If the item already exists in the cart, only the quantity is changed.

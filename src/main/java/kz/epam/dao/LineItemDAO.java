@@ -10,12 +10,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LineItemDAO extends AbstractDAO<LineItem> {
-    private static final String SQL_FIND_LINE_ITEMS_BY_ORDER_ID = "SELECT * FROM LineItem WHERE order_id = ?";
-    private static final String SQL_CREATE_NEW_LINE_ITEM = "INSERT INTO line_item (order_id, product_id, quantity) " +
-            "VALUES (?, ?, ?)";
+    private static final String SQL_FIND_LINE_ITEMS_BY_ORDER_ID = "SELECT * FROM line_item WHERE order_id = ?";
+    private static final String SQL_CREATE_NEW_LINE_ITEM = "INSERT INTO line_item (order_id, product_id, product_price, quantity) " +
+            "VALUES (?, ?, ?, ?)";
 
     private static String driverName = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_DRIVER_NAME);
     private static String url = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_URL);
@@ -24,20 +25,23 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
     private static int maxConn = Integer.parseInt(ConfigManager.getInstance().getProperty(ConfigManager.MAX_CONN));
     private Logger log = Logger.getRootLogger();
 
-    public List<LineItem> findALL (int order_id) {
+    public List<LineItem> findALL (int orderID) {
         List<LineItem> items = null;
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_LINE_ITEMS_BY_ORDER_ID)) {
-            preparedStatement.setInt(1, order_id);
+            preparedStatement.setInt(1, orderID);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
+                items = new ArrayList<>();
+                while (resultSet.next()) {
                     LineItem lineItem = new LineItem();
-                    ProductDAO productDAO = new ProductDAO();
+                    lineItem.setId(resultSet.getInt("item_id"));
                     int productID = resultSet.getInt("product_id");
+                    ProductDAO productDAO = new ProductDAO();
                     Product product = productDAO.findEntityById(productID);
                     lineItem.setProduct(product);
+                    product.setPrice(resultSet.getDouble("product_price"));
                     lineItem.setQuantity(resultSet.getInt("quantity"));
                     items.add(lineItem);
                 }
@@ -84,12 +88,13 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
         Connection connection = pool.getConnection();
 
-        ProductDAO productDAO = new ProductDAO();
-        int productID = productDAO.findEntityByID(item.getProduct());
+//        ProductDAO productDAO = new ProductDAO();
+//        int productID = productDAO.findProductbyCode(item.getProduct());
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_NEW_LINE_ITEM)) {
             preparedStatement.setInt(1, orderID);
-            preparedStatement.setInt(2, productID);
-            preparedStatement.setInt(3, item.getQuantity());;
+            preparedStatement.setInt(2, item.getProduct().getId());
+            preparedStatement.setDouble(3, item.getProduct().getPrice());
+            preparedStatement.setInt(4, item.getQuantity());;
             preparedStatement.executeUpdate();
 
             pool.freeConnection(connection);

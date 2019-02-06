@@ -9,7 +9,7 @@ public class CommandFactory {
     enum CommandEnum {
 
         LOGIN, LOGOUT, REGISTRATION, REGISTRATION_FORM, USER_PAGE, SELECT_PRODUCTS,
-        ADD_TO_CART, REVIEW_CART, UPDATE_CART, CHECKOUT, CONFIRM_ORDER, REVIEW_ORDERS;
+        ADD_TO_CART, REVIEW_CART, UPDATE_CART, CHECKOUT, CONFIRM_ORDER, REVIEW_ORDERS, SHOW_ALL_ORDERS;
     }
 
     public static CommandFactory getInstance() {
@@ -50,7 +50,9 @@ public class CommandFactory {
             case CONFIRM_ORDER:
                 return new ConfirmOrder();
             case REVIEW_ORDERS:
-                return new ReviewOrders();
+                return new ShowPendingOrders();
+            case SHOW_ALL_ORDERS:
+                return new ShowAllOrders();
             default:
                 throw new EnumConstantNotPresentException(
                         current.getDeclaringClass(), current.name());
