@@ -26,9 +26,9 @@ public class ShowAllOrders implements Command {
 
         session.setAttribute("pendingOrders", pendingOrders);
 
-//        completedOrders = orderDAO.findAllOrdersByUser(user);
-//
-//        session.setAttribute("orders", completedOrders);
+        completedOrders = orderDAO.findAllOrdersByUser(user);
+
+        session.setAttribute("completedOrders", completedOrders);
 
         page = "/jsp/user/review_orders.jsp";
 

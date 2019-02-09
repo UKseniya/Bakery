@@ -9,7 +9,7 @@
         <c:if test="${!empty user}">
             <ul class="user">
                 <li><a href="controller?command=select_products"><fmt:message key="make.order"/> </a></li> <br>
-                <li><a href="controller?command=show_all_orders"><fmt:message key="review.orders"/> </a></li> <br>
+                <li><a href="controller?command=show_all_orders"><fmt:message key="review.my.orders"/> </a></li> <br>
                 <li><a href="controller?command=review_cart"><fmt:message key="cart"/> </a><li></li> <br>
                 <li><a href="controller?command=logout"><fmt:message key="logout"/></a></li>
             </ul>

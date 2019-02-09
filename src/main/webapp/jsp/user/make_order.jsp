@@ -11,20 +11,12 @@
     <jsp:include page="../includes/user_menu.jsp"/>
 
     <body>
-    <%--<div id="left">--%>
-        <%--<c:if test="${!empty user}">--%>
-            <%--<a href="controller?command=select_products"><fmt:message key="make.order"/> </a> <br>--%>
-            <%--<a href="controller?command=review_orders"><fmt:message key="review.orders"/> </a> <br>--%>
-            <%--<a href="controller?command=review_cart"><fmt:message key="cart"/> </a> <br>--%>
-            <%--<a href="controller?command=logout"><fmt:message key="logout"/></a>--%>
-        <%--</c:if>--%>
-    <%--</div>--%>
+
     <section>
-        <table id="productsList">
+        <table id="productsList" border="transparent">
             <tr>
                 <th>&nbsp;</th>
                 <th><fmt:message key="name"/></th>
-                    <%--<th><fmt:kz.epam.message key="code"/> </th>--%>
                 <th><fmt:message key="price"/></th>
                 <th>&nbsp;</th>
             </tr>
@@ -44,6 +36,7 @@
                 </form>
             </c:forEach>
         </table>
+        <br/>
         <form name="cart" method="POST" action="controller">
             <input type="hidden" name="command" value="review_cart">
             <input type="submit" value="<fmt:message key="button.cart.go"/> ">

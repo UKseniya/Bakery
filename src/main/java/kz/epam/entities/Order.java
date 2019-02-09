@@ -12,6 +12,7 @@ public class Order extends Entity implements Serializable {
     private User user;
     private List<LineItem> items;
     private Date requestedDate;
+    private String comment;
     private String status;
 
     public Order() {
@@ -49,6 +50,14 @@ public class Order extends Entity implements Serializable {
         this.requestedDate = requestedDate;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -75,7 +84,7 @@ public class Order extends Entity implements Serializable {
     public double getOrderTotal() {
         double orderTotal = 0.0;
         for (LineItem item : items) {
-            orderTotal += item.getProduct().getPrice();
+            orderTotal += item.getItemTotal();
         }
         return orderTotal;
     }

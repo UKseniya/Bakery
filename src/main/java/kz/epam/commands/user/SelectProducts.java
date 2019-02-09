@@ -19,7 +19,7 @@ public class SelectProducts implements Command {
         User user = (User) session.getAttribute("user");
 
         ProductDAO productDAO = new ProductDAO();
-        availableProducts = productDAO.findAll();
+        availableProducts = productDAO.findAllAvailableProducts();
 
 //        HttpSession session = request.getSession(true);
         session.setAttribute("availableProducts", availableProducts);

@@ -13,20 +13,20 @@ public class OrderDAO extends AbstractDAO<Order> {
     private static final String SQL_FIND_ALL_ORDER_NUMBERS = "SELECT order_number FROM ordering";
     private static final String SQL_FIND_ALL_ORDERS_BY_USER = "SELECT order_id, order_number, date " +
             "FROM ordering o JOIN order_status os ON (o.status = os.status_id) " +
-            "WHERE user_id = ? AND status_id = ?";
-    private static final String SQL_FIND_ALL_PENDING_ORDERS_BY_USER = "SELECT order_id, order_number, " +
-            "date FROM ordering o JOIN order_status os ON (o.status = os.status_id) " +
-            "WHERE user_id = ? AND status_id = ?";
+            "WHERE user_id = ? AND status = ?";
     private static final String SQL_FIND_STATUS_ID_BY_NAME = "SELECT * FROM order_status " +
             "WHERE status_name = ?";
     private static final String SQL_FIND_STATUS_NAME_BY_ID = "SELECT * FROM order_status " +
             "WHERE status_id = ?";
-    private static final String SQL_SELECT_ALL_PENDING_ORDERS_BY_DATE = "SELECT order_number, first_name, last_name, " +
-            "date FROM ordering o JOIN user u ON (u.user_id = o.user_id) " +
-            "WHERE date = ?";
-    private static final String SQL_CREATE_NEW_ORDER = "INSERT INTO ordering (order_number, user_id, date, status)" +
-            "VALUES (?, ?, ?, ?)";
+    private static final String SQL_SELECT_ALL_ORDERS_BY_DATE_AND_STATUS = "SELECT order_id, order_number, user_id, " +
+            "date, comment FROM ordering " +
+            "WHERE date = ? and status = ?";
+    private static final String SQL_CREATE_NEW_ORDER = "INSERT INTO ordering (order_number, user_id, date, comment, status)" +
+            "VALUES (?, ?, ?, ?, ?)";
+    private static final String SQL_CHANGE_STATUS = "UPDATE ordering SET status = + ? " +
+            "WHERE order_number = ?";
     public static final String SQL_SELECT_LAST_ORDER_ID = "SELECT @@IDENTITY AS IDENTITY";
+
     private static String driverName = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_DRIVER_NAME);
     private static String url = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_URL);
     private static String user_name = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_USER);
@@ -49,7 +49,7 @@ public class OrderDAO extends AbstractDAO<Order> {
             orderNumbers = new ArrayList<>();
 
             try {
-                if (resultSet.next()) {
+                while (resultSet.next()) {
                     orderNumbers.add(Integer.parseInt(resultSet.getString("order_number")));
                 }
             } catch (SQLException e1) {
@@ -124,7 +124,7 @@ public class OrderDAO extends AbstractDAO<Order> {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL_ORDERS_BY_USER)) {
             preparedStatement.setInt(1, user.getId());
-            preparedStatement.setInt(2, findStatusID("completed"));
+            preparedStatement.setInt(2, findStatusID("closed"));
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 orders = new ArrayList<>();
@@ -160,7 +160,7 @@ public class OrderDAO extends AbstractDAO<Order> {
         Connection connection = pool.getConnection();
 
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL_PENDING_ORDERS_BY_USER)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL_ORDERS_BY_USER)) {
             preparedStatement.setInt(1, user.getId());
             preparedStatement.setInt(2, findStatusID("in progress"));
 
@@ -192,12 +192,12 @@ public class OrderDAO extends AbstractDAO<Order> {
 
     public List<Order> findAllPendingOrdersByDate(Date date) {
         List<Order> orders = null;
-        ConfigManager config = ConfigManager.getInstance();
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
         Connection connection = pool.getConnection();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_PENDING_ORDERS_BY_DATE)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_ORDERS_BY_DATE_AND_STATUS)) {
             preparedStatement.setDate(1, date);
+            preparedStatement.setInt(2, findStatusID("in progress"));
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 orders = new ArrayList<>();
@@ -212,8 +212,50 @@ public class OrderDAO extends AbstractDAO<Order> {
 
                     Order order = new Order();
                     order.setOrderNumber(resultSet.getString("order_number"));
-                    order.getUser().setFirstName(userDAO.findFirstNameByID(resultSet.getInt("user_id")));
-                    order.getUser().setLastName(userDAO.findLastNameByID(resultSet.getInt("user_id")));
+                    order.setUser(userDAO.findEntityById(resultSet.getInt("user_id")));
+                    order.setItems(items);
+                    order.setRequestedDate(resultSet.getDate("date"));
+                    order.setComment(resultSet.getString("comment"));
+                    orders.add(order);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                log.error("SQL error " + e.toString());
+            }
+
+            pool.freeConnection(connection);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            log.error("SQL error " + e.toString());
+        }
+
+        return orders;
+    }
+
+    public List<Order> findAllCompletedOrdersByDate(Date date) {
+        List<Order> orders = null;
+        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
+        Connection connection = pool.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_ORDERS_BY_DATE_AND_STATUS)) {
+            preparedStatement.setDate(1, date);
+            preparedStatement.setInt(2, findStatusID("completed"));
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                orders = new ArrayList<>();
+
+                ProductDAO productDAO = new ProductDAO();
+                UserDAO userDAO = new UserDAO();
+
+                while (resultSet.next()) {
+                    int orderID = resultSet.getInt("order_id");
+                    LineItemDAO lineItemDAO = new LineItemDAO();
+                    List<LineItem> items = lineItemDAO.findALL(orderID);
+
+                    Order order = new Order();
+                    order.setOrderNumber(resultSet.getString("order_number"));
+                    order.setUser(userDAO.findEntityById(resultSet.getInt("user_id")));
                     order.setItems(items);
                     order.setRequestedDate(resultSet.getDate("date"));
                     orders.add(order);
@@ -232,6 +274,49 @@ public class OrderDAO extends AbstractDAO<Order> {
 
         return orders;
     }
+
+    public List<Order> findAllClosedOrdersByDate(Date date) {
+        List<Order> orders = null;
+        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
+        Connection connection = pool.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_ORDERS_BY_DATE_AND_STATUS)) {
+            preparedStatement.setDate(1, date);
+            preparedStatement.setInt(2, findStatusID("closed"));
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                orders = new ArrayList<>();
+
+                ProductDAO productDAO = new ProductDAO();
+                UserDAO userDAO = new UserDAO();
+
+                while (resultSet.next()) {
+                    int orderID = resultSet.getInt("order_id");
+                    LineItemDAO lineItemDAO = new LineItemDAO();
+                    List<LineItem> items = lineItemDAO.findALL(orderID);
+
+                    Order order = new Order();
+                    order.setOrderNumber(resultSet.getString("order_number"));
+                    order.setUser(userDAO.findEntityById(resultSet.getInt("user_id")));
+                    order.setItems(items);
+                    order.setRequestedDate(resultSet.getDate("date"));
+                    orders.add(order);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                log.error("SQL error " + e.toString());
+            }
+
+            pool.freeConnection(connection);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            log.error("SQL error " + e.toString());
+        }
+
+        return orders;
+    }
+
 
     @Override
     public Order findEntityById(int id) {
@@ -269,7 +354,8 @@ public class OrderDAO extends AbstractDAO<Order> {
             preparedStatement.setString(1, order.getOrderNumber());
             preparedStatement.setInt(2, order.getUser().getId());
             preparedStatement.setDate(3, sqlDate);
-            preparedStatement.setInt(4, findStatusID(order.getStatus()));
+            preparedStatement.setString(4,order.getComment());
+            preparedStatement.setInt(5, findStatusID(order.getStatus()));
             preparedStatement.executeUpdate();
 
             try (Statement statement = connection.createStatement();
@@ -295,6 +381,43 @@ public class OrderDAO extends AbstractDAO<Order> {
         return false;
     }
 
+    public  boolean updatePendingOrder(String orderNumber) {
+        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
+        Connection connection = pool.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CHANGE_STATUS)) {
+            preparedStatement.setInt(1, findStatusID("completed"));
+            preparedStatement.setString(2, orderNumber);
+            preparedStatement.executeUpdate();
+
+            pool.freeConnection(connection);
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            log.error("SQL error " + e.toString());
+        }
+        return false;
+    }
+
+    public  boolean updateCompletedOrder(String orderNumber) {
+        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
+        Connection connection = pool.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CHANGE_STATUS)) {
+            preparedStatement.setInt(1, findStatusID("closed"));
+            preparedStatement.setString(2, orderNumber);
+            preparedStatement.executeUpdate();
+
+            pool.freeConnection(connection);
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            log.error("SQL error " + e.toString());
+        }
+        return false;
+    }
     @Override
     public Order update(Order order) {
         return null;

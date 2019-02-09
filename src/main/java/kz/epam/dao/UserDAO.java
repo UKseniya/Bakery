@@ -28,6 +28,8 @@ public class UserDAO extends AbstractDAO<User> {
             "WHERE login = ? AND password = ?";
     private static final String SQL_FIND_USER_BY_LOGIN = "SELECT * FROM user " +
             "WHERE login = ?";
+    private static final String SQL_FIND_USER_BY_ID = "SELECT * FROM user " +
+            "WHERE user_id = ?";
     private static final String SQL_FIND_USER_FIRST_NAME_BY_ID = "SELECT * FROM user " +
             "WHERE user_id = ?";
     private static final String SQL_FIND_USER_LAST_NAME_BY_ID = "SELECT * FROM user " +
@@ -184,7 +186,31 @@ public class UserDAO extends AbstractDAO<User> {
 
     @Override
     public User findEntityById(int id) {
-        return null;
+        User user = null;
+        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, db_user, db_password, maxConn);
+        Connection connection = pool.getConnection();
+
+        try (PreparedStatement statement = connection.prepareStatement(SQL_FIND_USER_BY_ID)) {
+            statement.setInt(1, id);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    user = new User();
+                    user.setFirstName(resultSet.getString("first_name"));
+                    user.setLastName(resultSet.getString("last_name"));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setPhoneNumber(resultSet.getString("phone"));
+                }
+                pool.freeConnection(connection);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                log.error("SQL error " + e.toString());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            log.error("SQL error " + e.toString());
+        }
+        return user;
     }
 
 
@@ -192,7 +218,6 @@ public class UserDAO extends AbstractDAO<User> {
     public int findEntityByID(User entity) {
         return 0;
     }
-
 
     @Override
     public boolean delete(int id) {

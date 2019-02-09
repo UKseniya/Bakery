@@ -8,6 +8,7 @@ import kz.epam.entities.Order;
 import kz.epam.entities.User;
 import kz.epam.message.MessageManager;
 
+import javax.naming.InitialContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
@@ -29,6 +30,7 @@ public class ConfirmOrder implements Command {
         User user = (User) session.getAttribute("user");
         Cart cart = (Cart) session.getAttribute("cart");
         String receivedDate = request.getParameter("date");
+        String comment = request.getParameter("comment");
 
         DateFormat formatter;
         formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -47,7 +49,13 @@ public class ConfirmOrder implements Command {
 //            int order_number = random.nextInt(MAXIMUM_ORDERS);
             List<Integer> usedNumbers = orderDAO.findAllOrderNumbers();
             if (usedNumbers.size() != 0) {
-                orderNumber = String.format("%06d", usedNumbers.get(usedNumbers.size()-1)+1);
+                for (int i = 0; i < usedNumbers.size()+1; i++) {
+                    if (!usedNumbers.contains(INITIAL_NUMBER)) {
+                        orderNumber = String.format("%06d",INITIAL_NUMBER);
+                        break;
+                    }
+                    INITIAL_NUMBER++;
+                }
             }
             else {
                 orderNumber = String.format("%06d",INITIAL_NUMBER);
@@ -59,6 +67,7 @@ public class ConfirmOrder implements Command {
                 order.setUser(user);
                 order.setItems(cart.getItems());
                 order.setRequestedDate(date);
+                order.setComment(comment);
                 order.setStatus("in progress");
                 boolean created = orderDAO.create(order);
                 cart.getItems().clear();
@@ -79,6 +88,7 @@ public class ConfirmOrder implements Command {
 //                }
 //            }
 
+            session.setAttribute("cart", cart);
 
             page = "/jsp/user/confirmed_order.jsp";
         }

@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:requestEncoding value="UTF-8"/>
 <fmt:setLocale value="${userLocale}"/>
-<script src="jsp/javascript/show_hidden.js" type="text/javascript"></script>
+<script src="jsp/javascript/show_hidden.js" async type="text/javascript"></script>
 <%--<fmt:setLocale value="${cookie['lang'].value}"/>--%>
 <fmt:bundle basename="resources">
     <jsp:include page="../includes/header.jsp"/>
@@ -12,14 +12,6 @@
     <jsp:include page="../includes/user_menu.jsp"/>
 
     <body>
-    <%--<div id="left">--%>
-        <%--<c:if test="${!empty user}">--%>
-            <%--<a href="controller?command=select_products"><fmt:message key="make.order"/> </a> <br>--%>
-            <%--<a href="controller?command=review_orders"><fmt:message key="review.orders"/> </a> <br>--%>
-            <%--<a href="controller?command=review_cart"><fmt:message key="cart"/> </a> <br>--%>
-            <%--<a href="controller?command=logout"><fmt:message key="logout"/></a>--%>
-        <%--</c:if>--%>
-    <%--</div>--%>
     <section class="orders">
 
     <c:choose>
@@ -31,20 +23,21 @@
             <p><fmt:message key="order.list.current"/></p>
             <p><fmt:message key="order.number"/><span class="tab1"><fmt:message key="order.date.selected"/></span><span class="tab2"> <fmt:message key="total"/></span></p>
             <c:forEach var="order" items="${pendingOrders}">
-                <p><a href="javascript:unhide('details')";/> ${order.orderNumber} </a><span class="tab1">${order.requestedDate}</span><span class="tab2">${order.orderTotalCurrencyFormat}</span></p>
-                <div id="details" class="hidden">
-                    <i>&nbsp;&nbsp;&nbsp;&nbsp; <fmt:message key="name"/>&emsp;&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="quantity"/></i>
+                <p><a href="javascript:unhide('${order.orderNumber}')";/> ${order.orderNumber} </a><span class="tab1">${order.requestedDate}</span><span class="tab2">${order.orderTotalCurrencyFormat}</span></p>
+                <div id="${order.orderNumber}" class="hidden">
+                    <i>&nbsp;&nbsp;&nbsp;&nbsp; <fmt:message key="name"/></i>&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;<i><fmt:message key="quantity"/></i>
                     <c:forEach var="item" items="${order.items}">
                         <br/>
-                        &nbsp;&nbsp;&nbsp;&nbsp;${item.product.name}&emsp;&nbsp;&nbsp;&nbsp;&nbsp;${item.quantity}
+                        &nbsp;&nbsp;&nbsp;&nbsp;${item.product.name}&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;${item.quantity}
                         </c:forEach>
                 </div>
             </c:forEach>
+
         <br/>
         <p><a href="javascript:unhide('completedOrders')";/> <fmt:message key="order.list.all"/> </a></p>
             <div id="completedOrders" class="hidden">
             <c:choose>
-        <c:when test="${empty completedOrders}">
+        <c:when test="${empty closedOrders}">
         <p><fmt:message key="order.completed.empty"/></p>
 
         </c:when>

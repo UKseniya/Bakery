@@ -13,6 +13,7 @@ public class Product extends Entity implements Serializable {
     private String code;
     private String name;
     private double price;
+    private String status;
 
     public Product() {
     }
@@ -39,6 +40,14 @@ public class Product extends Entity implements Serializable {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getFormattedName() {

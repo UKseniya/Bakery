@@ -1,5 +1,6 @@
 package kz.epam.commands;
 
+import kz.epam.commands.admin.ShowTasks;
 import kz.epam.commands.user.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,7 +10,8 @@ public class CommandFactory {
     enum CommandEnum {
 
         LOGIN, LOGOUT, REGISTRATION, REGISTRATION_FORM, USER_PAGE, SELECT_PRODUCTS,
-        ADD_TO_CART, REVIEW_CART, UPDATE_CART, CHECKOUT, CONFIRM_ORDER, REVIEW_ORDERS, SHOW_ALL_ORDERS;
+        ADD_TO_CART, REVIEW_CART, UPDATE_CART, CHECKOUT, CONFIRM_ORDER, REVIEW_ORDERS,
+        SHOW_ALL_ORDERS, SHOW_TASKS;
     }
 
     public static CommandFactory getInstance() {
@@ -53,6 +55,8 @@ public class CommandFactory {
                 return new ShowPendingOrders();
             case SHOW_ALL_ORDERS:
                 return new ShowAllOrders();
+            case SHOW_TASKS:
+                return new ShowTasks();
             default:
                 throw new EnumConstantNotPresentException(
                         current.getDeclaringClass(), current.name());
