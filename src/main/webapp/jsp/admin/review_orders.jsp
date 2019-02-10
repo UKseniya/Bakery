@@ -13,8 +13,8 @@
 
     <body>
 
-    <section class="orders">
-
+    <section>
+    <a href="controller?command=show_all_requests"/><fmt:message key="order.list.all"/></a>
     <c:choose>
         <c:when test="${empty pendingOrders}">
             <a href="javascript:unhide('date')";/><fmt:message key="date.select"/></a>

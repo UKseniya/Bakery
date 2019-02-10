@@ -223,6 +223,11 @@ td, th {
   left:600px;
 }
 
+.tab3 {
+  position: absolute;
+  left: 850px;
+}
+
 /*.clicker {*/
   /*width:100px;*/
   /*height:100px;*/

@@ -12,11 +12,6 @@
 
     <body>
 
-    <%--<section class="center">--%>
-        <%--<h3><fmt:message key="ordering.instruction"/></h3><br>--%>
-        <%--<h3><fmt:message key="order.review.instruction"/></h3><br>--%>
-        <%--<h3><fmt:message key="order.confirm.instruction"/></h3><br>--%>
-    <%--</section>--%>
     </body>
     <jsp:include page="../includes/footer.jsp"/>
 </fmt:bundle>

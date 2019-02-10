@@ -1,5 +1,6 @@
 package kz.epam.dao;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
 import kz.epam.config.ConfigManager;
 import kz.epam.entities.*;
 import kz.epam.pool.ConnectionPool;
@@ -12,15 +13,17 @@ import java.util.List;
 public class OrderDAO extends AbstractDAO<Order> {
     private static final String SQL_FIND_ALL_ORDER_NUMBERS = "SELECT order_number FROM ordering";
     private static final String SQL_FIND_ALL_ORDERS_BY_USER = "SELECT order_id, order_number, date " +
-            "FROM ordering o JOIN order_status os ON (o.status = os.status_id) " +
+            "FROM ordering " +
             "WHERE user_id = ? AND status = ?";
     private static final String SQL_FIND_STATUS_ID_BY_NAME = "SELECT * FROM order_status " +
             "WHERE status_name = ?";
     private static final String SQL_FIND_STATUS_NAME_BY_ID = "SELECT * FROM order_status " +
             "WHERE status_id = ?";
-    private static final String SQL_SELECT_ALL_ORDERS_BY_DATE_AND_STATUS = "SELECT order_id, order_number, user_id, " +
+    private static final String SQL_FIND_ALL_ORDERS_BY_DATE_AND_STATUS = "SELECT order_id, order_number, user_id, " +
             "date, comment FROM ordering " +
             "WHERE date = ? and status = ?";
+    private static final String SQL_FIND_ALL_ORDERS = "SELECT order_id, order_number, user_id, " +
+            "date, comment, status FROM ordering";
     private static final String SQL_CREATE_NEW_ORDER = "INSERT INTO ordering (order_number, user_id, date, comment, status)" +
             "VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_CHANGE_STATUS = "UPDATE ordering SET status = + ? " +
@@ -36,7 +39,38 @@ public class OrderDAO extends AbstractDAO<Order> {
 
     @Override
     public List findAll() {
-        return null;
+        List<Order> orders = null;
+        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
+        Connection connection = pool.getConnection();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(SQL_FIND_ALL_ORDERS)) {
+            orders = new ArrayList<>();
+
+            UserDAO userDAO = new UserDAO();
+
+            while (resultSet.next()) {
+                int orderID = resultSet.getInt("order_id");
+                LineItemDAO lineItemDAO = new LineItemDAO();
+
+                Order order = new Order();
+                order.setOrderNumber(resultSet.getString("order_number"));
+                order.setUser(userDAO.findEntityById(resultSet.getInt("user_id")));
+                order.setItems(lineItemDAO.findALL(orderID));
+                order.setRequestedDate(resultSet.getDate("date"));
+                order.setComment(resultSet.getString("comment"));
+                order.setStatus(findStatusNameByID(resultSet.getInt("status")));
+                orders.add(order);
+            }
+
+            pool.freeConnection(connection);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            log.error("SQL error " + e.toString());
+        }
+
+        return orders;
     }
 
     public List<Integer> findAllOrderNumbers() {
@@ -195,7 +229,7 @@ public class OrderDAO extends AbstractDAO<Order> {
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
         Connection connection = pool.getConnection();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_ORDERS_BY_DATE_AND_STATUS)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL_ORDERS_BY_DATE_AND_STATUS)) {
             preparedStatement.setDate(1, date);
             preparedStatement.setInt(2, findStatusID("in progress"));
 
@@ -238,7 +272,7 @@ public class OrderDAO extends AbstractDAO<Order> {
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
         Connection connection = pool.getConnection();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_ORDERS_BY_DATE_AND_STATUS)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL_ORDERS_BY_DATE_AND_STATUS)) {
             preparedStatement.setDate(1, date);
             preparedStatement.setInt(2, findStatusID("completed"));
 
@@ -280,7 +314,7 @@ public class OrderDAO extends AbstractDAO<Order> {
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
         Connection connection = pool.getConnection();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_ORDERS_BY_DATE_AND_STATUS)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL_ORDERS_BY_DATE_AND_STATUS)) {
             preparedStatement.setDate(1, date);
             preparedStatement.setInt(2, findStatusID("closed"));
 

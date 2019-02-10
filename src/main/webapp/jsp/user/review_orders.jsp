@@ -34,7 +34,7 @@
             </c:forEach>
 
         <br/>
-        <p><a href="javascript:unhide('completedOrders')";/> <fmt:message key="order.list.all"/> </a></p>
+        <p><a href="javascript:unhide('completedOrders')";/> <fmt:message key="order.review.completed"/> </a></p>
             <div id="completedOrders" class="hidden">
             <c:choose>
         <c:when test="${empty completedOrders}">
@@ -55,7 +55,7 @@
                     </c:forEach>
                 </div>
             </c:forEach>
-        </div>
+
         </c:otherwise>
         </c:choose>
             <%--<table id="pending_orders">--%>

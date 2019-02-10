@@ -9,11 +9,12 @@ import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class ShowTasks implements Command {
+public class ShowOpenRequests implements Command {
     private List<Order> pendingOrders;
     private List<Order> completedOrders;
 
@@ -41,8 +42,9 @@ public class ShowTasks implements Command {
         }
 
         Calendar calendar = Calendar.getInstance();
+        Date requestCompletionDate = calendar.getTime();
         calendar.add(Calendar.DAY_OF_YEAR, 1);
-        Date currentDate = calendar.getTime();
+        Date requestProcessingDate = calendar.getTime();
 
         if (changeButton != null) {
             DateFormat formatter;
@@ -54,7 +56,7 @@ public class ShowTasks implements Command {
             }
         }
         else {
-            date = currentDate;
+            date = requestProcessingDate;
         }
 
         java.util.Date utilCurrentDate = date;
@@ -64,7 +66,7 @@ public class ShowTasks implements Command {
 
         session.setAttribute("pendingOrders", pendingOrders);
 
-        java.util.Date utilPickupDate = currentDate;
+        java.util.Date utilPickupDate = requestCompletionDate;
         java.sql.Date sqlPickUpDate = new java.sql.Date(utilPickupDate.getTime());
 
         completedOrders = orderDAO.findAllCompletedOrdersByDate(sqlPickUpDate);
