@@ -13,6 +13,7 @@
     <body>
 
     <section class="checkout">
+        <p><fmt:message key="ordering.date.instructions"/> </p>
         <form name="confirm_order" method="POST" action="controller">
             <input type="hidden" name="command" value="confirm_order"> <br/>
             <p><fmt:message key="order"/>: </p>
@@ -23,7 +24,8 @@
                 </c:forEach>
 
             <br/>
-                ${dateErrorMessage}
+            <strong><em>${dateNullMessage}</em></strong>
+            <strong><em>${dateErrorMessage}</em></strong>
             <br/>
             <p><fmt:message key="order.date"/>: <input type="date" name="date" value="" oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
                                                        oninput="this.setCustomValidity('')" ></p>

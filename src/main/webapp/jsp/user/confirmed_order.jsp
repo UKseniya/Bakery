@@ -11,14 +11,7 @@
     <jsp:include page="../includes/user_menu.jsp"/>
 
     <body>
-    <%--<div id="left">--%>
-        <%--<c:if test="${!empty user}">--%>
-            <%--<a href="controller?command=select_products"><fmt:message key="make.order"/> </a> <br>--%>
-            <%--<a href="controller?command=review_orders"><fmt:message key="review.orders"/> </a> <br>--%>
-            <%--<a href="controller?command=review_cart"><fmt:message key="cart"/> </a> <br>--%>
-            <%--<a href="controller?command=logout"><fmt:message key="logout"/></a>--%>
-        <%--</c:if>--%>
-    <%--</div>--%>
+
     <section class="center">
         <p><fmt:message key="order.confirm.information"/> <br/><br/>
             <fmt:message key="email"/>&nbsp;<a href="mailto:customer.support@test.com">customer.support@test.com</a><br/>

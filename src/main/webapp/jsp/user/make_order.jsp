@@ -24,7 +24,7 @@
                 <form name="productList" method="POST" action="controller">
                     <input type="hidden" name="command" value="add_to_cart">
                     <tr>
-                        <td><img src="/Bakery/jsp/style/pictures/${product.name}.jpg" width="100" height="100">
+                        <td><img src="pictures/${product.name}.jpg" width="100" height="100">
                         </td>
                         <td><fmt:message key="product.name.${product.formattedName}"/></td>
                         <td>${product.priceCurrencyFormat}</td>

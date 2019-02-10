@@ -34,7 +34,7 @@
                             <td><input type="hidden" name="productCode" value="${item.product.code}">
                                 <input type="hidden" name="quantity" value="${item.quantity}">
                                 <input type="submit" name="addButton" value="+"></td>
-                            <td>${item.quantity}</td>
+                            <td border="0px">${item.quantity}</td>
                             <td><input type="hidden" name="productCode" value="${item.product.code}">
                                 <input type="hidden" name="quantity" value="${item.quantity}">
                                 <input type="submit" name="removeButton" value="-"></td>

@@ -13,8 +13,8 @@
             <title>Home Bakery</title>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-            <link rel="stylesheet" href="/Bakery/jsp/style/bakery.css">
-            <link rel="icon" type="image/x-icon" href="/Bakery/jsp/style/favicon.ico" />
+            <link rel="stylesheet" href="/Bakery/style/bakery.css">
+            <link rel="icon" type="image/x-icon" href="/Bakery/style/favicon.ico" />
         </head>
             <header>
                 <h1><fmt:message key="title"/></h1>

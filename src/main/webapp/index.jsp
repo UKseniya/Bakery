@@ -7,6 +7,7 @@
 <fmt:setLocale value="${userLocale}"/>
 <%--<fmt:setLocale value="${cookie['lang'].value}" />--%>
 <fmt:bundle basename="resources">
+
     <jsp:include page="jsp/includes/header.jsp"/>
     <jsp:include page="jsp/includes/column_right_home.jsp"/>
     <jsp:include page="jsp/includes/welcome.jsp"/>
@@ -25,6 +26,7 @@
 <section class="center">
     <br><br>
     <h3><fmt:message key="welcome"/></h3><br>
+    <h3><fmt:message key="ordering.date.instructions"/> </h3><br/>
     <h3><fmt:message key="info.selection"/></h3><br>
     <h3><fmt:message key="info.ordering"/></h3><br>
 </section>

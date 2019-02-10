@@ -23,9 +23,8 @@ public class LocaleFilter implements Filter {
             req.getSession().setAttribute(Constants.LOCALE,req.getLocale());
         }
         String language = servletRequest.getParameter(Constants.LANGUAGE);
-        String country = servletRequest.getParameter(Constants.COUNTRY);
         if (language != null) {
-            Locale locale = new Locale(language, country);
+            Locale locale = new Locale(language);
             req.getSession().setAttribute(Constants.LOCALE, locale);
         }
 
