@@ -17,8 +17,8 @@ public class UserPage implements Command {
         if (user.getRole().equals("user")) {
             page = "/jsp/user/user.jsp";
         }
-        else if (user.getRole().equals("kz/epam/admin")){
-            page = "/jsp/kz.epam.admin/kz.epam.admin.jsp";
+        else if (user.getRole().equals("admin")){
+            page = "/jsp/admin/admin.jsp";
         }
 
         return page;

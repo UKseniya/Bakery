@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:requestEncoding value="UTF-8"/>
 <fmt:setLocale value="${userLocale}"/>
-<script src="jsp/javascript/show_hidden.js" async type="text/javascript"></script>
+<script src="javascript/show_hidden.js" async type="text/javascript"></script>
 <%--<fmt:setLocale value="${cookie['lang'].value}"/>--%>
 <fmt:bundle basename="resources">
     <jsp:include page="../includes/header.jsp"/>
@@ -14,10 +14,9 @@
     <body>
 
     <section>
-    <a href="controller?command=show_all_requests"/><fmt:message key="order.list.all"/></a>
-    <c:choose>
-        <c:when test="${empty pendingOrders}">
-            <a href="javascript:unhide('date')";/><fmt:message key="date.select"/></a>
+
+        <a href="javascript:unhide('date')";/><fmt:message key="date.select"/></a> &nbsp; &nbsp; &nbsp;
+        <a href="controller?command=show_all_requests"/><fmt:message key="order.list.all"/></a><br/>
         <div id="date" class="hidden">
             <form name="date" method="GET" action="controller">
                 <input type="hidden" name="command" value="show_tasks">
@@ -25,16 +24,16 @@
                 <input type="submit" name="changeDateButton" value="<fmt:message key="button.ok"/>">
             </form>
         </div>
+
+    <c:choose>
+
+        <c:when test="${empty pendingOrders}">
+            <br/><br/>
                 <p><fmt:message key="tasks.empty"/></p>
 
         </c:when>
         <c:otherwise>
-            <fmt:message key="date.select"/>
-            <form name="date" method="GET" action="controller">
-                <input type="hidden" name="command" value="show_tasks">
-                <input type="date" name="date" value="">
-                <input type="submit" name="changeDateButton" value="<fmt:message key="button.ok"/>">
-            </form>
+            <br/><br/>
             <h1><fmt:message key="tasks.todo"/> <fmt:formatDate value="${now}" type="date"/></h1>
             <c:forEach var="order" items="${pendingOrders}">
                 <b><fmt:message key="order.number"/>: &nbsp; ${order.orderNumber}</b>&nbsp;&nbsp;&nbsp;&nbsp;

@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:requestEncoding value="UTF-8"/>
 <fmt:setLocale value="${userLocale}"/>
-<script src="jsp/javascript/show_hidden.js" async type="text/javascript"></script>
+<script src="javascript/show_hidden.js" async type="text/javascript"></script>
 <%--<fmt:setLocale value="${cookie['lang'].value}"/>--%>
 <fmt:bundle basename="resources">
     <jsp:include page="../includes/header.jsp"/>
