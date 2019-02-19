@@ -7,7 +7,6 @@ import kz.epam.entities.Cart;
 import kz.epam.entities.Order;
 import kz.epam.entities.User;
 import kz.epam.message.MessageManager;
-import sun.util.locale.LocaleUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,34 +18,45 @@ import java.util.*;
 import static java.util.Calendar.DAY_OF_WEEK;
 
 public class ConfirmOrder implements Command {
+    private static final String COMMENT = "comment";
+    private static final String ORDER_NUMBER_FORMAT = "%06d";
+    private static final String DATE_ERROR = "dateErrorMessage";
+    private static final String NULL_DATE = "dateNullMessage";
+    private static final String WRONG_DATE_MESSAGE = "error.date.wrong";
+    private static final String NULL_DATE_MESSAGE = "error.date.null";
+    private static final String PATH_TO_CHECKOUT_PAGE = "/jsp/user/checkout.jsp";
+    private static final String PATH_TO_CONFIRMATION_PAGE = "/jsp/user/confirmed_order.jsp";
     private static int INITIAL_NUMBER = 000001;
+
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
         Date date = null;
 
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        Cart cart = (Cart) session.getAttribute("cart");
-        String requestedDate = request.getParameter("date");
-        String comment = request.getParameter("comment");
+        User user = (User) session.getAttribute(Constants.USER);
+        Cart cart = (Cart) session.getAttribute(Constants.CART);
+        String requestedDate = request.getParameter(Constants.DATE);
+        String comment = request.getParameter(COMMENT);
 
         String language = session.getAttribute(Constants.LOCALE).toString();
 
         Locale locale = new Locale(language);
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 2);
+        Date minimumDate = calendar.getTime();
+
+
+
         DateFormat formatter;
-        formatter = new SimpleDateFormat("yyyy-MM-dd");
+        formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
         try {
+            minimumDate = formatter.parse(formatter.format(calendar.getTime()));
             date = formatter.parse(requestedDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, 2);
-        Date minimumDate = calendar.getTime();
 
         calendar.setTime(date);
 
@@ -56,12 +66,10 @@ public class ConfirmOrder implements Command {
 //            calendar.setFirstDayOfWeek(2);
             int dayOfWeek = calendar.get(DAY_OF_WEEK);
 
-//            int firstDayOfWeek = calendar.getFirstDayOfWeek();
-
-            if (calendar.before(minimumDate) || dayOfWeek == Calendar.SUNDAY || dayOfWeek == Calendar.MONDAY) {
-                request.setAttribute("dateErrorMessage",
-                        MessageManager.getInstance(locale).getProperty("error.date.wrong"));
-                page = "/jsp/user/checkout.jsp";
+            if (date.before(minimumDate) || dayOfWeek == Calendar.SUNDAY || dayOfWeek == Calendar.MONDAY) {
+                request.setAttribute(DATE_ERROR,
+                        MessageManager.getInstance(locale).getProperty(WRONG_DATE_MESSAGE));
+                page = PATH_TO_CHECKOUT_PAGE;
 
             }
             else {
@@ -70,16 +78,16 @@ public class ConfirmOrder implements Command {
                 if (usedNumbers.size() != 0) {
                     for (int i = 0; i < usedNumbers.size()+1; i++) {
                         if (!usedNumbers.contains(INITIAL_NUMBER)) {
-                            orderNumber = String.format("%06d",INITIAL_NUMBER);
+                            orderNumber = String.format(ORDER_NUMBER_FORMAT,INITIAL_NUMBER);
                             break;
                         }
                         INITIAL_NUMBER++;
                     }
                 }
                 else {
-                    orderNumber = String.format("%06d",INITIAL_NUMBER);
+                    orderNumber = String.format(ORDER_NUMBER_FORMAT,INITIAL_NUMBER);
                 }
-//            if (usedNumbers.size() == 0 || !usedNumbers.contains(order_number)) {
+
                 if (!usedNumbers.contains(Integer.parseInt(orderNumber))) {
                     Order order = new Order();
                     order.setOrderNumber(orderNumber);
@@ -87,21 +95,21 @@ public class ConfirmOrder implements Command {
                     order.setItems(cart.getItems());
                     order.setRequestedDate(date);
                     order.setComment(comment);
-                    order.setStatus("in progress");
+                    order.setStatus(Constants.IN_PROGRESS_STATUS);
                     boolean created = orderDAO.create(order);
                     cart.getItems().clear();
                 }
 
-                session.setAttribute("cart", cart);
+                session.setAttribute(Constants.CART, cart);
 
-                page = "/jsp/user/confirmed_order.jsp";
+                page = PATH_TO_CONFIRMATION_PAGE;
             }
 
         }
         else {
-            request.setAttribute("dateNullMessage",
-                    MessageManager.getInstance(locale).getProperty("error.date.null"));
-            page = "/jsp/user/checkout.jsp";
+            request.setAttribute(NULL_DATE,
+                    MessageManager.getInstance(locale).getProperty(NULL_DATE_MESSAGE));
+            page = PATH_TO_CHECKOUT_PAGE;
         }
 
         return page;

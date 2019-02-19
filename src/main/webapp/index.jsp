@@ -5,9 +5,7 @@
 <%@ taglib prefix="C" uri="http://java.sun.com/jsp/jstl/core" %>
 <fmt:requestEncoding value="UTF-8" />
 <fmt:setLocale value="${userLocale}"/>
-<%--<fmt:setLocale value="${cookie['lang'].value}" />--%>
 <fmt:bundle basename="resources">
-
     <jsp:include page="jsp/includes/header.jsp"/>
     <jsp:include page="jsp/includes/column_right_home.jsp"/>
     <jsp:include page="jsp/includes/welcome.jsp"/>
@@ -16,11 +14,11 @@
 <ul class="login-option">
 <c:choose>
 <c:when test="${empty user}">
-    <li><a href="controller"><fmt:message key="sign-in"/></a></li>
+    <li><a href="controller?command=no_command"><fmt:message key="sign-in"/></a></li>
     <li><a href="controller?command=registration"/><fmt:message key="info.signup"/> </a></li>
 </c:when>
 <c:otherwise>
-    <a href="controller?command=user_page"/><fmt:message key="page.account"/> </c:otherwise>
+    <a href="controller?command=user_page"/><fmt:message key="page.account"/></a> </c:otherwise>
     </c:choose>
 </ul>
 <section class="center">

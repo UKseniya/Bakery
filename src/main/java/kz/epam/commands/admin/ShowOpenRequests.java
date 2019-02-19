@@ -1,6 +1,7 @@
 package kz.epam.commands.admin;
 
 import kz.epam.commands.Command;
+import kz.epam.constants.Constants;
 import kz.epam.dao.OrderDAO;
 import kz.epam.entities.Order;
 
@@ -9,12 +10,18 @@ import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class ShowOpenRequests implements Command {
+    private static final String CHANGE_BUTTON = "private static final String CHANGE_BUTTON = \"\";";
+    private static final String COMPLETE_BUTTON = "completeButton";
+    private static final String CLOSE_BUTTON = "closeButton";
+    private static final String RECEIVED_DATE = "date";
+    private static final String ORDER_NUMBER = "orderNumber";
+    private static final String PATH_TO_REVIEW_ORDERS = "/jsp/admin/review_orders.jsp";
+
     private List<Order> pendingOrders;
     private List<Order> completedOrders;
 
@@ -24,12 +31,13 @@ public class ShowOpenRequests implements Command {
         String page;
 
         HttpSession session = request.getSession();
+        String locale = session.getAttribute(Constants.LOCALE).toString();
 
-        String changeButton = request.getParameter("changeDateButton");
-        String completeButton = request.getParameter("completeButton");
-        String closeButton = request.getParameter("closeButton");
-        String receivedDate = request.getParameter("date");
-        String orderNumber = request.getParameter("orderNumber");
+        String changeButton = request.getParameter(CHANGE_BUTTON);
+        String completeButton = request.getParameter(COMPLETE_BUTTON);
+        String closeButton = request.getParameter(CLOSE_BUTTON);
+        String receivedDate = request.getParameter(RECEIVED_DATE);
+        String orderNumber = request.getParameter(ORDER_NUMBER);
 
         OrderDAO orderDAO = new OrderDAO();
 
@@ -48,7 +56,7 @@ public class ShowOpenRequests implements Command {
 
         if (changeButton != null) {
             DateFormat formatter;
-            formatter = new SimpleDateFormat("yyyy-MM-dd");
+            formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
             try {
                 date = formatter.parse(receivedDate);
             } catch (ParseException e) {
@@ -62,18 +70,18 @@ public class ShowOpenRequests implements Command {
         java.util.Date utilCurrentDate = date;
         java.sql.Date sqlCurrentDate = new java.sql.Date(utilCurrentDate.getTime());
 
-        pendingOrders = orderDAO.findAllPendingOrdersByDate(sqlCurrentDate);
+        pendingOrders = orderDAO.findAllPendingOrdersByDate(sqlCurrentDate, locale);
 
-        session.setAttribute("pendingOrders", pendingOrders);
+        session.setAttribute(Constants.PENDING_ORDERS, pendingOrders);
 
         java.util.Date utilPickupDate = requestCompletionDate;
         java.sql.Date sqlPickUpDate = new java.sql.Date(utilPickupDate.getTime());
 
-        completedOrders = orderDAO.findAllCompletedOrdersByDate(sqlPickUpDate);
+        completedOrders = orderDAO.findAllCompletedOrdersByDate(sqlPickUpDate, locale);
 
-        session.setAttribute("completedOrders", completedOrders);
+        session.setAttribute(Constants.COMPLETE_ORDERS, completedOrders);
 
-        page = "/jsp/admin/review_orders.jsp";
+        page = PATH_TO_REVIEW_ORDERS;
 
         return page;
     }

@@ -3,11 +3,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:requestEncoding value="UTF-8"/>
 <fmt:setLocale value="${userLocale}"/>
-<%--<fmt:setLocale value="${cookie['lang'].value}"/>--%>
 <fmt:bundle basename="resources">
     <jsp:include page="../includes/header.jsp"/>
     <jsp:include page="../includes/column_right_home.jsp"/>
-    <jsp:include page="../includes/welcome.jsp"/>
+    <jsp:include page="../includes/authorization.jsp"/>
     <jsp:include page="../includes/user_menu.jsp"/>
 
     <body>
@@ -24,9 +23,9 @@
                 <form name="productList" method="POST" action="controller">
                     <input type="hidden" name="command" value="add_to_cart">
                     <tr>
-                        <td><img src="pictures/${product.name}.jpg" width="100" height="100">
+                        <td><img src="pictures/${product.formattedCode}.jpg" width="100" height="100">
                         </td>
-                        <td><fmt:message key="product.name.${product.formattedName}"/></td>
+                        <td>${product.name}</td>
                         <td>${product.priceCurrencyFormat}</td>
                         <td>
                             <input type="hidden" name="productCode" value="${product.code}">

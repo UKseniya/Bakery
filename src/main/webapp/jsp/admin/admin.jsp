@@ -7,7 +7,7 @@
 <fmt:bundle basename="resources">
     <jsp:include page="../includes/header.jsp"/>
     <jsp:include page="../includes/column_right_home.jsp"/>
-    <jsp:include page="../includes/welcome.jsp"/>
+    <jsp:include page="../includes/authorization.jsp"/>
     <jsp:include page="../includes/admin_menu.jsp"/>
 
     <body>

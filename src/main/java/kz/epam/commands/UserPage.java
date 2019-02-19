@@ -1,5 +1,6 @@
 package kz.epam.commands;
 
+import kz.epam.constants.Constants;
 import kz.epam.entities.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,13 +13,13 @@ public class UserPage implements Command {
         String page = null;
 
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute(Constants.USER);
 
-        if (user.getRole().equals("user")) {
-            page = "/jsp/user/user.jsp";
+        if (user.getRole().equals(Constants.USER)) {
+            page = Constants.PATH_TO_USER_PAGE;
         }
-        else if (user.getRole().equals("admin")){
-            page = "/jsp/admin/admin.jsp";
+        else if (user.getRole().equals(Constants.ADMIN)){
+            page = Constants.PATH_TO_ADMIN_PAGE;
         }
 
         return page;

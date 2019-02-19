@@ -1,18 +1,21 @@
 package kz.epam.commands;
 
-import kz.epam.commands.admin.ShowAllRequests;
-import kz.epam.commands.admin.ShowOpenRequests;
+import kz.epam.commands.admin.*;
+import kz.epam.commands.menu.ShowAvailableProducts;
 import kz.epam.commands.user.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class CommandFactory {
+    private static final String COMMAND = "command";
     private static CommandFactory instance = null;
     enum CommandEnum {
 
-        LOGIN, LOGOUT, REGISTRATION, REGISTRATION_FORM, USER_PAGE, SELECT_PRODUCTS,
+        NO_COMMAND, LOGIN, LOGOUT, REGISTRATION, REGISTRATION_FORM, USER_PAGE, SELECT_PRODUCTS,
         ADD_TO_CART, REVIEW_CART, UPDATE_CART, CHECKOUT, CONFIRM_ORDER, REVIEW_ORDERS,
-        SHOW_ALL_ORDERS, SHOW_TASKS, SHOW_ALL_REQUESTS;
+        SHOW_ALL_ORDERS, SHOW_TASKS, SHOW_ALL_REQUESTS, SHOW_AVAILABLE_PRODUCTS,
+        UPDATE_PRODUCT_LIST, SHOW_PRODUCT_INFO, UPDATE_PRODUCT_INFO, ADD_NEW_PRODUCT,
+        UPLOAD_PICTURE, SHOW_INCOME, SHOW_ANNUAL_INCOMES, SHOW_ALL_INCOMES;
     }
 
     public static CommandFactory getInstance() {
@@ -20,16 +23,18 @@ public class CommandFactory {
     }
 
     public static Command getCommand(HttpServletRequest request) {
-        // извлечение команды из запроса
 
-        String action = request.getParameter("command");
-        if (action == null || action.isEmpty()) {
-            // если команда не задана в текущем запросе
-            return new NoCommand();
-        }
-        // получение объекта, соответствующего команде
+        // Get the command from the request
+        String action = request.getParameter(COMMAND);
+//        if (action == null || action.isEmpty()) {
+//            // если команда не задана в текущем запросе
+//            return new NoCommand();
+//        }
+        // Receive object that corresponds to the request
         CommandEnum current = CommandEnum.valueOf(action.toUpperCase());
         switch (current) {
+            case NO_COMMAND:
+                return new NoCommand();
             case LOGIN:
                 return new Login();
             case LOGOUT:
@@ -60,6 +65,22 @@ public class CommandFactory {
                 return new ShowOpenRequests();
             case SHOW_ALL_REQUESTS:
                 return new ShowAllRequests();
+            case SHOW_AVAILABLE_PRODUCTS:
+                return new ShowAvailableProducts();
+            case UPDATE_PRODUCT_LIST:
+                return new UpdateProductList();
+            case SHOW_PRODUCT_INFO:
+                return new ShowProductInfo();
+            case UPDATE_PRODUCT_INFO:
+                return new UpdateProductInfo();
+            case ADD_NEW_PRODUCT:
+                return new AddNewProduct();
+            case UPLOAD_PICTURE:
+                return new UploadPicture();
+            case SHOW_INCOME:
+                return new ShowIncome();
+            case SHOW_ANNUAL_INCOMES:
+                return new ShowAnnualIncomes();
             default:
                 throw new EnumConstantNotPresentException(
                         current.getDeclaringClass(), current.name());

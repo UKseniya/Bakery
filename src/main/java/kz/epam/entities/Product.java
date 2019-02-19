@@ -1,17 +1,13 @@
 package kz.epam.entities;
 
-import kz.epam.constants.Constants;
-import sun.util.locale.LocaleUtils;
-
 import java.io.Serializable;
 import java.text.NumberFormat;
-import java.util.Currency;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class Product extends Entity implements Serializable {
     private String code;
     private String name;
+    private String description;
     private double price;
     private String status;
 
@@ -34,6 +30,14 @@ public class Product extends Entity implements Serializable {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public double getPrice() {
         return price;
     }
@@ -50,10 +54,10 @@ public class Product extends Entity implements Serializable {
         this.status = status;
     }
 
-    public String getFormattedName() {
-        String formattedname = null;
-        formattedname = this.name.toLowerCase().replace(" ", "");
-        return formattedname;
+    public String getFormattedCode() {
+        String formattedCode = null;
+        formattedCode = this.code.substring(0,3);
+        return formattedCode;
     }
 
     public String getPriceCurrencyFormat() {

@@ -30,14 +30,6 @@ public class LocaleFilter implements Filter {
 
         filterChain.doFilter(servletRequest, servletResponse);
 
-//        HttpServletRequest req = (HttpServletRequest) servletRequest;
-//        HttpServletResponse res = (HttpServletResponse) servletResponse;
-//        if (req.getParameter("cookieLocale") != null) {
-//            Cookie cookie = new Cookie("lang", req.getParameter("cookieLocale"));
-//            res.addCookie(cookie);
-//        }
-//
-//        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     @Override

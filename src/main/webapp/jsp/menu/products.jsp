@@ -1,65 +1,26 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<fmt:requestEncoding value="UTF-8"/>
-    <fmt:setLocale value="${userLocale}"/>
-<%--<fmt:setLocale value="${cookie['lang'].value}"/>--%>
-<fmt:bundle basename="resources">
-    <jsp:include page="../includes/header.jsp"/>
-    <jsp:include page="../includes/column_right_home.jsp"/>
-    <jsp:include page="../includes/welcome.jsp"/>
-    <body>
+    <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+        <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+        <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+        <fmt:requestEncoding value="UTF-8"/>
+        <fmt:setLocale value="${userLocale}"/>
+        <fmt:bundle basename="resources">
+            <jsp:include page="../includes/header.jsp"/>
+            <jsp:include page="../includes/column_right_home.jsp"/>
+            <jsp:include page="../includes/authorization.jsp"/>
+            <body>
+            <c:if test="!${empty user}">
+                <a href="controller?command=user_page"/><fmt:message key="page.account"/></a>
+            </c:if>
             <table id="description">
-    <tr>
-    <td><img src="/Bakery/pictures/Black Forest.jpg" width="200" height="200"></td>
-    <td><b><fmt:message key="product.name.blackforest"/></b><br/><br/><br/> <fmt:message key="product.description.blackforest"/> </td>
-    </tr>
-    <tr>
-    <td><img src="/Bakery/pictures/Red Velvet.jpg" width="200" height="200" ></td>
-    <td><b><fmt:message key="product.name.redvelvet"/></b><br/><br/><br/><fmt:message key="product.description.redvelvet"/> </td>
-    </tr>
-    <tr>
-    <td><img src="/Bakery/pictures/Cheesecake.jpg" width="200" height="200"></td>
-    <td><b><fmt:message key="product.name.cheesecake"/></b><br/><br/><br/><fmt:message key="product.description.cheesecake"/> </td>
-    </tr>
-    <tr>
-    <td><img src="/Bakery/pictures/Banoffee Pie.jpg" width="200" height="200"></td>
-    <td><b><fmt:message key="product.name.banoffeepie"/></b><br/><br/><br/><fmt:message key="product.description.banoffeepie"/> </td>
-    </tr>
-    <tr>
-    <td><img src="/Bakery/pictures/Napoleon.jpg" width="200" height="200"></td>
-    <td><b><fmt:message key="product.name.napoleon"/></b><br/><br/><br/><fmt:message key="product.description.napoleon"/> </td>
-    </tr>
-    <tr>
-    <td><img src="/Bakery/pictures/Carrot Cake.jpg" width="200" height="200"></td>
-    <td><b><fmt:message key="product.name.carrotcake"/></b><br/><br/><br/><fmt:message key="product.description.carrotcake"/> </td>
-    </tr>
-    <tr>
-    <td><img src="/Bakery/pictures/Kiev Cake.jpg" width="200" height="200"></td>
-    <td><b><fmt:message key="product.name.kievcake"/></b><br/><br/><br/><fmt:message key="product.description.kievcake"/> </td>
-    </tr>
-    <tr>
-    <td><img src="/Bakery/pictures/Honey Cake.jpg" width="200" height="200"></td>
-    <td><b><fmt:message key="product.name.honeycake"/></b><br/><br/><br/><fmt:message key="product.description.honeycake"/> </td>
-    </tr>
-    <tr>
-    <td><img src="/Bakery/pictures/Pavlova.jpg" width="200" height="200"></td>
-    <td><b><fmt:message key="product.name.pavlova"/></b><br/><br/><br/><fmt:message key="product.description.pavlova"/> </td>
-    </tr>
-    <tr>
-    <td><img src="/Bakery/pictures/Macarons.jpg" width="200" height="200"></td>
-    <td><b><fmt:message key="product.name.macarons"/></b><br/><br/><br/><fmt:message key="product.description.macarons"/> </td>
-    </tr>
-    <tr>
-    <td><img src="/Bakery/pictures/Brownie.jpg" width="200" height="200"></td>
-    <td><b><fmt:message key="product.name.brownie"/></b><br/><br/><br/><fmt:message key="product.description.brownie"/> </td>
-    </tr>
-    <tr>
-    <td><img src="/Bakery/pictures/Eclair.jpg" width="200" height="200"></td>
-    <td><b><fmt:message key="product.name.eclair"/></b><br/><br/><br/><fmt:message key="product.description.eclair"/> </td>
-    </tr>
-    </table>
-    <br/><br/><br/><br/>
-    </body>
-    <jsp:include page="../includes/footer.jsp"/>
-</fmt:bundle>
+            <c:forEach var="product" items="${availableProducts}">
+                <tr>
+                <td><img src="/Bakery/pictures/${product.formattedCode}.jpg" width="200" height="200"></td>
+                <td><b>${product.name}</b><br/><br/><br/> ${product.description} </td>
+                </tr>
+            </c:forEach>
+            <tr>
+            </table>
+            <br/><br/><br/><br/>
+            </body>
+            <jsp:include page="../includes/footer.jsp"/>
+        </fmt:bundle>

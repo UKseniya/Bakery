@@ -1,6 +1,7 @@
 package kz.epam.commands.user;
 
 import kz.epam.commands.Command;
+import kz.epam.constants.Constants;
 import kz.epam.dao.OrderDAO;
 import kz.epam.entities.Order;
 import kz.epam.entities.User;
@@ -10,20 +11,23 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public class ShowPendingOrders implements Command {
+    private static final String ORDERS = "orders";
+    private static final String PATH_TO_REVIEW_ORDERS_PAGE = "/jsp/user/review_orders.jsp";
     private List<Order> orders;
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
 
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+        String locale = session.getAttribute(Constants.LOCALE).toString();
+        User user = (User) session.getAttribute(Constants.USER);
 
         OrderDAO orderDAO = new OrderDAO();
-        orders = orderDAO.findAllPendingOrdersByUser(user);
+        orders = orderDAO.findAllPendingOrdersByUser(user, locale);
 
-        session.setAttribute("orders", orders);
+        session.setAttribute(ORDERS, orders);
 
-        page = "/jsp/user/review_orders.jsp";
+        page = PATH_TO_REVIEW_ORDERS_PAGE;
 
         return page;
     }

@@ -3,14 +3,12 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:requestEncoding value="UTF-8"/>
 <fmt:setLocale value="${userLocale}"/>
-<%--<fmt:setLocale value="${cookie['lang'].value}" />--%>
 <fmt:bundle basename="resources">
     <jsp:include page="includes/header.jsp"/>
     <jsp:include page="includes/column_right_home.jsp"/>
     <body>
     <ul class="login-option">
-        <li><a href="controller"><fmt:message key="sign-in"/></a></li>
-        <li><a href="controller?command=registration"/><fmt:message key="info.signup"/> </a></li>
+        <li><a href="controller?command=no_command"><fmt:message key="sign-in"/></a></li>
     </ul>
     <section>
         <fmt:message key="registered"></fmt:message>

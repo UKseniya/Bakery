@@ -1,6 +1,7 @@
 package kz.epam.commands.user;
 
 import kz.epam.commands.Command;
+import kz.epam.constants.Constants;
 import kz.epam.entities.Cart;
 import kz.epam.entities.LineItem;
 import kz.epam.entities.User;
@@ -10,20 +11,25 @@ import javax.servlet.http.HttpSession;
 import java.util.Iterator;
 
 public class UpdateCart implements Command {
+    private static final String Quantity = "quantity";
+    private static final String ADD_BUTTON = "addButton";
+    private static final String REMOVE_BUTTON = "removeButton";
+    private static final String PATH_TO_VIEW_CART = "/jsp/user/review_cart.jsp";
+
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
         int quantity;
 
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute(Constants.USER);
 
-        Cart cart = (Cart) session.getAttribute("cart");
+        Cart cart = (Cart) session.getAttribute(Constants.CART);
 
-        String productCode = request.getParameter("productCode");
-        String receivedQuantity = request.getParameter("quantity");
-        String addButton = request.getParameter("addButton");
-        String removeButton = request.getParameter("removeButton");
+        String productCode = request.getParameter(Constants.PRODUCT_CODE);
+        String receivedQuantity = request.getParameter(Quantity);
+        String addButton = request.getParameter(ADD_BUTTON);
+        String removeButton = request.getParameter(REMOVE_BUTTON);
 
         quantity = Integer.parseInt(receivedQuantity);
 
@@ -48,23 +54,10 @@ public class UpdateCart implements Command {
                 }
             }
         }
-//        ProductDAO productDAO = new ProductDAO();
-//        Product product = new Product();
-//        product = productDAO.findProductbyCode(productCode);
-//        session.setAttribute("product", product);
-//
-//        if (product != null) {
-//            LineItem item = new LineItem();
-//            item.setProduct(product);
-//            item.setQuantity(quantity);
-//            if (quantity == 0) {
-//                cart.removeItem(item);
-//            }
-//        }
 
-        session.setAttribute("cart", cart);
+        session.setAttribute(Constants.CART, cart);
 
-        page = "/jsp/user/review_cart.jsp";
+        page = PATH_TO_VIEW_CART;
 
         return page;
     }

@@ -1,7 +1,7 @@
 package kz.epam.commands.user;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
 import kz.epam.commands.Command;
+import kz.epam.constants.Constants;
 import kz.epam.dao.OrderDAO;
 import kz.epam.entities.Order;
 import kz.epam.entities.User;
@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public class ShowAllOrders implements Command {
+    private static final String PATH_TO_REVIEW_ORDERS_PAGE = "/jsp/user/review_orders.jsp";
     private List<Order> pendingOrders;
     private List<Order> completedOrders;
     @Override
@@ -18,19 +19,20 @@ public class ShowAllOrders implements Command {
         String page = null;
 
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+        String locale = session.getAttribute(Constants.LOCALE).toString();
+        User user = (User) session.getAttribute(Constants.USER);
 
         OrderDAO orderDAO = new OrderDAO();
 
-        pendingOrders = orderDAO.findAllPendingOrdersByUser(user);
+        pendingOrders = orderDAO.findAllPendingOrdersByUser(user, locale);
 
-        session.setAttribute("pendingOrders", pendingOrders);
+        session.setAttribute(Constants.PENDING_ORDERS, pendingOrders);
 
-        completedOrders = orderDAO.findAllOrdersByUser(user);
+        completedOrders = orderDAO.findAllOrdersByUser(user, locale);
 
-        session.setAttribute("completedOrders", completedOrders);
+        session.setAttribute(Constants.COMPLETE_ORDERS, completedOrders);
 
-        page = "/jsp/user/review_orders.jsp";
+        page = PATH_TO_REVIEW_ORDERS_PAGE;
 
         return page;
     }

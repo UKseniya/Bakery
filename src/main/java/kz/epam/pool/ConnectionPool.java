@@ -9,7 +9,11 @@ import java.util.Iterator;
 import org.apache.log4j.Logger;
 
 public class ConnectionPool {
-
+    private static final String DRIVER_ERROR = "Driver loading error ";
+    private static final String WAITING_ERROR = "Waiting error ";
+    private static final String CONNECTION_CREATION_ERROR = "Connection creation error ";
+    private static final String ILLEGAL_MONITOR_EXCEPTION = "Illegal Monitor State Exception ";
+    private static final String CONNECTION_RELEASE_ERROR = "Connection release error ";
     private Logger log = Logger.getRootLogger();
     private static ConnectionPool instance;
     private final String DRIVER_NAME;
@@ -44,7 +48,7 @@ public class ConnectionPool {
             DriverManager.registerDriver(driver);
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("Driver loading error " + e.toString());
+            log.error(DRIVER_ERROR + e.toString());
         }
     }
 
@@ -73,7 +77,7 @@ public class ConnectionPool {
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                log.error("Waiting error " + e.toString());
+                log.error(WAITING_ERROR + e.toString());
             }
         }
         return connection;
@@ -89,7 +93,7 @@ public class ConnectionPool {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            log.error("Connection creation error " + ex.toString());
+            log.error(CONNECTION_CREATION_ERROR + ex.toString());
             return null;
         }
         return connection;
@@ -104,7 +108,7 @@ public class ConnectionPool {
                 }
             } catch (IllegalMonitorStateException ex) {
                 ex.printStackTrace();
-                log.error("Illegal Monitor State Exception " + ex.toString());
+                log.error(ILLEGAL_MONITOR_EXCEPTION + ex.toString());
             }
         }
     }
@@ -118,36 +122,9 @@ public class ConnectionPool {
             }
             catch (SQLException e) {
                 e.printStackTrace();
-                log.error("Connection release error " + e.toString());
+                log.error(CONNECTION_RELEASE_ERROR + e.toString());
             }
         }
         freeConnections.clear();
     }
-
-//        private ConnectionPool() {
-//
-//    }
-//    private static ConnectionPool instance = null;
-//
-//    public static ConnectionPool getInstance(){
-//        if (instance == null) {
-//            instance = new ConnectionPool();
-//        }
-//        return instance;
-//    }
-//
-//    public static Connection getConnection(){
-//        Context context;
-//        Connection connection = null;
-//        try {
-//            context = new InitialContext();
-//            DataSource dataSource = (DataSource)context.lookup("java:comp/env/jdbc/bakery");
-//            connection = dataSource.getConnection();
-//        } catch (NamingException e) {
-//            e.printStackTrace();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return connection;
-//    }
 }
