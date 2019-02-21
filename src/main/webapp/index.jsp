@@ -14,7 +14,7 @@
 <ul class="login-option">
 <c:choose>
 <c:when test="${empty user}">
-    <li><a href="controller?command=no_command"><fmt:message key="sign-in"/></a></li>
+    <li><a href="controller?command=login_form"><fmt:message key="sign-in"/></a></li>
     <li><a href="controller?command=registration"/><fmt:message key="info.signup"/> </a></li>
 </c:when>
 <c:otherwise>

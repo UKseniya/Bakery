@@ -12,14 +12,29 @@
 
     <body>
     <section class="center">
-        <a href="controller?command=show_annual_incomes"><fmt:message key="income.annual"/> </a><br/> <br/>
-        <p><fmt:message key="income.month.current"/> </p><br/>
-        ${currentMonthIncome.month} ${currentMonthIncome.year} &nbsp; &nbsp; &nbsp; &nbsp;
-                ${currentMonthIncome.sumCurrencyFormat}<br/><br/>
-        <p><fmt:message key="income.month.previous"/> </p><br/>
+        <a href="controller?command=show_annual_incomes"><fmt:message key="income.annual"/> </a> &nbsp; &nbsp; &nbsp;
+        &nbsp;
+        <a href="controller?command=show_all_incomes"><fmt:message key="income.all"/> </a> <br/> <br/>
+        <c:choose>
+            <c:when test="${empty currentMonthIncome}">
+                <p><fmt:message key="income.current.empty"/></p>
+            </c:when>
+            <c:otherwise>
+                <p><fmt:message key="income.month.current"/></p><br/>
+                ${currentMonthIncome.month} ${currentMonthIncome.year} &nbsp; &nbsp; &nbsp; &nbsp;
+                ${currentMonthIncome.sumCurrencyFormat}
+            </c:otherwise>
+        </c:choose><br/><br/>
+        <c:choose>
+            <c:when test="${empty previousMonthIncome}">
+                <p><fmt:message key="income.current.empty"/></p>
+            </c:when>
+            <c:otherwise>
+                <p><fmt:message key="income.month.previous"/></p><br/>
                 ${previousMonthIncome.month} ${previousMonthIncome.year} &nbsp; &nbsp; &nbsp; &nbsp;
                 ${previousMonthIncome.sumCurrencyFormat}<br/>
-
+            </c:otherwise>
+        </c:choose>
     </section>
 
     </body>

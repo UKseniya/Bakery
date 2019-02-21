@@ -11,11 +11,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 
-public class ShowAnnualIncomes implements Command {
-    private static final String ANNUAL_INCOMES = "annualIncomes";
-    private static final String PATH_TO_REVIEW_ANNUAL_INCOMES = "/jsp/admin/show_annual_incomes.jsp";
-    private List<Income> annualIncomes;
-    private int year;
+public class ShowAllIncomes implements Command {
+    private static final String ALL_INCOMES = "allIncomes";
+    private static final String PATH_TO_REVIEW_ALL_INCOMES = "/jsp/admin/show_all_incomes.jsp";
+    private List<Income> allIncomes;
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -24,18 +23,13 @@ public class ShowAnnualIncomes implements Command {
         HttpSession session = request.getSession();
         String language = session.getAttribute(Constants.LOCALE).toString();
 
-        Locale locale = new Locale(language);
-
-        LocalDate today = LocalDate.now();
-        year = today.getYear();
-
         IncomeDAO incomeDAO = new IncomeDAO();
 
-        annualIncomes = incomeDAO.findIncomesForYear(year, locale);
+        allIncomes = incomeDAO.findAll();
 
-        session.setAttribute(ANNUAL_INCOMES, annualIncomes);
+        session.setAttribute(ALL_INCOMES, allIncomes);
 
-        page = PATH_TO_REVIEW_ANNUAL_INCOMES;
+        page = PATH_TO_REVIEW_ALL_INCOMES;
 
         return page;
     }

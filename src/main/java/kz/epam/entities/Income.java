@@ -1,13 +1,6 @@
 package kz.epam.entities;
 
-import sun.util.locale.LocaleUtils;
-
-import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Month;
-import java.time.format.TextStyle;
 import java.util.Locale;
 
 public class Income extends Entity {
@@ -38,12 +31,6 @@ public class Income extends Entity {
     public void setYear(int year) {
         this.year = year;
     }
-
-//    public String getMonthName() {
-//        return new DateFormatSymbols().getMonths()[this.month-1];
-//        return Month.of(this.month).getDisplayName(TextStyle.FULL_STANDALONE, locale);
-//        return Month.of(this.month).toString();
-//    }
 
     public String getSumCurrencyFormat()
     {

@@ -47,8 +47,6 @@ public class ConfirmOrder implements Command {
         calendar.add(Calendar.DAY_OF_YEAR, 2);
         Date minimumDate = calendar.getTime();
 
-
-
         DateFormat formatter;
         formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
         try {
@@ -58,12 +56,10 @@ public class ConfirmOrder implements Command {
             e.printStackTrace();
         }
 
-        calendar.setTime(date);
-
         OrderDAO orderDAO = new OrderDAO();
 
-        if (calendar != null) {
-//            calendar.setFirstDayOfWeek(2);
+        if (date != null) {
+            calendar.setTime(date);
             int dayOfWeek = calendar.get(DAY_OF_WEEK);
 
             if (date.before(minimumDate) || dayOfWeek == Calendar.SUNDAY || dayOfWeek == Calendar.MONDAY) {

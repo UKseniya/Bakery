@@ -10,8 +10,6 @@
     <jsp:include page="../includes/authorization.jsp"/>
     <jsp:include page="../includes/admin_menu.jsp"/>
 
-    <body>
-
     <section>
         <p><fmt:message key="product.active"/></p>
         <a href="controller?command=add_new_product"><fmt:message key="product.new"/></a><br/><br/>

@@ -5,8 +5,10 @@
         <fmt:setLocale value="${userLocale}"/>
         <fmt:bundle basename="resources">
             <jsp:include page="../includes/header.jsp"/>
+
+            <input type="hidden" name="jspName" value="controller?command=show_available_products">
             <jsp:include page="../includes/column_right_home.jsp"/>
-            <jsp:include page="../includes/authorization.jsp"/>
+
             <body>
             <c:if test="!${empty user}">
                 <a href="controller?command=user_page"/><fmt:message key="page.account"/></a>

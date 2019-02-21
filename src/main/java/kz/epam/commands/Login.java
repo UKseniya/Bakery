@@ -12,6 +12,7 @@ import java.util.Locale;
 
 public class Login implements Command{
     private static final int SALT_LENGHT = 30;
+    private static final String LOGIN_BUTTON = "loginButton";
     private static final String LOGIN_ERROR = "loginErrorMessage";
     private static final String ERROR_MESSAGE = "error.login";
     private static final String PATH_TO_LOGIN_PAGE = "/jsp/login.jsp";

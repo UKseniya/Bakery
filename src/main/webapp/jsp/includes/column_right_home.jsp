@@ -5,18 +5,31 @@
 <fmt:setLocale value="${userLocale}"/>
 <fmt:bundle basename="resources">
     <div id="column-right">
-
+        <%--<form>--%>
+            <%--<select name="lang" onchange='this.form.submit()'>--%>
+                <%--<c:choose>--%>
+                <%--<c:when test="${userLocale.language =='ru'}">--%>
+                <%--<option value='ru' selected>Русский--%>
+                <%--<option value='en'>English--%>
+                    <%--</c:when>--%>
+                    <%--<c:otherwise>--%>
+                <%--<option value='ru'>Русский--%>
+                <%--<option value='en' selected>English--%>
+                    <%--</c:otherwise>--%>
+                    <%--</c:choose>--%>
+            <%--</select>--%>
+        <%--</form>--%>
         <ul class="locale">
-            <li>Language &nbsp;</li>
-            <li class="lang"><a href="?lang=en&country=UK"><fmt:message key="en.lang"/></a></li>
-            <li class="lang"><a href="?lang=ru&country=KZ"><fmt:message key="ru.lang"/></a></li>
+            <%--<li>Language &nbsp;</li>--%>
+            <li class="lang"><a href="?lang=en"><fmt:message key="en.lang"/></a></li>
+            <li class="lang"><a href="?lang=ru"><fmt:message key="ru.lang"/></a></li>
         </ul>
 
-        <ul class="locale"/>
-        <li>Currency &nbsp;</li>
-        <li class="lang"><a href="?lang=en"><fmt:message key="en.lang"/></a></li>
-        <li class="lang"><a href="?lang=ru"><fmt:message key="ru.lang"/></a></li>
-        </ul>
+        <%--<ul class="locale"/>--%>
+        <%--<li>Currency &nbsp;</li>--%>
+        <%--<li class="lang"><a href="?lang=en"><fmt:message key="en.lang"/></a></li>--%>
+        <%--<li class="lang"><a href="?lang=ru"><fmt:message key="ru.lang"/></a></li>--%>
+        <%--</ul>--%>
 
         <jsp:useBean id="now" class="java.util.Date"/>
         <p>

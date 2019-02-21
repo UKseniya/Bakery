@@ -14,19 +14,17 @@
     <section class="center">
         <a href="controller?command=show_income"><fmt:message key="back"/> </a><br/> <br/>
         <c:choose>
-            <c:when test="${empty annualIncomes}">
-                <p><fmt:message key="income.annual.empty"/></p>
+            <c:when test="${empty allIncomes}">
+                <p><fmt:message key="income.all.empty"/></p>
             </c:when>
             <c:otherwise>
-                <p><fmt:message key="income.year.current"/></p><br/>
-                <p><fmt:message key="month"/><span class="tab1"> <fmt:message key="income"/></span></p>
-                <c:forEach var="income" items="${annualIncomes}">
-                    <p>${income.month} <span class="tab1"> ${income.sumCurrencyFormat}</span></p>
+                <p><fmt:message key="year"/><span class="tab1"><fmt:message key="income"/></span> </p>
+                <c:forEach var="income" items="${allIncomes}">
+                    <p>${income.year} <span class="tab1"> ${income.sumCurrencyFormat}</span></p>
                 </c:forEach>
             </c:otherwise>
         </c:choose>
         <br/><br/>
-
     </section>
 
     </body>

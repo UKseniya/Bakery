@@ -11,12 +11,16 @@
     <jsp:include page="../includes/user_menu.jsp"/>
 
     <body>
-    <section class="orders">
-
+    <section>
+<c:choose>
+        <c:when test="${empty allOrders}">
+            <p><fmt:message key="order.empty" /></p>
+        </c:when>
+    <c:otherwise>
         <c:choose>
 
         <c:when test="${empty pendingOrders}">
-            <p><fmt:message key="order.empty"/></p>
+            <p><fmt:message key="order.pending.empty"/></p>
         </c:when>
 
         <c:otherwise>
@@ -36,6 +40,9 @@
                 </c:forEach>
             </div>
         </c:forEach>
+        </c:otherwise>
+
+        </c:choose>
 
         <br/>
         <p><a href="javascript:unhide('completedOrders')" ;/> <fmt:message key="order.review.completed"/> </a></p>
@@ -64,14 +71,13 @@
                 </c:forEach>
             </div>
             </c:forEach>
-            </c:otherwise>
 
-            </c:choose>
 
             </c:otherwise>
 
             </c:choose>
-
+                </c:otherwise>
+                </c:choose>
 
     </section>
 

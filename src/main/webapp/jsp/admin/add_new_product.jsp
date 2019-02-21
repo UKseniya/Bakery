@@ -11,7 +11,6 @@
     <jsp:include page="../includes/admin_menu.jsp"/>
 
     <body>
-
     <section>
 
         <form name="update" method="POST" action="controller">

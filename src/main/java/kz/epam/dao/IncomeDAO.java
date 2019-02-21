@@ -3,25 +3,22 @@ package kz.epam.dao;
 import kz.epam.config.ConfigManager;
 import kz.epam.constants.Constants;
 import kz.epam.entities.Income;
-import kz.epam.entities.Product;
 import kz.epam.pool.ConnectionPool;
 import org.apache.log4j.Logger;
-import sun.util.locale.LocaleUtils;
 
 import java.sql.*;
-import java.time.Month;
-import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 public class IncomeDAO extends AbstractDAO<Income> {
-    private static final String SQL_FIND_ALL_INCOME_INFORMATION = "SELECT * FROM income";
+    private static final String SQL_FIND_ALL_INCOME_INFORMATION = "SELECT SUM(total_income) AS annual_income, year FROM `income` GROUP BY year";
     private static final String SQL_FIND_INCOME_FOR_CERTAIN_MONTH = "SELECT * FROM income WHERE month = ? AND year = ?";
     private static final String SQL_FIND_INCOME_FOR_CERTAIN_YEAR = "SELECT * FROM income WHERE year = ?";
 
     private static final String TOTAL_INCOME = "total_income";
+    private static final String ANNUAL_INCOME = "annual_income";
     private static final String MONTH = "month";
     private static final String YEAR = "year";
 
@@ -32,7 +29,8 @@ public class IncomeDAO extends AbstractDAO<Income> {
     private static int maxConn = Integer.parseInt(ConfigManager.getInstance().getProperty(ConfigManager.MAX_CONN));
     private Logger log = Logger.getRootLogger();
 
-    public List<Income> findAll(Locale locale) {
+    @Override
+    public List<Income> findAll() {
         List<Income> incomes = null;
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
         Connection connection = pool.getConnection();
@@ -42,13 +40,8 @@ public class IncomeDAO extends AbstractDAO<Income> {
             incomes = new ArrayList<>();
 
             while (resultSet.next()) {
-                Calendar calendar = Calendar.getInstance();
-                int databaseMonth = resultSet.getInt(MONTH);
-                calendar.set(Calendar.MONTH, databaseMonth-1);
-                String monthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG_STANDALONE, locale);
                 Income income = new Income();
-                income.setSum(resultSet.getDouble(TOTAL_INCOME));
-                income.setMonth(monthName);
+                income.setSum(resultSet.getDouble(ANNUAL_INCOME));
                 income.setYear(resultSet.getInt(YEAR));
                 incomes.add(income);
             }
@@ -104,7 +97,7 @@ public class IncomeDAO extends AbstractDAO<Income> {
             incomes = new ArrayList<>();
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
+                while (resultSet.next()) {
                     Calendar calendar = Calendar.getInstance();
                     int databaseMonth = resultSet.getInt(MONTH);
                     calendar.set(Calendar.MONTH, databaseMonth-1);
@@ -125,11 +118,6 @@ public class IncomeDAO extends AbstractDAO<Income> {
             log.error(Constants.SQL_ERROR + e.toString());
         }
         return incomes;
-    }
-
-    @Override
-    public List<Income> findAll() {
-        return null;
     }
 
     @Override

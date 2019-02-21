@@ -18,7 +18,7 @@
             <br/>
                 ${loginErrorMessage}
             <br/>
-            <input type="submit" value="<fmt:message key="button.login"/>"/>
+            <input type="submit" name="loginButton" value="<fmt:message key="button.login"/>"/>
         </form>
     </section>
     <jsp:include page="/jsp/includes/footer.jsp"/>
