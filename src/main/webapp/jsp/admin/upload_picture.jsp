@@ -15,11 +15,12 @@
     <section>
         <form enctype="multipart/form-data" method="POST" action="upload">
             <label><fmt:message key="picture.select"/></label><br/>
-            <input type="image" name="image"><br/>
-            <br/>
-            <input type="submit" name="addButton" value="<fmt:message key="button.add.picture"/> "></form>
+                    <input type="file" name="file" id="file" /><br />
+
+                    <input type="submit" name="addButton" value="<fmt:message key="button.add.picture"/>" id="upload" />
 
         <br/> <br/>
+        </form>
     </section>
 
     <br>

@@ -19,6 +19,9 @@ import static java.util.Calendar.DAY_OF_WEEK;
 
 public class ConfirmOrder implements Command {
     private static final String COMMENT = "comment";
+    private static final int NUMBER_OF_DAYS = 2;
+    private static final int NULL = 0;
+    private static final int INCREMENT = 1;
     private static final String ORDER_NUMBER_FORMAT = "%06d";
     private static final String DATE_ERROR = "dateErrorMessage";
     private static final String NULL_DATE = "dateNullMessage";
@@ -44,7 +47,8 @@ public class ConfirmOrder implements Command {
         Locale locale = new Locale(language);
 
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, 2);
+
+        calendar.add(Calendar.DAY_OF_YEAR, NUMBER_OF_DAYS);
         Date minimumDate = calendar.getTime();
 
         DateFormat formatter;
@@ -71,8 +75,8 @@ public class ConfirmOrder implements Command {
             else {
                 String orderNumber = null;
                 List<Integer> usedNumbers = orderDAO.findAllOrderNumbers();
-                if (usedNumbers.size() != 0) {
-                    for (int i = 0; i < usedNumbers.size()+1; i++) {
+                if (usedNumbers.size() != NULL) {
+                    for (int i = NULL; i < usedNumbers.size()+INCREMENT; i++) {
                         if (!usedNumbers.contains(INITIAL_NUMBER)) {
                             orderNumber = String.format(ORDER_NUMBER_FORMAT,INITIAL_NUMBER);
                             break;
@@ -92,7 +96,7 @@ public class ConfirmOrder implements Command {
                     order.setRequestedDate(date);
                     order.setComment(comment);
                     order.setStatus(Constants.IN_PROGRESS_STATUS);
-                    boolean created = orderDAO.create(order);
+                    orderDAO.create(order);
                     cart.getItems().clear();
                 }
 

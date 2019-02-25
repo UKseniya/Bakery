@@ -11,7 +11,6 @@ public class MessageManager {
     public static MessageManager getInstance(Locale locale) {
         if (instance == null) {
             instance = new MessageManager();
-            locale = new Locale("en");
             instance.resourceBundle = ResourceBundle.getBundle(MESSAGE, locale);
         }
         return instance;

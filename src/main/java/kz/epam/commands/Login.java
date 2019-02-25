@@ -32,60 +32,63 @@ public class Login implements Command{
         User user = null;
         UserDAO userDAO = new UserDAO();
 
-        if (providedPassword.length() < 30) {
-            boolean isUserRegistered = userDAO.isUserRegistered(login, providedPassword);
-            if (isUserRegistered) {
-                user = userDAO.findUserByLoginAndPassword(login, providedPassword);
-                // Generate Salt. The generated value can be stored in DB.
-                String salt = PasswordUtil.getSalt(SALT_LENGHT);
+        if (login != "") {
 
-                // Protect user's providedPassword. The generated value can be stored in DB.
-                String securedPassword = PasswordUtil.generateSecurePassword(providedPassword, salt);
+            if (providedPassword.length() < SALT_LENGHT) {
+                boolean isUserRegistered = userDAO.isUserRegistered(login, providedPassword);
+                if (isUserRegistered) {
+                    user = userDAO.findUserByLoginAndPassword(login, providedPassword);
+                    // Generate Salt. The generated value can be stored in DB.
+                    String salt = PasswordUtil.getSalt(SALT_LENGHT);
 
-                // Get the value of securedPassword and salt to be stored in DB
-                StringBuilder saltedSecuredPassword = new StringBuilder();
-                saltedSecuredPassword.append(securedPassword).append(salt);
-                String password = saltedSecuredPassword.toString();
+                    // Protect user's providedPassword. The generated value can be stored in DB.
+                    String securedPassword = PasswordUtil.generateSecurePassword(providedPassword, salt);
 
-                user.setPassword(password);
+                    // Get the value of securedPassword and salt to be stored in DB
+                    StringBuilder saltedSecuredPassword = new StringBuilder();
+                    saltedSecuredPassword.append(securedPassword).append(salt);
+                    String password = saltedSecuredPassword.toString();
 
-                // Update user password in DB
-                userDAO.updateUserPassword(user);
+                    user.setPassword(password);
+
+                    // Update user password in DB
+                    userDAO.updateUserPassword(user);
+                } else {
+                    request.setAttribute(LOGIN_ERROR,
+                            MessageManager.getInstance(locale).getProperty(ERROR_MESSAGE));
+                    page = PATH_TO_LOGIN_PAGE;
+                }
+
+            }
+
+            // Retrieve secured password and salt from the password stored in DB.
+            String password = userDAO.findPasswordByLogin(login);
+            String securedPassword = password.substring(0, password.length() - SALT_LENGHT);
+            String salt = password.length() > SALT_LENGHT ? password.substring(password.length() - SALT_LENGHT) : password;
+
+
+            // Verify password provided by user
+            boolean passwordVerified = PasswordUtil.verifyUserPassword(providedPassword, securedPassword, salt);
+
+            if (passwordVerified == true) {
+                user = userDAO.findUserByLoginAndPassword(login, password);
+                session.setAttribute(Constants.USER, user);
+
+                if (user.getRole().equals(Constants.USER)) {
+                    page = Constants.PATH_TO_USER_PAGE;
+                } else if (user.getRole().equals(Constants.ADMIN)) {
+
+                    page = Constants.PATH_TO_ADMIN_PAGE;
+                }
+                session.setAttribute(Constants.USER, user);
             } else {
                 request.setAttribute(LOGIN_ERROR,
                         MessageManager.getInstance(locale).getProperty(ERROR_MESSAGE));
                 page = PATH_TO_LOGIN_PAGE;
             }
-
-        }
-
-        // Retrieve secured password and salt from the password stored in DB.
-
-        String password = userDAO.findPasswordByLogin(login);
-        String securedPassword = password.substring(0, password.length() - SALT_LENGHT);
-        String salt = password.length() > SALT_LENGHT ? password.substring(password.length() - SALT_LENGHT) : password;
-
-        // Verify password provided by user
-        boolean passwordVerified = PasswordUtil.verifyUserPassword(providedPassword, securedPassword, salt);
-
-        if (passwordVerified == true) {
-            user = userDAO.findUserByLoginAndPassword(login, password);
-            session.setAttribute(Constants.USER, user);
-
-            if (user.getRole().equals(Constants.USER)) {
-                page = Constants.PATH_TO_USER_PAGE;
-            }
-            else if (user.getRole().equals(Constants.ADMIN)){
-
-                page = Constants.PATH_TO_ADMIN_PAGE;
-            }
-            session.setAttribute(Constants.USER, user);
-        }
-        else {
-            request.setAttribute(LOGIN_ERROR,
-                    MessageManager.getInstance(locale).getProperty(ERROR_MESSAGE));
-            page = PATH_TO_LOGIN_PAGE;
-        }
-        return page;
+            return page;
+        }  request.setAttribute(LOGIN_ERROR,
+                MessageManager.getInstance(locale).getProperty(ERROR_MESSAGE));
+        return PATH_TO_LOGIN_PAGE;
     }
 }

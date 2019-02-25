@@ -11,7 +11,7 @@ import java.io.IOException;
 public class UploadPicture implements Command {
     private static final String UPLOAD_DIR = "pictures";
     private static final String PATH_TO_CONFIRMATION = "/jsp/admin/product_added.jsp";
-
+//TODO: try to get the picture
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;

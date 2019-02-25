@@ -23,11 +23,6 @@ public class CommandFactory {
         return instance;
     }
 
-//    public static String setCommand(String command) {
-//        action = command;
-//        return action;
-//    }
-
     public static Command getCommand(HttpServletRequest request) {
 
         // Get the command from the request

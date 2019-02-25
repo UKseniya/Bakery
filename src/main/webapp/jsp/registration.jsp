@@ -9,6 +9,7 @@
     <jsp:include page="includes/column_right_home.jsp"/>
 
     <section>
+        <%--TODO: customValidity doesn't work--%>
         <form name="registrationForm" method="POST" action="controller">
             <input type="hidden" name="command" value="registration_form"/>
             <label><fmt:message key="first.name"/>:</label><br/>
@@ -22,7 +23,9 @@
             <br/><label><fmt:message key="email"/>:</label><br/>
             <input type="email" name="email" value=""/>
             <br/><label><fmt:message key="phone"/>:</label><br/>
-            <input type="text" name="phone" value=""
+                <%--TODO: make a mask for phone number--%>
+            ${phoneNumberError}
+            <input type="text" id="phone" name="phone" pattern= "[0-9]{11}" value=""
                    oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
                    oninput="this.setCustomValidity('')" required/>
             <br/><label><fmt:message key="login"/>:</label><br/>
