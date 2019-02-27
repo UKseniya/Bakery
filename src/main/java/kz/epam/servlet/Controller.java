@@ -2,6 +2,7 @@ package kz.epam.servlet;
 
 import kz.epam.commands.Command;
 import kz.epam.commands.CommandFactory;
+import kz.epam.config.ConfigManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -43,8 +44,7 @@ public class Controller extends HttpServlet {
             // вызов страницы ответа на запрос
             dispatcher.forward(request, response);
         } else {
-            // установка страницы c cообщением об ошибке
-            //page = ConfigManager.getProperty("path.page.error");//index
+//            page = ConfigManager.getProperty("path.page.error");
             response.sendRedirect(request.getContextPath() + page);
 
         }

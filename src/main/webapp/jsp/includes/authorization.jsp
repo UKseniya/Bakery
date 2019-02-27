@@ -12,7 +12,7 @@
             </c:when>
             <c:otherwise>
                 <ul class="login-option">
-                    <li><a href="controller?command=no_command"><fmt:message key="sign-in"/> &nbsp; <fmt:message
+                    <li><a href="controller?command=login_form"><fmt:message key="sign-in"/> &nbsp; <fmt:message
                             key="info.signup"/> </a></li>
                 </ul>
             </c:otherwise>

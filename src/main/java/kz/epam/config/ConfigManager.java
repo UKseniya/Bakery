@@ -20,7 +20,7 @@ public class ConfigManager {
         return instance;
     }
 
-    public String getProperty (String key) {
+    public String getProperty(String key) {
         return (String) resourceBundle.getObject(key);
     }
 }

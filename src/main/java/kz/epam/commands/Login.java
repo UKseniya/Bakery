@@ -11,12 +11,12 @@ import javax.servlet.http.HttpSession;
 import java.util.Locale;
 
 public class Login implements Command{
-    private static final int SALT_LENGHT = 30;
-    private static final String LOGIN_BUTTON = "loginButton";
+    private static final int SALT_LENGTH = 30;
     private static final String LOGIN_ERROR = "loginErrorMessage";
     private static final String ERROR_MESSAGE = "error.login";
     private static final String PATH_TO_LOGIN_PAGE = "/jsp/login.jsp";
-
+    private static final String PATH_TO_USER_PAGE = "/controller?command=user_page";
+//TODO: check user change locale
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
@@ -25,21 +25,25 @@ public class Login implements Command{
         String providedPassword = request.getParameter(Constants.PASSWORD);
 
         HttpSession session = request.getSession();
+        User user = (User) session.getAttribute(Constants.USER);
         String language = session.getAttribute(Constants.LOCALE).toString();
 
         Locale locale = new Locale(language);
 
-        User user = null;
         UserDAO userDAO = new UserDAO();
 
-        if (login != "") {
+        if (user != null) {
+            page = PATH_TO_USER_PAGE;
+        }
 
-            if (providedPassword.length() < SALT_LENGHT) {
+        else if (login != "") {
+
+            if (providedPassword.length() < SALT_LENGTH) {
                 boolean isUserRegistered = userDAO.isUserRegistered(login, providedPassword);
                 if (isUserRegistered) {
                     user = userDAO.findUserByLoginAndPassword(login, providedPassword);
                     // Generate Salt. The generated value can be stored in DB.
-                    String salt = PasswordUtil.getSalt(SALT_LENGHT);
+                    String salt = PasswordUtil.getSalt(SALT_LENGTH);
 
                     // Protect user's providedPassword. The generated value can be stored in DB.
                     String securedPassword = PasswordUtil.generateSecurePassword(providedPassword, salt);
@@ -63,8 +67,8 @@ public class Login implements Command{
 
             // Retrieve secured password and salt from the password stored in DB.
             String password = userDAO.findPasswordByLogin(login);
-            String securedPassword = password.substring(0, password.length() - SALT_LENGHT);
-            String salt = password.length() > SALT_LENGHT ? password.substring(password.length() - SALT_LENGHT) : password;
+            String securedPassword = password.substring(0, password.length() - SALT_LENGTH);
+            String salt = password.length() > SALT_LENGTH ? password.substring(password.length() - SALT_LENGTH) : password;
 
 
             // Verify password provided by user
@@ -86,9 +90,11 @@ public class Login implements Command{
                         MessageManager.getInstance(locale).getProperty(ERROR_MESSAGE));
                 page = PATH_TO_LOGIN_PAGE;
             }
-            return page;
-        }  request.setAttribute(LOGIN_ERROR,
-                MessageManager.getInstance(locale).getProperty(ERROR_MESSAGE));
-        return PATH_TO_LOGIN_PAGE;
+        }  else {
+            request.setAttribute(LOGIN_ERROR,
+                    MessageManager.getInstance(locale).getProperty(ERROR_MESSAGE));
+            page = PATH_TO_LOGIN_PAGE;
+        }
+        return page;
     }
 }

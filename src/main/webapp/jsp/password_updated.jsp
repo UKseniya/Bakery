@@ -6,14 +6,12 @@
 <fmt:bundle basename="resources">
     <jsp:include page="includes/header.jsp"/>
     <jsp:include page="includes/column_right_home.jsp"/>
+    <jsp:include page="includes/authorization.jsp"/>
+    <jsp:include page="includes/user_menu.jsp"/>
     <body>
-    <ul class="login-option">
-        <li><a href="controller?command=login_form"><fmt:message key="sign-in"/></a></li>
-    </ul>
     <section>
-        <fmt:message key="registered"></fmt:message>
+        <fmt:message key="updated.password"></fmt:message>
     </section>
     </body>
     <jsp:include page="includes/footer.jsp"/>
 </fmt:bundle>
-

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class AddNewProduct implements Command {
-    private static final String PICTURE = "image";
+
     private static final String PRODUCT_CODE = "productCode";
     private static final String PRODUCT_PRICE = "price";
     private static final String RU_NAME = "russianName";
@@ -20,7 +20,6 @@ public class AddNewProduct implements Command {
     private static final String EN_LOCALE = "en";
     private static final String ADD_BUTTON = "addButton";
     private static final String PATH_TO_FORM = "/jsp/admin/add_new_product.jsp";
-    private static final String PATH_TO_CONFIRMATION = "/jsp/admin/product_added.jsp";
     private static final String PATH_TO_PICTURE_UPLOAD = "/jsp/admin/upload_picture.jsp";
 
     @Override
@@ -31,7 +30,6 @@ public class AddNewProduct implements Command {
         String locale = session.getAttribute(Constants.LOCALE).toString();
 
         String addButton = request.getParameter(ADD_BUTTON);
-        String picture = request.getParameter(PICTURE);
         String code = request.getParameter(PRODUCT_CODE);
         String price = request.getParameter(PRODUCT_PRICE);
         String ruName = request.getParameter(RU_NAME);
@@ -55,8 +53,7 @@ public class AddNewProduct implements Command {
 
             page = PATH_TO_PICTURE_UPLOAD;
         } else {
-            page = PATH_TO_PICTURE_UPLOAD;
-//                    PATH_TO_FORM;
+            page = PATH_TO_FORM;
         }
 
         return page;

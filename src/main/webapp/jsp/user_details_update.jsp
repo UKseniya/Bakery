@@ -9,37 +9,28 @@
     <jsp:include page="includes/column_right_home.jsp"/>
 
     <section>
-        <%--TODO: customValidity doesn't work--%>
+            <%--TODO: customValidity doesn't work--%>
         <form name="registrationForm" method="POST" action="controller">
-            <input type="hidden" name="command" value="registration_form"/>
+            <input type="hidden" name="command" value="update_user_details"/>
             <label><fmt:message key="first.name"/>:</label><br/>
-            <input type="text" name="firstName" value=""
+            <input type="text" name="firstName" value="${user.firstName}"
                    oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
                    oninput="this.setCustomValidity('')" required/>
             <br/><label><fmt:message key="last.name"/>:</label><br/>
-            <input type="text" name="lastName" value=""
+            <input type="text" name="lastName" value="${user.lastName}"
                    oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
                    oninput="this.setCustomValidity('')" required/>
             <br/><label><fmt:message key="email"/>:</label><br/>
-            <input type="email" name="email" value=""/>
+            <input type="email" name="email" value="${user.email}"/>
             <br/><label><fmt:message key="phone"/>:</label><br/>
                 <%--TODO: make a mask for phone number--%>
-            <i>${phoneNumberError}</i>
-            <input type="text" id="phone" name="phone" pattern= "[0-9]{11}" value=""
-                   oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
-                   oninput="this.setCustomValidity('')" required/>
-            <br/><label><fmt:message key="login"/>:</label><br/>
-            <input type="text" name="login" value=""
-                   oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
-                   oninput="this.setCustomValidity('')" required/>
-            <br/><label><fmt:message key="password"/>:</label><br/>
-            <input type="password" name="password" value=""
+            <i> ${phoneNumberError} </i>
+            <input type="text" id="phone" name="phone" pattern= "[0-9]{11}" value="${user.phoneNumber}"
                    oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
                    oninput="this.setCustomValidity('')" required/>
             <br/>
-            <i> ${registrationErrorMessage} </i>
             <br/>
-            <input type="submit" value="<fmt:message key="registration.button"/>"/>
+            <input type="submit" name="updateButton" value="<fmt:message key="button.update"/>"/>
         </form>
     </section>
     <jsp:include page="includes/footer.jsp"/>

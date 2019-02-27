@@ -12,8 +12,8 @@ public class CommandFactory {
     private static String action;
     enum CommandEnum {
 
-        NO_COMMAND, LANGUAGE, LOGIN_FORM, LOGIN, LOGOUT, REGISTRATION, REGISTRATION_FORM, USER_PAGE, SELECT_PRODUCTS,
-        ADD_TO_CART, REVIEW_CART, UPDATE_CART, CHECKOUT, CONFIRM_ORDER, REVIEW_ORDERS,
+        NO_COMMAND, LANGUAGE, LOGIN_FORM, LOGIN, LOGOUT, REGISTRATION, REGISTRATION_FORM, USER_PAGE, UPDATE_USER_DETAILS,
+        UPDATE_USER_PASSWORD, SELECT_PRODUCTS, ADD_TO_CART, REVIEW_CART, UPDATE_CART, CHECKOUT, CONFIRM_ORDER, REVIEW_ORDERS, ADMIN_PAGE,
         SHOW_ALL_ORDERS, SHOW_TASKS, SHOW_ALL_REQUESTS, SHOW_AVAILABLE_PRODUCTS,
         UPDATE_PRODUCT_LIST, SHOW_PRODUCT_INFO, UPDATE_PRODUCT_INFO, ADD_NEW_PRODUCT,
         UPLOAD_PICTURE, SHOW_INCOME, SHOW_ANNUAL_INCOMES, SHOW_ALL_INCOMES;
@@ -27,15 +27,18 @@ public class CommandFactory {
 
         // Get the command from the request
         String command = request.getParameter(COMMAND);
+
         if (command == null || command.isEmpty()) {
             // if the command is not specified in the current request
-            command = action;
+           command = action;
         } else if (command != action){
             action = command;
         }
         // Receive object that corresponds to the request
         CommandEnum current = CommandEnum.valueOf(action.toUpperCase());
         switch (current) {
+            case NO_COMMAND:
+                return new NoCommand();
             case LOGIN_FORM:
                 return new GetLoginForm();
             case LOGIN:
@@ -48,6 +51,10 @@ public class CommandFactory {
                 return new RegistrationForm();
             case USER_PAGE:
                 return new UserPage();
+            case UPDATE_USER_DETAILS:
+                return new UpdateUserDetails();
+            case UPDATE_USER_PASSWORD:
+                return new UpdateUserPassword();
             case SELECT_PRODUCTS:
                 return new SelectProducts();
             case ADD_TO_CART:
@@ -62,6 +69,8 @@ public class CommandFactory {
                 return new ConfirmOrder();
 //            case REVIEW_ORDERS:
 //                return new ShowPendingOrders();
+            case ADMIN_PAGE:
+                return new AdminPage();
             case SHOW_ALL_ORDERS:
                 return new ShowAllOrders();
             case SHOW_TASKS:
@@ -78,8 +87,6 @@ public class CommandFactory {
                 return new UpdateProductInfo();
             case ADD_NEW_PRODUCT:
                 return new AddNewProduct();
-            case UPLOAD_PICTURE:
-                return new UploadPicture();
             case SHOW_INCOME:
                 return new ShowIncome();
             case SHOW_ANNUAL_INCOMES:

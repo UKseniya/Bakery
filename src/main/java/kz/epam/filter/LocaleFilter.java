@@ -5,31 +5,44 @@ import kz.epam.constants.Constants;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 public class LocaleFilter implements Filter {
+    private static final String EXCLUDED_URLS = "excludedUrls";
+    private static final String COMMA = ",";
+    private List<String> excludedUrls;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        String excludePattern = filterConfig.getInitParameter(EXCLUDED_URLS);
+        excludedUrls = Arrays.asList(excludePattern.split(COMMA));
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
-        HttpServletRequest req = (HttpServletRequest) servletRequest;
-        req.setCharacterEncoding(Constants.ENCODING);
-        if (req.getSession().getAttribute(Constants.LOCALE) == null) {
-            req.getSession().setAttribute(Constants.LOCALE,req.getLocale());
-        }
-        String language = servletRequest.getParameter(Constants.LANGUAGE);
-        if (language != null) {
-            Locale locale = new Locale(language);
-            req.getSession().setAttribute(Constants.LOCALE, locale);
-        }
+        String path = ((HttpServletRequest) servletRequest).getServletPath();
 
-        filterChain.doFilter(servletRequest, servletResponse);
+        if (!excludedUrls.contains(path)) {
+            HttpServletRequest req = (HttpServletRequest) servletRequest;
+            req.setCharacterEncoding(Constants.ENCODING);
+            if (req.getSession().getAttribute(Constants.LOCALE) == null) {
+                Locale locale = req.getLocale();
+                req.getSession().setAttribute(Constants.LOCALE, locale);
+            }
+            String language = servletRequest.getParameter(Constants.LANGUAGE);
+            if (language != null) {
+                Locale locale = new Locale(language);
+                req.getSession().setAttribute(Constants.LOCALE, locale);
+            }
 
+            filterChain.doFilter(servletRequest, servletResponse);
+        }
+        else {
+            servletRequest.getRequestDispatcher(path).forward(servletRequest, servletResponse);
+        }
     }
 
     @Override

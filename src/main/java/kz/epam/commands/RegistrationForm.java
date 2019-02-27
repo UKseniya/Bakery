@@ -2,7 +2,6 @@ package kz.epam.commands;
 
 import kz.epam.constants.Constants;
 import kz.epam.dao.UserDAO;
-import kz.epam.entities.Income;
 import kz.epam.entities.User;
 import kz.epam.message.MessageManager;
 import kz.epam.util.PasswordUtil;
@@ -13,7 +12,8 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class RegistrationForm implements Command {
-    private static final int SALT_LENGHT = 30;
+    private static final int SALT_LENGTH = 30;
+    private static final String PHONE_NUMBER_REGEX = "\\d+";
     private static final String INCORRECT_PHONE = "error.phone";
     private static final String INCORRECT_PHONE_MESSAGE = "phoneNumberError";
     private static final String REGISTRATION_ERROR = "registrationErrorMessage";
@@ -38,15 +38,13 @@ public class RegistrationForm implements Command {
 
         Locale locale = new Locale(language);
 
-        String regex = "\\d+";
-
-        Pattern phoneNumberPattern =  Pattern.compile(regex);
+        Pattern phoneNumberPattern =  Pattern.compile(PHONE_NUMBER_REGEX);
 
         UserDAO userDAO = new UserDAO();
         boolean isLoginFree = userDAO.isLoginFree(login);
         if (isLoginFree) {
             // Generate Salt. The generated value can be stored in DB.
-            String salt = PasswordUtil.getSalt(SALT_LENGHT);
+            String salt = PasswordUtil.getSalt(SALT_LENGTH);
 
             // Protect user's providedPassword. The generated value can be stored in DB.
             String securedPassword = PasswordUtil.generateSecurePassword(providedPassword, salt);

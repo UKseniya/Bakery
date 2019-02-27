@@ -6,14 +6,12 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
 
@@ -38,37 +36,6 @@ public class ImageUploadServlet extends HttpServlet {
 
         response.setContentType("text/plain;charset=UTF-8");
 
-        // gets absolute path of the web application
-//        String applicationPath = request.getServletContext().getRealPath("");
-//        // constructs path of the directory to save uploaded file
-//        String uploadFilePath = applicationPath + UPLOAD_DIR;
-//        // creates upload folder if it does not exists
-//        File uploadFolder = new File(uploadFilePath);
-//        if (!uploadFolder.exists()) {
-//            uploadFolder.mkdirs();
-//        }
-
-//        Part filePart = request.getPart(FILE_TO_UPLOAD);
-//
-//        String fileName = filePart.getSubmittedFileName();
-//        InputStream is = filePart.getInputStream();
-//
-//        Files.copy(is, Paths.get(uploadFilePath + fileName),
-//                StandardCopyOption.REPLACE_EXISTING);
-
-        // write all files in upload folder
-//            if (filePart != null) {
-//                String fileName = filePart.getSubmittedFileName();
-//                String contentType = filePart.getContentType();
-//
-//                // allows only JPG files to be uploaded
-//                if (!contentType.equalsIgnoreCase("image/jpg")) {
-//                    return;
-//                }
-//
-//                filePart.write(uploadFilePath + File.separator + fileName);
-//        }
-        // another code to try
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 
         if (isMultipart) {
@@ -92,11 +59,11 @@ public class ImageUploadServlet extends HttpServlet {
                         File uploadedFile = new File(path + "/" + fileName);
                         item.write(uploadedFile);
                     }
-                    page = PATH_TO_CONFIRMATION;
-
-                    RequestDispatcher dispatcher = request.getRequestDispatcher(page);
-                    dispatcher.forward(request, response);
                 }
+                page = PATH_TO_CONFIRMATION;
+
+                RequestDispatcher dispatcher = request.getRequestDispatcher(page);
+                dispatcher.forward(request, response);
 
             } catch (Exception ex) {
                 request.setAttribute("message",

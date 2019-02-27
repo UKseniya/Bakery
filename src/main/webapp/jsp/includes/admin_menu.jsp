@@ -11,8 +11,11 @@
                 <br>
                 <li><a href="controller?command=show_income"><fmt:message key="review.income"/> </a></li>
                 <br>
-                <li><a href="controller?command=update_product_list"><fmt:message key="product.list"/> </a>
-                <li></li>
+                <li><a href="controller?command=update_product_list"><fmt:message key="product.list"/> </a> </li>
+                <br/>
+                <li><a href="controller?command=update_user_details"><fmt:message key="personal.details"/> </a> </li>
+                <br/>
+                <li><a href="controller?command=update_user_password"><fmt:message key="password.update"/> </a> </li>
                 <br>
                 <li><a href="controller?command=logout"><fmt:message key="logout"/></a></li>
             </ul>
