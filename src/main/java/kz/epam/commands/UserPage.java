@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class UserPage implements Command {
+    private static final String PATH_TO_ADMIN_PAGE = "/controller?command=admin_page";
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -19,7 +20,7 @@ public class UserPage implements Command {
             page = Constants.PATH_TO_USER_PAGE;
         }
         else if (user.getRole().equals(Constants.ADMIN)){
-            page = Constants.PATH_TO_ADMIN_PAGE;
+            page = PATH_TO_ADMIN_PAGE;
         }
 
         return page;

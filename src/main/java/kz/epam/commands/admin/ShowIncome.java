@@ -22,7 +22,6 @@ public class ShowIncome implements Command {
     private int currentMonth;
     private int year;
     private int previousMonth;
-    private int previousYear;
 
     @Override
     public String execute(HttpServletRequest request) {

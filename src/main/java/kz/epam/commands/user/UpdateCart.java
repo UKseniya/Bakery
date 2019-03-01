@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Iterator;
 
 public class UpdateCart implements Command {
-    private static final String Quantity = "quantity";
+    private static final String QUANTITY = "quantity";
     private static final String ADD_BUTTON = "addButton";
     private static final String REMOVE_BUTTON = "removeButton";
     private static final String PATH_TO_VIEW_CART = "/jsp/user/review_cart.jsp";
@@ -27,7 +27,7 @@ public class UpdateCart implements Command {
         Cart cart = (Cart) session.getAttribute(Constants.CART);
 
         String productCode = request.getParameter(Constants.PRODUCT_CODE);
-        String receivedQuantity = request.getParameter(Quantity);
+        String receivedQuantity = request.getParameter(QUANTITY);
         String addButton = request.getParameter(ADD_BUTTON);
         String removeButton = request.getParameter(REMOVE_BUTTON);
 

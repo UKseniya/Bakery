@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 public class ReviewCart implements Command {
     private static final String PATH_TO_REVIEW_CART_PAGE = "/jsp/user/review_cart.jsp";
+
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;

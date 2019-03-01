@@ -59,6 +59,8 @@ public class ProductDAO extends AbstractDAO<Product> {
     private static final String STATUS_ID = "status_id";
     private static final String STATUS_NAME = "status_name";
     private static final String PRODUCT_INSERTION_MESSAGE = "Product has been inserted ";
+    private static final String MONTH = "month";
+    private static final String YEAR = "year";
 
     private static String driverName = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_DRIVER_NAME);
     private static String url = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_URL);

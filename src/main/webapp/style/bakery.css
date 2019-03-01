@@ -228,6 +228,10 @@ td, th {
   left: 850px;
 }
 
+.tab4 {
+  position: absolute;
+  left: 400px;
+}
 /*.clicker {*/
   /*width:100px;*/
   /*height:100px;*/

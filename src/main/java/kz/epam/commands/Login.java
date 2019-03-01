@@ -15,8 +15,9 @@ public class Login implements Command{
     private static final String LOGIN_ERROR = "loginErrorMessage";
     private static final String ERROR_MESSAGE = "error.login";
     private static final String PATH_TO_LOGIN_PAGE = "/jsp/login.jsp";
+    private static final String PATH_TO_ADMIN_PAGE = "/controller?command=admin_page";
     private static final String PATH_TO_USER_PAGE = "/controller?command=user_page";
-//TODO: check user change locale
+
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
@@ -82,7 +83,7 @@ public class Login implements Command{
                     page = Constants.PATH_TO_USER_PAGE;
                 } else if (user.getRole().equals(Constants.ADMIN)) {
 
-                    page = Constants.PATH_TO_ADMIN_PAGE;
+                    page = PATH_TO_ADMIN_PAGE;
                 }
                 session.setAttribute(Constants.USER, user);
             } else {

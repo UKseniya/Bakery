@@ -28,9 +28,14 @@
         <p><fmt:message key="order.number"/><span class="tab1"><fmt:message key="order.date.selected"/></span>
             <span class="tab2"> <fmt:message key="total"/></span></p>
         <c:forEach var="order" items="${pendingOrders}">
+            <form action="controller" method="POST">
+                <input type="hidden" name="action" value="cancel_order">
             <p><a href="javascript:unhide('${order.orderNumber}')" ;/> ${order.orderNumber} </a>
                 <span class="tab1">${order.requestedDate}</span>
                 <span class="tab2">${order.orderTotalCurrencyFormat}</span></p>
+                <span class="tab3"><input type="hidden" name="orderID" value="${order.id}">
+                    <input type="submit" value="<fmt:message key="cancel"/> "></span>
+            </form>
             <div id="${order.orderNumber}" class="hidden">
                 <i>&nbsp;&nbsp;&nbsp;&nbsp; <fmt:message key="name"/></i>&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;
                 <i><fmt:message key="quantity"/></i>

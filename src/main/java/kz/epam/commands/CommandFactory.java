@@ -12,11 +12,11 @@ public class CommandFactory {
     private static String action;
     enum CommandEnum {
 
-        NO_COMMAND, LANGUAGE, LOGIN_FORM, LOGIN, LOGOUT, REGISTRATION, REGISTRATION_FORM, USER_PAGE, UPDATE_USER_DETAILS,
+        NO_COMMAND, LOGIN_FORM, LOGIN, LOGOUT, REGISTRATION, REGISTRATION_FORM, USER_PAGE, UPDATE_USER_DETAILS,
         UPDATE_USER_PASSWORD, SELECT_PRODUCTS, ADD_TO_CART, REVIEW_CART, UPDATE_CART, CHECKOUT, CONFIRM_ORDER, REVIEW_ORDERS, ADMIN_PAGE,
         SHOW_ALL_ORDERS, SHOW_TASKS, SHOW_ALL_REQUESTS, SHOW_AVAILABLE_PRODUCTS,
         UPDATE_PRODUCT_LIST, SHOW_PRODUCT_INFO, UPDATE_PRODUCT_INFO, ADD_NEW_PRODUCT,
-        UPLOAD_PICTURE, SHOW_INCOME, SHOW_ANNUAL_INCOMES, SHOW_ALL_INCOMES;
+        SHOW_INCOME, SHOW_ANNUAL_INCOMES, SHOW_ALL_INCOMES, CANCEL_ORDER;
     }
 
     public static CommandFactory getInstance() {
@@ -93,6 +93,8 @@ public class CommandFactory {
                 return new ShowAnnualIncomes();
             case SHOW_ALL_INCOMES:
                 return new ShowAllIncomes();
+            case CANCEL_ORDER:
+                return new CancelOrder();
             default:
                 throw new EnumConstantNotPresentException(
                         current.getDeclaringClass(), current.name());

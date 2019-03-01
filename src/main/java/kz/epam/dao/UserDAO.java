@@ -16,7 +16,7 @@ import kz.epam.pool.ConnectionPool;
 
 public class UserDAO extends AbstractDAO<User> {
     private static final String  SQL_FIND_PASSWORD_BY_LOGIN = "SELECT password FROM user WHERE login = ?";
-    private static final String SQL_FIND_USERS_BY_ROLE = "SELECT * FROM users WHERE role_id = ?";
+    private static final String SQL_FIND_USERS_BY_ROLE = "SELECT * FROM user WHERE role_id = ?";
     private static final String SQL_SELECT_ALL_USERS = "SELECT user_id, first_name, last_name, login, " +
             "password, email, phone, role_name FROM user u JOIN user_role ur ON (ur.role_id = u.user_id)";
     private static final String SQL_CREATE_NEW_USER = "INSERT INTO user (first_name, last_name, " +
@@ -87,9 +87,15 @@ public class UserDAO extends AbstractDAO<User> {
         try (PreparedStatement statement = connection.prepareStatement(SQL_FIND_USERS_BY_ROLE)) {
             statement.setInt(1, findRoleIDbyName(roleName));
 
+            users = new ArrayList<>();
+
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     User user = new User();
+                    user.setFirstName(resultSet.getString("first_name"));
+                    user.setLastName(resultSet.getString("last_name"));
+                    user.setLogin(resultSet.getString("login"));
+                    user.setPhoneNumber(resultSet.getString("phone"));
                     users.add(user);
                 }
             } catch (SQLException e) {

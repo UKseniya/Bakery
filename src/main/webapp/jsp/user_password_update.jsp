@@ -9,7 +9,6 @@
     <jsp:include page="includes/column_right_home.jsp"/>
 
     <section>
-            <%--TODO: password--%>
         <form name="registrationForm" method="POST" action="controller">
             <input type="hidden" name="command" value="update_user_password"/>
             <i> ${incorrectPasswordMessage}</i>

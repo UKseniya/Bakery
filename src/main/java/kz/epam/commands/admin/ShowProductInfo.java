@@ -21,7 +21,6 @@ public class ShowProductInfo implements Command {
         String page = null;
 
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constants.LOCALE).toString();
         String productCode = request.getParameter(PRODUCT_CODE);
 
         ProductDAO productDAO = new ProductDAO();
