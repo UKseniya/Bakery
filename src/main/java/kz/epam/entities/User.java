@@ -3,7 +3,8 @@ package kz.epam.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class User extends Entity implements Serializable {
+public class User extends Entity {
+
     private String firstName;
     private String lastName;
     private String login;

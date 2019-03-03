@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class Product extends Entity implements Serializable {
+public class Product extends Entity {
+
     private String code;
     private String name;
     private String description;
@@ -54,6 +55,7 @@ public class Product extends Entity implements Serializable {
         this.status = status;
     }
 
+    //    TODO: think about moving all methods from entity to util
     public String getFormattedCode() {
         String formattedCode = null;
         formattedCode = this.code.substring(0,3);
@@ -63,9 +65,6 @@ public class Product extends Entity implements Serializable {
     public String getPriceCurrencyFormat() {
 
         Locale locale = new Locale("ru", "KZ");
-
-//        NumberFormat formater = NumberFormat.getNumberInstance();
-//        return formater.format(price);
 
         NumberFormat formater = NumberFormat.getCurrencyInstance(locale);
         return formater.format(price);

@@ -1,8 +1,7 @@
 package kz.epam.servlet;
 
-import kz.epam.commands.Command;
-import kz.epam.commands.CommandFactory;
-import kz.epam.config.ConfigManager;
+import kz.epam.command.Command;
+import kz.epam.command.CommandFactory;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

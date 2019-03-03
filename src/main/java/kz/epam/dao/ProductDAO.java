@@ -1,7 +1,7 @@
 package kz.epam.dao;
 
 import kz.epam.config.ConfigManager;
-import kz.epam.constants.Constants;
+import kz.epam.constant.Constants;
 import kz.epam.entities.Product;
 
 import java.sql.*;
@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import kz.epam.pool.ConnectionPool;
 
 public class ProductDAO extends AbstractDAO<Product> {
+
     private Logger log = Logger.getRootLogger();
     private static final String SQL_FIND_PRODUCT_NAME_BY_ID = "SELECT product_name FROM product_description pd " +
             "JOIN locale l ON (l.locale_id = pd.locale_id) " +

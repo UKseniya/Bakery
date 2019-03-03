@@ -1,7 +1,7 @@
 package kz.epam.dao;
 
 import kz.epam.config.ConfigManager;
-import kz.epam.constants.Constants;
+import kz.epam.constant.Constants;
 import kz.epam.entities.LineItem;
 import kz.epam.entities.Product;
 import kz.epam.pool.ConnectionPool;
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LineItemDAO extends AbstractDAO<LineItem> {
+
     private static final String SQL_FIND_LINE_ITEMS_BY_ORDER_ID = "SELECT * FROM line_item WHERE order_id = ?";
     private static final String SQL_CREATE_NEW_LINE_ITEM = "INSERT INTO line_item (order_id, product_id, product_price, quantity) " +
             "VALUES (?, ?, ?, ?)";

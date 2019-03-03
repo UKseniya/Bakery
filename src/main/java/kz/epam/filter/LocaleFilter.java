@@ -1,6 +1,6 @@
 package kz.epam.filter;
 
-import kz.epam.constants.Constants;
+import kz.epam.constant.Constants;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class LocaleFilter implements Filter {
+
     private static final String EXCLUDED_URLS = "excludedUrls";
     private static final String COMMA = ",";
     private List<String> excludedUrls;

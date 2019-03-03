@@ -9,12 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kz.epam.config.ConfigManager;
-import kz.epam.constants.Constants;
+import kz.epam.constant.Constants;
 import kz.epam.entities.User;
 import org.apache.log4j.Logger;
 import kz.epam.pool.ConnectionPool;
 
 public class UserDAO extends AbstractDAO<User> {
+
     private static final String  SQL_FIND_PASSWORD_BY_LOGIN = "SELECT password FROM user WHERE login = ?";
     private static final String SQL_FIND_USERS_BY_ROLE = "SELECT * FROM user WHERE role_id = ?";
     private static final String SQL_SELECT_ALL_USERS = "SELECT user_id, first_name, last_name, login, " +

@@ -7,17 +7,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FormEncodingSetterFilter implements Filter{
+
     private static final String FILTERABLE_CONTENT_TYPE="application/x-www-form-urlencoded";
     private static final String EXCLUDED_URLS = "excludedUrls";
     private static final String FREE_PAGES = "freePages";
     private static final String COMMA = ",";
-
     private static final String ENCODING_DEFAULT = "UTF-8";
-
     private static final String ENCODING_INIT_PARAM_NAME = "encoding";
 
     private List<String> excludedUrls;
-
     private String encoding;
 
     public void destroy(){

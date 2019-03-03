@@ -1,7 +1,7 @@
 package kz.epam.dao;
 
 import kz.epam.config.ConfigManager;
-import kz.epam.constants.Constants;
+import kz.epam.constant.Constants;
 import kz.epam.entities.*;
 import kz.epam.pool.ConnectionPool;
 import org.apache.log4j.Logger;
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDAO extends AbstractDAO<Order> {
+
     private static final String SQL_FIND_ALL_ORDER_NUMBERS = "SELECT order_number FROM ordering";
     private static final String SQL_FIND_ALL_ORDERS_BY_USER = "SELECT order_id, order_number, date " +
             "FROM ordering " +

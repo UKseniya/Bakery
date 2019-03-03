@@ -1,7 +1,9 @@
 package kz.epam.entities;
 
-public abstract class Entity {
+import java.io.Serializable;
 
+public abstract class Entity implements Serializable {
+//TODO: equals & hash for all entity ?
     private int id;
 
     public int getId() {

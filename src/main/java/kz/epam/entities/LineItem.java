@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class LineItem extends Entity implements Serializable {
+public class LineItem extends Entity {
 
     private Product product;
     private int quantity;
@@ -28,6 +28,7 @@ public class LineItem extends Entity implements Serializable {
         this.quantity = quantity;
     }
 
+    //    TODO: think about moving all methods from entity to util
     public double getItemTotal()
     {
         double total = product.getPrice() * quantity;

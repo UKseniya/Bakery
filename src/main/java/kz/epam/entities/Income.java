@@ -4,6 +4,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 public class Income extends Entity {
+
     private double sum;
     private String month;
     private int year;
@@ -32,6 +33,7 @@ public class Income extends Entity {
         this.year = year;
     }
 
+    //    TODO: think about moving all methods from entity to util
     public String getSumCurrencyFormat()
     {
         Locale locale = new Locale("ru", "KZ");

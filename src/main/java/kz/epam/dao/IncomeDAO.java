@@ -1,7 +1,7 @@
 package kz.epam.dao;
 
 import kz.epam.config.ConfigManager;
-import kz.epam.constants.Constants;
+import kz.epam.constant.Constants;
 import kz.epam.entities.Income;
 import kz.epam.pool.ConnectionPool;
 import org.apache.log4j.Logger;
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class IncomeDAO extends AbstractDAO<Income> {
+
     private static final String SQL_FIND_ALL_INCOME_INFORMATION = "SELECT SUM(total_income) AS annual_income, year FROM `income` GROUP BY year";
     private static final String SQL_FIND_INCOME_FOR_CERTAIN_MONTH = "SELECT * FROM income WHERE month = ? AND year = ?";
     private static final String SQL_FIND_INCOME_FOR_CERTAIN_YEAR = "SELECT * FROM income WHERE year = ?";

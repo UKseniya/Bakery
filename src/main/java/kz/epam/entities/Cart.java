@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class Cart extends Entity implements Serializable {
+public class Cart extends Entity {
 
     private List<LineItem> items;
 
@@ -22,11 +22,7 @@ public class Cart extends Entity implements Serializable {
         this.items = items;
     }
 
-//    public int getCount()
-//    {
-//        return items.size();
-//    }
-
+//    TODO: think about moving all methods from entity to util
     public double getTotal() {
 
         double total = 0.00;
@@ -74,7 +70,7 @@ public class Cart extends Entity implements Serializable {
             if (lineItem.getProduct().getCode().equals(code))
             {
                 items.remove(i);
-//                return;
+
             }
         }
     }

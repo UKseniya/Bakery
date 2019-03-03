@@ -4,6 +4,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class MessageManager {
+
     private static final String MESSAGE = "messages";
     private  static MessageManager instance;
     private static ResourceBundle resourceBundle;

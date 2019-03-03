@@ -7,7 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class Order extends Entity implements Serializable {
+public class Order extends Entity {
+
     private String orderNumber;
     private User user;
     private List<LineItem> items;
@@ -66,15 +67,7 @@ public class Order extends Entity implements Serializable {
         this.status = status;
     }
 
-    //
-//    public Date getDate() {
-//        return requestedDate;
-//    }
-//
-//    public void setDate(Date date) {
-//        this.requestedDate = date;
-//    }
-
+    //    TODO: think about moving all methods from entity to util
     public String getRequestedDateFormat() {
         DateFormat dateFormat = DateFormat.getDateInstance();
         String invoiceDateFormatted = dateFormat.format(requestedDate);

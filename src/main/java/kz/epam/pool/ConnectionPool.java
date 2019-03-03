@@ -9,11 +9,13 @@ import java.util.Iterator;
 import org.apache.log4j.Logger;
 
 public class ConnectionPool {
+
     private static final String DRIVER_ERROR = "Driver loading error ";
     private static final String WAITING_ERROR = "Waiting error ";
     private static final String CONNECTION_CREATION_ERROR = "Connection creation error ";
     private static final String ILLEGAL_MONITOR_EXCEPTION = "Illegal Monitor State Exception ";
     private static final String CONNECTION_RELEASE_ERROR = "Connection release error ";
+
     private Logger log = Logger.getRootLogger();
     private static ConnectionPool instance;
     private final String DRIVER_NAME;
