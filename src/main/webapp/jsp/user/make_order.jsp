@@ -11,13 +11,13 @@
 
     <body>
 
-    <section>
+    <section class="center">
         <form name="cart" method="POST" action="controller">
             <input type="hidden" name="command" value="review_cart">
             <input type="submit" value="<fmt:message key="button.cart.go"/> ">
         </form>
-        <br/>
-        <table id="productsList" border="transparent">
+        <%--<br/>--%>
+        <table class="common">
             <tr>
                 <th>&nbsp;</th>
                 <th><fmt:message key="name"/></th>

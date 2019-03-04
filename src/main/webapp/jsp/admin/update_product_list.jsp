@@ -14,7 +14,7 @@
     <section>
         <p><fmt:message key="product.active"/></p>
         <a href="controller?command=add_new_product"><fmt:message key="product.new"/></a><br/><br/>
-        <table class="list">
+        <table class="productsList">
             <tr>
                 <th><fmt:message key="product.code"/></th>
                 <th><fmt:message key="product.name"/></th>

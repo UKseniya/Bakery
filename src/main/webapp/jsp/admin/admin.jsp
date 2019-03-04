@@ -11,30 +11,30 @@
     <jsp:include page="../includes/admin_menu.jsp"/>
 
     <body>
-<section>
-    <p><fmt:message key="user.number"/> &nbsp;<b><i>${numberOfUsers}</i></b></p> <br/> <br/>
+<section class="center">
+    <p><fmt:message key="user.number"/> &nbsp; <b><i>${numberOfUsers}</i></b></p> <br/>
     <p><fmt:message key="top.product.current"/></p>
     <c:choose>
         <c:when test="${empty currentMonthTopProducts}">
-            <i><fmt:message key="none"/></i>
+            <b> <i><fmt:message key="none"/></i></b>
         </c:when>
         <c:otherwise>
             <fmt:message key="product.name"/><span class="tab4"><fmt:message key="quantity"/></span>
             <c:forEach var="item" items="${currentMonthTopProducts}">
-    <p><i>${item.product.name}<span class="tab4">${item.quantity}</span></i></p>
+                <p><b><i>${item.product.name}<span class="tab4">${item.quantity}</span></i></b></p>
     </c:forEach>
         </c:otherwise>
     </c:choose>
-    <br/>
+    <br/><br/>
     <p><fmt:message key="top.product.previous"/></p>
     <c:choose>
         <c:when test="${empty previousMonthTopProducts}">
-    <i><fmt:message key="none"/></i>
+            <b><i><fmt:message key="none"/></i></b>
         </c:when>
         <c:otherwise>
             <i> <fmt:message key="product.name"/><span class="tab4"><fmt:message key="quantity"/></span></i>
             <c:forEach var="item" items="${previousMonthTopProducts}">
-        <p><i>${item.product.name}<span class="tab4">${item.quantity}</span></i></p>
+                <p><b><i>${item.product.name}<span class="tab4">${item.quantity}</span></i></b></p>
         </c:forEach>
         </c:otherwise>
     </c:choose>

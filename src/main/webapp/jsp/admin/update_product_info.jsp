@@ -26,7 +26,7 @@
             <label><fmt:message key="product.description.english"/>: </label><br/>
             <textarea name="englishDescription" cols="50" rows="4">${productEn.description}</textarea><br/>
             <label><fmt:message key="price"/>: </label><br/>
-            <input type="text" name="price" value="${productRu.price}"><br/>
+            <input type="text" name="price" value="${productRu.price}"><br/><br/>
             <input type="submit" name="changeButton" value="<fmt:message key="button.change"/> "></form>
 
         <br/> <br/>

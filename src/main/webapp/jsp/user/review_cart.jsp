@@ -10,14 +10,15 @@
     <jsp:include page="../includes/user_menu.jsp"/>
 
     <body>
-    <section>
+    <section class="center">
+        <b><i>${orderErrorMessage}</i></b> <br/><br/>
         <c:choose>
             <c:when test="${empty cart.items}">
                 <p><fmt:message key="cart.empty"/></p>
 
             </c:when>
             <c:otherwise>
-                <table id="cart" border="transparent">
+                <table class="productsList">
                     <tr>
                         <th><fmt:message key="name"/></th>
                         <th><fmt:message key="price"/></th>

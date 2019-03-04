@@ -16,15 +16,8 @@ body {
   position:relative;
   padding-bottom: 30px;
 }
-/*#description img {*/
-  /*width: 5px;*/
-  /*height: 5px;*/
-/*}*/
-/*p {*/
-  /*margin-top: 0px;*/
-  /*margin-bottom: 0px;*/
-/*}*/
-.center section {
+
+section .center {
   text-align: center;
   font-size: 16px;
   margin-left: 15%;
@@ -100,12 +93,6 @@ li {
   padding-right: 2px;
 }
 
-#productsList table, tr, td {
-    border: none;
-    margin-left: 20px;
-    text-align: center;
-}
-
 #column-right {
   /*background: #efe5d0;*/
   text-align: right;
@@ -124,12 +111,7 @@ li {
 #user {
   font-size: 120%;
   margin-left: 30px;
-  /*float: left;*/
 }
-
-/*#logout {*/
-  /*margin-left: 10px;*/
-/*}*/
 
 #main {
   display: block;
@@ -146,7 +128,6 @@ li {
   float: right;
 }
 
-
 footer {
   display: block;
   background-color: #675c47;
@@ -162,7 +143,6 @@ footer {
   height: 30px;
 }
 
-
 h1 {
   font-size: 120%;
   text-align: center;
@@ -174,7 +154,6 @@ h3 {
   text-align: center;
   padding-left: 10%;
   padding-right: 10%;
-
 }
 
 a:link {
@@ -194,19 +173,26 @@ a:visited {
   border-bottom: thin dotted #675c47;
 }
 
-#description table {
-text-align: left;
+/*#description table {*/
+/*text-align: left;*/
+/*}*/
+
+/*Invisible border for table in cart and product_list*/
+table, tr, td, th .productsList {
+  border: none;
+  /*margin-left: 20px;*/
+  text-align: center;
+  margin: auto;
 }
 
-table  {
-  float: inside;
+table, tr .common {
   margin-left: 0px;
   margin-right: 20px;
   border: thin dotted gray;
   border-collapse: collapse;
 }
 
-td, th {
+td, th .common {
   border: thin dotted gray;
   padding: 15px;
   margin-left: 5px;
@@ -230,7 +216,7 @@ td, th {
 
 .tab4 {
   position: absolute;
-  left: 400px;
+  left: 450px;
 }
 
 .tab5 {

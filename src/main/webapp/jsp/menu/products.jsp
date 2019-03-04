@@ -13,7 +13,7 @@
             <c:if test="!${empty user}">
                 <a href="controller?command=user_page"/><fmt:message key="page.account"/></a>
             </c:if>
-            <table id="description">
+            <table class="common">
             <c:forEach var="product" items="${availableProducts}">
                 <tr>
                 <td><img src="/Bakery/pictures/${product.formattedCode}.jpg" width="200" height="200"></td>

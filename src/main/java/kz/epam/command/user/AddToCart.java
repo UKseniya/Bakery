@@ -7,13 +7,22 @@ import kz.epam.entities.Cart;
 import kz.epam.entities.LineItem;
 import kz.epam.entities.Product;
 import kz.epam.entities.User;
+import kz.epam.message.MessageManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class AddToCart implements Command {
 
+    private static final int MAXIMUM_ORDER_QUANTITY = 5;
+    private static final String ORDER_ERROR = "orderErrorMessage";
+    private static final String ORDER_ERROR_MESSAGE = "error.order.full";
     private static final String PATH_TO_SELECTING_ORDER_PAGE = "/jsp/user/make_order.jsp";
+    private static final String PATH_TO_CART_PAGE = "/jsp/user/review_cart.jsp";
+    private static int totalItemQuantity = 0;
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -23,8 +32,10 @@ public class AddToCart implements Command {
         String productCode = request.getParameter(Constants.PRODUCT_CODE);
 
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constants.LOCALE).toString();
+        String language = session.getAttribute(Constants.LOCALE).toString();
         User user = (User) session.getAttribute(Constants.USER);
+
+        Locale locale = new Locale(language);
 
         Cart cart = (Cart) session.getAttribute(Constants.CART);
         if (cart == null)
@@ -34,20 +45,31 @@ public class AddToCart implements Command {
         }
 
         ProductDAO productDAO = new ProductDAO();
-        Product product = new Product();
-        product = productDAO.findProductbyCode(productCode, locale);
+        Product product = productDAO.findProductbyCode(productCode, language);
         session.setAttribute(Constants.PRODUCT, product);
 
-        if (product != null) {
+        if (product != null && totalItemQuantity < MAXIMUM_ORDER_QUANTITY) {
             LineItem lineItem = new LineItem();
             lineItem.setProduct(product);
             lineItem.setQuantity(itemQuantity);
-                cart.addItem(lineItem);
+            cart.addItem(lineItem);
+            totalItemQuantity ++;
+
+            session.setAttribute(Constants.CART, cart);
+
+            if (totalItemQuantity < MAXIMUM_ORDER_QUANTITY) {
+
+                page = PATH_TO_SELECTING_ORDER_PAGE;
+            }
+            else {
+                page = PATH_TO_CART_PAGE;
+            }
         }
-
-        session.setAttribute(Constants.CART, cart);
-
-        page = PATH_TO_SELECTING_ORDER_PAGE;
+        else {
+            request.setAttribute(ORDER_ERROR,
+                    MessageManager.getInstance(locale).getProperty(ORDER_ERROR_MESSAGE));
+            page = PATH_TO_CART_PAGE;
+        }
 
         return page;
     }

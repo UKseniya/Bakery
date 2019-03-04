@@ -3,6 +3,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:requestEncoding value="UTF-8"/>
 <fmt:setLocale value="${userLocale}"/>
+<%--TODO: decide whether it is reasonable to have js over here--%>
+<script src="javascript/show_hidden.js" async type="text/javascript"></script>
 <fmt:bundle basename="resources">
 
     <!DOCTYPE html>
