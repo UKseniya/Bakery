@@ -12,6 +12,7 @@
 
     <body>
     <section>
+        <b><i>${lateDateMessage}</i></b>
 <c:choose>
         <c:when test="${empty allOrders}">
             <p><fmt:message key="order.empty" /></p>
@@ -29,12 +30,13 @@
             <span class="tab2"> <fmt:message key="total"/></span></p>
         <c:forEach var="order" items="${pendingOrders}">
             <form action="controller" method="POST">
-                <input type="hidden" name="action" value="cancel_order">
+                <input type="hidden" name="command" value="cancel_order">
             <p><a href="javascript:unhide('${order.orderNumber}')" ;/> ${order.orderNumber} </a>
                 <span class="tab1">${order.requestedDate}</span>
-                <span class="tab2">${order.orderTotalCurrencyFormat}</span></p>
-                <span class="tab3"><input type="hidden" name="orderID" value="${order.id}">
-                    <input type="submit" value="<fmt:message key="cancel"/> "></span>
+                <span class="tab2">${order.orderTotalCurrencyFormat}</span>
+                <span class="tab5">
+                    <input type="hidden" name="orderNumber" value="${order.orderNumber}">
+                    <input type="submit" value="<fmt:message key="cancel"/> "></span></p>
             </form>
             <div id="${order.orderNumber}" class="hidden">
                 <i>&nbsp;&nbsp;&nbsp;&nbsp; <fmt:message key="name"/></i>&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;

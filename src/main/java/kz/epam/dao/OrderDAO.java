@@ -26,13 +26,13 @@ public class OrderDAO extends AbstractDAO<Order> {
             "WHERE date = ? and status = ?";
     private static final String SQL_FIND_ALL_ORDERS = "SELECT order_id, order_number, user_id, " +
             "date, comment, status FROM ordering";
-    private static final String SQL_FIND_ORDER_BY_ID = "SELECT * FROM ordering WHERE order_id = ?";
+    private static final String SQL_FIND_ORDER_BY_ORDER_NUMBER = "SELECT * FROM ordering WHERE order_number = ?";
     private static final String SQL_CREATE_NEW_ORDER = "INSERT INTO ordering (order_number, user_id, date, comment, status)" +
             "VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_CHANGE_STATUS = "UPDATE ordering SET status = + ? " +
             "WHERE order_number = ?";
     private static final String SQL_SELECT_LAST_ORDER_ID = "SELECT @@IDENTITY AS IDENTITY";
-    private static final String SQL_CANCEL_ORDER = "DELETE FROM ordering WHERE order_number = ?";
+    private static final String SQL_CANCEL_ORDER = "DELETE FROM ordering WHERE order_id = ?";
 
     private static final String ORDER_ID = "order_id";
     private static final String ORDER_NUMBER = "order_number";
@@ -369,19 +369,19 @@ public class OrderDAO extends AbstractDAO<Order> {
         throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
-    @Override
-    public Order findEntityById(int id) {
+    public Order findEntityByOrderNumber(String number) {
         Order order = null;
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
         Connection connection = pool.getConnection();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ORDER_BY_ID)) {
-            preparedStatement.setInt(1, id);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ORDER_BY_ORDER_NUMBER)) {
+            preparedStatement.setString(1, number);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
 
                 if (resultSet.next()) {
                     order = new Order();
+                    order.setId(resultSet.getInt(ORDER_ID));
                     order.setOrderNumber(resultSet.getString(ORDER_NUMBER));
                     order.setRequestedDate(resultSet.getDate(Constants.DATE));
                 }
@@ -401,6 +401,11 @@ public class OrderDAO extends AbstractDAO<Order> {
     }
 
     @Override
+    public Order findEntityById(int id) {
+        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+    }
+
+    @Override
     public int findEntityByID(Order entity) {
         throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
@@ -410,12 +415,12 @@ public class OrderDAO extends AbstractDAO<Order> {
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
         Connection connection = pool.getConnection();
 
+        LineItemDAO lineItemDAO = new LineItemDAO();
+        lineItemDAO.delete(id);
+
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CANCEL_ORDER)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
-
-                LineItemDAO lineItemDAO = new LineItemDAO();
-                    lineItemDAO.delete(id);
 
             pool.freeConnection(connection);
 

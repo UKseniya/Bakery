@@ -18,8 +18,8 @@ import java.util.Locale;
 
 public class CancelOrder implements Command {
 
-    private static final String ORDER_ID = "orderID";
-    private static final int NUMBER_OF_DAYS = 5;
+    private static final String ORDER_NUMBER = "orderNumber";
+    private static final int NUMBER_OF_DAYS = -5;
     private static final String LATE_DATE = "lateDateMessage";
     private static final String LATE_DATE_MESSAGE = "late.date";
     private static final String PATH_TO_UPDATED_ORDER_LIST_PAGE = "/controller?command=show_all_orders";
@@ -37,19 +37,14 @@ public class CancelOrder implements Command {
 
         Locale locale = new Locale(language);
 
-        String orderID = request.getParameter(ORDER_ID);
+        String orderNumber = request.getParameter(ORDER_NUMBER);
 
         Calendar calendar = Calendar.getInstance();
         Date currentDate = calendar.getTime();
 
-        //TODO: delete function
-
-//        calendar.add(Calendar.DAY_OF_YEAR, NUMBER_OF_DAYS);
-//        Date minimumDateToCancel = calendar.getTime();
-
         OrderDAO orderDAO = new OrderDAO();
 
-        Order order = orderDAO.findEntityById(Integer.parseInt(orderID));
+        Order order = orderDAO.findEntityByOrderNumber(orderNumber);
 
         Date orderDate = order.getRequestedDate();
 
@@ -59,14 +54,15 @@ public class CancelOrder implements Command {
         DateFormat formatter;
         formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
         try {
-            currentDate = formatter.parse(formatter.format(calendar.getTime()));
-            date = formatter.parse(formatter.format(orderDate));
+            currentDate = formatter.parse(formatter.format(currentDate));
+            date = formatter.parse(formatter.format(calendar.getTime()));
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        if (orderDate.before(currentDate)) {
+        if (date.after(currentDate)) {
             orderDAO.delete(order.getId());
+            page = PATH_TO_UPDATED_ORDER_LIST_PAGE;
         }
         else {
             request.setAttribute(LATE_DATE,
@@ -74,6 +70,6 @@ public class CancelOrder implements Command {
             page = PATH_TO_REVIEW_ORDERS_PAGE;
         }
 
-        return PATH_TO_UPDATED_ORDER_LIST_PAGE;
+        return page;
     }
 }

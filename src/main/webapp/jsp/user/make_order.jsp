@@ -12,6 +12,11 @@
     <body>
 
     <section>
+        <form name="cart" method="POST" action="controller">
+            <input type="hidden" name="command" value="review_cart">
+            <input type="submit" value="<fmt:message key="button.cart.go"/> ">
+        </form>
+        <br/>
         <table id="productsList" border="transparent">
             <tr>
                 <th>&nbsp;</th>
@@ -30,6 +35,7 @@
                         <td>
                             <input type="hidden" name="productCode" value="${product.code}">
                             <input type="submit" value="<fmt:message key="button.cart.add"/>">
+                            <%--TODO: add some notification that product has been added, if possible--%>
                         </td>
                     </tr>
                 </form>

@@ -7,6 +7,7 @@ import kz.epam.entities.Cart;
 import kz.epam.entities.Order;
 import kz.epam.entities.User;
 import kz.epam.message.MessageManager;
+import kz.epam.util.OrderNumberGenerator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -75,20 +76,9 @@ public class ConfirmOrder implements Command {
 
             }
             else {
-                String orderNumber = null;
+
                 List<Integer> usedNumbers = orderDAO.findAllOrderNumbers();
-                if (usedNumbers.size() != NULL) {
-                    for (int i = NULL; i < usedNumbers.size()+INCREMENT; i++) {
-                        if (!usedNumbers.contains(INITIAL_NUMBER)) {
-                            orderNumber = String.format(ORDER_NUMBER_FORMAT,INITIAL_NUMBER);
-                            break;
-                        }
-                        INITIAL_NUMBER++;
-                    }
-                }
-                else {
-                    orderNumber = String.format(ORDER_NUMBER_FORMAT,INITIAL_NUMBER);
-                }
+                String orderNumber = OrderNumberGenerator.generateOrderNumber(orderDAO.findAllOrderNumbers());
 
                 if (!usedNumbers.contains(Integer.parseInt(orderNumber))) {
                     Order order = new Order();
