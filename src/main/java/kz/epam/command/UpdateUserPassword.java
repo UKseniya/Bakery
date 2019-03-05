@@ -1,8 +1,8 @@
 package kz.epam.command;
 
-import kz.epam.constant.Constants;
+import kz.epam.constant.Constant;
 import kz.epam.dao.UserDAO;
-import kz.epam.entities.User;
+import kz.epam.entity.User;
 import kz.epam.message.MessageManager;
 import kz.epam.util.PasswordUtil;
 
@@ -13,6 +13,7 @@ import java.util.Locale;
 public class UpdateUserPassword implements Command {
 
     private static final int SALT_LENGTH = 30;
+    private static final int SUBSTRING = 0;
     private static final String UPDATE_BUTTON = "updateButton";
     private static final String CURRENT_PASSWORD = "currentPassword";
     private static final String NEW_PASSWORD = "newPassword";
@@ -26,16 +27,17 @@ public class UpdateUserPassword implements Command {
     //    TODO: split the whole method into several small methods;
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
+        String page;
+        boolean passwordVerified = true;
 
         String updateButton = request.getParameter(UPDATE_BUTTON);
         String currentPassword = request.getParameter(CURRENT_PASSWORD);
         String newPassword = request.getParameter(NEW_PASSWORD);
 
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute(Constants.USER);
+        User user = (User) session.getAttribute(Constant.USER);
 
-        String language = session.getAttribute(Constants.LOCALE).toString();
+        String language = session.getAttribute(Constant.LOCALE).toString();
 
         Locale locale = new Locale(language);
 
@@ -44,22 +46,9 @@ public class UpdateUserPassword implements Command {
         if (updateButton != null) {
             // Retrieve secured password and salt from the password stored in DB.
             String password = userDAO.findPasswordByLogin(user.getLogin());
-            String currentSecuredPassword = password.substring(0, password.length() - SALT_LENGTH);
-            String currentSalt = password.length() > SALT_LENGTH ? password.substring(password.length() - SALT_LENGTH) : password;
-
 
             // Verify password provided by user
-            boolean passwordVerified = PasswordUtil.verifyUserPassword(currentPassword, currentSecuredPassword, currentSalt);
-
-            String newSalt = PasswordUtil.getSalt(SALT_LENGTH);
-
-            // Protect user's providedPassword. The generated value can be stored in DB.
-            String newSecuredPassword = PasswordUtil.generateSecurePassword(newPassword, newSalt);
-
-            // Get the value of securedPassword and salt to be stored in DB
-            StringBuilder saltedSecuredPassword = new StringBuilder();
-            saltedSecuredPassword.append(newSecuredPassword).append(newSalt);
-            String newPasswordinDB = saltedSecuredPassword.toString();
+            passwordVerified = verifyPassword(password, currentPassword);
 
             if (currentPassword.equals(newPassword)) {
                 request.setAttribute(SAME_PASSWORD_MESSAGE,
@@ -70,7 +59,10 @@ public class UpdateUserPassword implements Command {
                         MessageManager.getInstance(locale).getProperty(INCORRECT_PASSWORD));
                 page = PATH_TO_UPDATE_PAGE;
             } else {
-                user.setPassword(newPasswordinDB);
+                // Get new secured password
+                String newPasswordInDB = generateNewSecuredPassword(newPassword);
+
+                user.setPassword(newPasswordInDB);
                 userDAO.updateUserPassword(user);
                 page = PATH_TO_CONFIRMATION_PAGE;
             }
@@ -78,5 +70,33 @@ public class UpdateUserPassword implements Command {
             page = PATH_TO_UPDATE_PAGE;
         }
         return page;
+    }
+
+    private boolean verifyPassword(String databasePassword, String providedPassword) {
+        boolean verified = true;
+
+        String securedPassword = databasePassword.substring(SUBSTRING, databasePassword.length() - SALT_LENGTH);
+        String salt = databasePassword.length() > SALT_LENGTH ? databasePassword.substring(databasePassword.length() - SALT_LENGTH) : databasePassword;
+
+        // Verify databasePassword provided by user
+        verified = PasswordUtil.verifyUserPassword(providedPassword, securedPassword, salt);
+
+        return verified;
+    }
+
+    private String generateNewSecuredPassword(String newPassword) {
+        String password;
+        // Generate Salt. The generated value can be stored in DB.
+        String salt = PasswordUtil.getSalt(SALT_LENGTH);
+
+        // Protect user's newPassword. The generated value can be stored in DB.
+        String securedPassword = PasswordUtil.generateSecurePassword(newPassword, salt);
+
+        // Get the value of securedPassword and salt to be stored in DB
+        StringBuilder saltedSecuredPassword = new StringBuilder();
+        saltedSecuredPassword.append(securedPassword).append(salt);
+        password = saltedSecuredPassword.toString();
+
+        return password;
     }
 }

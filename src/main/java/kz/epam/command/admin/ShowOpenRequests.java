@@ -1,9 +1,9 @@
 package kz.epam.command.admin;
 
 import kz.epam.command.Command;
-import kz.epam.constant.Constants;
+import kz.epam.constant.Constant;
 import kz.epam.dao.OrderDAO;
-import kz.epam.entities.Order;
+import kz.epam.entity.Order;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,10 +16,11 @@ import java.util.List;
 
 public class ShowOpenRequests implements Command {
 
-    private static final String CHANGE_BUTTON = "private static final String CHANGE_BUTTON = \"\";";
+    private static final String CHANGE_BUTTON = "changeDateButton";
     private static final String COMPLETE_BUTTON = "completeButton";
     private static final String CLOSE_BUTTON = "closeButton";
     private static final String RECEIVED_DATE = "date";
+    private static final int NUMBER_OF_DAYS = 1;
     private static final String ORDER_NUMBER = "orderNumber";
     private static final String PATH_TO_REVIEW_ORDERS = "/jsp/admin/review_orders.jsp";
 
@@ -32,7 +33,7 @@ public class ShowOpenRequests implements Command {
         String page;
 
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constants.LOCALE).toString();
+        String locale = session.getAttribute(Constant.LOCALE).toString();
 
         String changeButton = request.getParameter(CHANGE_BUTTON);
         String completeButton = request.getParameter(COMPLETE_BUTTON);
@@ -52,19 +53,18 @@ public class ShowOpenRequests implements Command {
 
         Calendar calendar = Calendar.getInstance();
         Date requestCompletionDate = calendar.getTime();
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        calendar.add(Calendar.DAY_OF_YEAR, NUMBER_OF_DAYS);
         Date requestProcessingDate = calendar.getTime();
 
         if (changeButton != null) {
             DateFormat formatter;
-            formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
+            formatter = new SimpleDateFormat(Constant.DATE_FORMAT);
             try {
                 date = formatter.parse(receivedDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }
-        else {
+        } else {
             date = requestProcessingDate;
         }
 
@@ -73,14 +73,14 @@ public class ShowOpenRequests implements Command {
 
         pendingOrders = orderDAO.findAllPendingOrdersByDate(sqlCurrentDate, locale);
 
-        session.setAttribute(Constants.PENDING_ORDERS, pendingOrders);
+        session.setAttribute(Constant.PENDING_ORDERS, pendingOrders);
 
         java.util.Date utilPickupDate = requestCompletionDate;
         java.sql.Date sqlPickUpDate = new java.sql.Date(utilPickupDate.getTime());
 
         completedOrders = orderDAO.findAllCompletedOrdersByDate(sqlPickUpDate, locale);
 
-        session.setAttribute(Constants.COMPLETE_ORDERS, completedOrders);
+        session.setAttribute(Constant.COMPLETE_ORDERS, completedOrders);
 
         page = PATH_TO_REVIEW_ORDERS;
 

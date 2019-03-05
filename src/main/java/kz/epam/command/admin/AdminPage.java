@@ -1,11 +1,11 @@
 package kz.epam.command.admin;
 
 import kz.epam.command.Command;
-import kz.epam.constant.Constants;
+import kz.epam.constant.Constant;
 import kz.epam.dao.LineItemDAO;
 import kz.epam.dao.UserDAO;
-import kz.epam.entities.LineItem;
-import kz.epam.entities.User;
+import kz.epam.entity.LineItem;
+import kz.epam.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,9 +19,10 @@ public class AdminPage implements Command {
     private static final int FIRST_MONTH = 1;
     private static final int LAST_MONTH = 12;
     private static final int DECREMENT = 1;
-    private List<User> registeredUsers = new ArrayList<>();
     private static final String CURRENT_MONTH_TOP_PRODUCTS = "currentMonthTopProducts";
     private static final String PREVIOUS_MONTH_TOP_PRODUCTS = "previousMonthTopProducts";
+
+    private List<User> registeredUsers = new ArrayList<>();
     private List<LineItem> currentMonthTopProducts = new ArrayList<>();
     private List<LineItem> previousMonthTopProducts = new ArrayList<>();
     private int maxQuantity = 0;
@@ -33,10 +34,10 @@ public class AdminPage implements Command {
     public String execute(HttpServletRequest request) {
 
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constants.LOCALE).toString();
+        String locale = session.getAttribute(Constant.LOCALE).toString();
 
         UserDAO userDAO = new UserDAO();
-        registeredUsers = userDAO.findAllUsersByRole(Constants.USER);
+        registeredUsers = userDAO.findAllUsersByRole(Constant.USER);
         int numberOfUsers = registeredUsers.size();
 
         session.setAttribute(TOTAL_NUMBER_OF_USERS, numberOfUsers);
@@ -85,7 +86,6 @@ public class AdminPage implements Command {
 
         session.setAttribute(PREVIOUS_MONTH_TOP_PRODUCTS, previousMonthTopProducts);
 
-
-        return Constants.PATH_TO_ADMIN_PAGE;
+        return Constant.PATH_TO_ADMIN_PAGE;
     }
 }

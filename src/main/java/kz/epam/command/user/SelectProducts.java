@@ -1,10 +1,10 @@
 package kz.epam.command.user;
 
 import kz.epam.command.Command;
-import kz.epam.constant.Constants;
+import kz.epam.constant.Constant;
 import kz.epam.dao.ProductDAO;
-import kz.epam.entities.Product;
-import kz.epam.entities.User;
+import kz.epam.entity.Product;
+import kz.epam.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -18,16 +18,15 @@ public class SelectProducts implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
+        String page;
 
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constants.LOCALE).toString();
-        User user = (User) session.getAttribute(Constants.USER);
+        String locale = session.getAttribute(Constant.LOCALE).toString();
 
         ProductDAO productDAO = new ProductDAO();
         availableProducts = productDAO.findAllAvailableProducts(locale);
 
-        session.setAttribute(Constants.AVAILABLE_PRODUCTS, availableProducts);
+        session.setAttribute(Constant.AVAILABLE_PRODUCTS, availableProducts);
 
         page = PATH_TO_SELECTING_ORDER_PAGE;
 

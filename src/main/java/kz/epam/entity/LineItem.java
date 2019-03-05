@@ -1,6 +1,5 @@
-package kz.epam.entities;
+package kz.epam.entity;
 
-import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 

@@ -28,7 +28,7 @@ section .center {
 section {
   text-align: left;
   font-size: 16px;
-  margin-left: 18%;
+  margin-left: 20%;
   margin-right: 18%;
   color: #000000;
 }
@@ -178,21 +178,47 @@ a:visited {
 /*}*/
 
 /*Invisible border for table in cart and product_list*/
-table, tr, td, th .productsList {
+.productsList {
   border: none;
   /*margin-left: 20px;*/
   text-align: center;
-  margin: auto;
 }
 
-table, tr .common {
+.productsList th, tr, td {
+  border: none;
+  padding: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
+  width: max-content;
+  text-align: center;
+}
+
+.productsList input[type="submit"] {
+  display: block;
+  margin: 0 auto;
+}
+
+.list {
+  border: none;
+}
+
+.list th, tr, td {
+  border: none;
+  padding: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
+  width: max-content;
+  text-align: left;
+}
+
+.common {
   margin-left: 0px;
   margin-right: 20px;
   border: thin dotted gray;
   border-collapse: collapse;
 }
 
-td, th .common {
+.common td, th {
   border: thin dotted gray;
   padding: 15px;
   margin-left: 5px;
@@ -201,7 +227,7 @@ td, th .common {
 
 .tab1 {
   position:absolute;
-  left:380px;
+  left:400px;
 }
 
 .tab2 {

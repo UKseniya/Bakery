@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class Controller extends HttpServlet {
+public class BakeryController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     CommandFactory commandFactory = CommandFactory.getInstance();
 

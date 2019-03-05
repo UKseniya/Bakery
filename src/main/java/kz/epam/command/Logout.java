@@ -1,6 +1,6 @@
 package kz.epam.command;
 
-import kz.epam.constant.Constants;
+import kz.epam.constant.Constant;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -14,10 +14,8 @@ public class Logout implements Command {
 
         HttpSession session = request.getSession();
 
-        String page = PATH_TO_WELCOME_PAGE;
+        session.removeAttribute(Constant.USER);
 
-        session.removeAttribute(Constants.USER);
-
-        return page;
+        return PATH_TO_WELCOME_PAGE;
     }
 }

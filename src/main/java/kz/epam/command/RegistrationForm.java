@@ -1,8 +1,8 @@
 package kz.epam.command;
 
-import kz.epam.constant.Constants;
+import kz.epam.constant.Constant;
 import kz.epam.dao.UserDAO;
-import kz.epam.entities.User;
+import kz.epam.entity.User;
 import kz.epam.message.MessageManager;
 import kz.epam.util.PasswordUtil;
 
@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 public class RegistrationForm implements Command {
 
     private static final int SALT_LENGTH = 30;
+    private static final int PHONE_NUMBER_LENGTH = 11;
     private static final String PHONE_NUMBER_REGEX = "\\d+";
     private static final String INCORRECT_PHONE = "error.phone";
     private static final String INCORRECT_PHONE_MESSAGE = "phoneNumberError";
@@ -25,38 +26,30 @@ public class RegistrationForm implements Command {
     //    TODO: split the whole method into several small methods;
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
+        String page;
 
-        String firstName = request.getParameter(Constants.FIRST_NAME);
-        String lastName = request.getParameter(Constants.LAST_NAME);
-        String email = request.getParameter(Constants.EMAIL);
-        String phone = request.getParameter(Constants.PHONE);
-        String login = request.getParameter(Constants.LOGIN);
-        String providedPassword = request.getParameter(Constants.PASSWORD);
+        String firstName = request.getParameter(Constant.FIRST_NAME);
+        String lastName = request.getParameter(Constant.LAST_NAME);
+        String email = request.getParameter(Constant.EMAIL);
+        String phone = request.getParameter(Constant.PHONE);
+        String login = request.getParameter(Constant.LOGIN);
+        String providedPassword = request.getParameter(Constant.PASSWORD);
 
         HttpSession session = request.getSession();
 
-        String language = session.getAttribute(Constants.LOCALE).toString();
+        String language = session.getAttribute(Constant.LOCALE).toString();
 
         Locale locale = new Locale(language);
 
-        Pattern phoneNumberPattern =  Pattern.compile(PHONE_NUMBER_REGEX);
+        Pattern phoneNumberPattern = Pattern.compile(PHONE_NUMBER_REGEX);
 
         UserDAO userDAO = new UserDAO();
         boolean isLoginFree = userDAO.isLoginFree(login);
         if (isLoginFree) {
-            // Generate Salt. The generated value can be stored in DB.
-            String salt = PasswordUtil.getSalt(SALT_LENGTH);
 
-            // Protect user's providedPassword. The generated value can be stored in DB.
-            String securedPassword = PasswordUtil.generateSecurePassword(providedPassword, salt);
+            String password = generateSecuredPassword(providedPassword);
 
-            // Get the value of securedPassword and salt to be stored in DB
-            StringBuilder saltedSecuredPassword = new StringBuilder();
-            saltedSecuredPassword.append(securedPassword).append(salt);
-            String password = saltedSecuredPassword.toString();
-
-            if (phoneNumberPattern.matcher(phone).matches() && phone.length() == 11) {
+            if (phoneNumberPattern.matcher(phone).matches() && phone.length() == PHONE_NUMBER_LENGTH) {
                 User user = new User();
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
@@ -67,19 +60,32 @@ public class RegistrationForm implements Command {
 
                 userDAO.create(user);
                 page = PATH_TO_CONFIRMATION_PAGE;
-            }
-            else {
+            } else {
                 request.setAttribute(INCORRECT_PHONE_MESSAGE,
                         MessageManager.getInstance(locale).getProperty(INCORRECT_PHONE));
                 page = PATH_TO_REGISTRATION_PAGE;
             }
-        }
-
-        else {
+        } else {
             request.setAttribute(REGISTRATION_ERROR,
                     MessageManager.getInstance(locale).getProperty(REGISTRATION_ERROR_MESSAGE));
             page = PATH_TO_REGISTRATION_PAGE;
         }
         return page;
+    }
+
+    private String generateSecuredPassword(String providedPassword) {
+        String password;
+        // Generate Salt. The generated value can be stored in DB.
+        String salt = PasswordUtil.getSalt(SALT_LENGTH);
+
+        // Protect user's providedPassword. The generated value can be stored in DB.
+        String securedPassword = PasswordUtil.generateSecurePassword(providedPassword, salt);
+
+        // Get the value of securedPassword and salt to be stored in DB
+        StringBuilder saltedSecuredPassword = new StringBuilder();
+        saltedSecuredPassword.append(securedPassword).append(salt);
+        password = saltedSecuredPassword.toString();
+
+        return password;
     }
 }

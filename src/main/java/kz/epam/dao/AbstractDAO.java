@@ -1,6 +1,6 @@
 package kz.epam.dao;
 
-import kz.epam.entities.Entity;
+import kz.epam.entity.Entity;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +9,6 @@ import java.sql.Statement;
 import java.util.List;
 
 public abstract class AbstractDAO<T extends Entity> {
-
 
     public abstract List<T> findAll();
 

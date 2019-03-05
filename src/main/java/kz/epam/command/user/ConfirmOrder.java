@@ -1,11 +1,11 @@
 package kz.epam.command.user;
 
 import kz.epam.command.Command;
-import kz.epam.constant.Constants;
+import kz.epam.constant.Constant;
 import kz.epam.dao.OrderDAO;
-import kz.epam.entities.Cart;
-import kz.epam.entities.Order;
-import kz.epam.entities.User;
+import kz.epam.entity.Cart;
+import kz.epam.entity.Order;
+import kz.epam.entity.User;
 import kz.epam.message.MessageManager;
 import kz.epam.util.OrderNumberGenerator;
 
@@ -22,30 +22,26 @@ public class ConfirmOrder implements Command {
 
     private static final String COMMENT = "comment";
     private static final int NUMBER_OF_DAYS = 2;
-    private static final int NULL = 0;
-    private static final int INCREMENT = 1;
-    private static final String ORDER_NUMBER_FORMAT = "%06d";
     private static final String DATE_ERROR = "dateErrorMessage";
     private static final String NULL_DATE = "dateNullMessage";
     private static final String WRONG_DATE_MESSAGE = "error.date.wrong";
     private static final String NULL_DATE_MESSAGE = "error.date.null";
     private static final String PATH_TO_CHECKOUT_PAGE = "/jsp/user/checkout.jsp";
     private static final String PATH_TO_CONFIRMATION_PAGE = "/jsp/user/confirmed_order.jsp";
-    private static int INITIAL_NUMBER = 000001;
 
-//    TODO: split the whole method into several small methods;
+    //    TODO: split the whole method into several small methods;
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
+        String page;
         Date date = null;
 
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute(Constants.USER);
-        Cart cart = (Cart) session.getAttribute(Constants.CART);
-        String requestedDate = request.getParameter(Constants.DATE);
+        User user = (User) session.getAttribute(Constant.USER);
+        Cart cart = (Cart) session.getAttribute(Constant.CART);
+        String requestedDate = request.getParameter(Constant.DATE);
         String comment = request.getParameter(COMMENT);
 
-        String language = session.getAttribute(Constants.LOCALE).toString();
+        String language = session.getAttribute(Constant.LOCALE).toString();
 
         Locale locale = new Locale(language);
 
@@ -55,7 +51,7 @@ public class ConfirmOrder implements Command {
         Date minimumDate = calendar.getTime();
 
         DateFormat formatter;
-        formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
+        formatter = new SimpleDateFormat(Constant.DATE_FORMAT);
         try {
             minimumDate = formatter.parse(formatter.format(calendar.getTime()));
             date = formatter.parse(requestedDate);
@@ -74,8 +70,7 @@ public class ConfirmOrder implements Command {
                         MessageManager.getInstance(locale).getProperty(WRONG_DATE_MESSAGE));
                 page = PATH_TO_CHECKOUT_PAGE;
 
-            }
-            else {
+            } else {
 
                 List<Integer> usedNumbers = orderDAO.findAllOrderNumbers();
                 String orderNumber = OrderNumberGenerator.generateOrderNumber(orderDAO.findAllOrderNumbers());
@@ -87,18 +82,17 @@ public class ConfirmOrder implements Command {
                     order.setItems(cart.getItems());
                     order.setRequestedDate(date);
                     order.setComment(comment);
-                    order.setStatus(Constants.IN_PROGRESS_STATUS);
+                    order.setStatus(Constant.IN_PROGRESS_STATUS);
                     orderDAO.create(order);
                     cart.getItems().clear();
                 }
 
-                session.setAttribute(Constants.CART, cart);
+                session.setAttribute(Constant.CART, cart);
 
                 page = PATH_TO_CONFIRMATION_PAGE;
             }
 
-        }
-        else {
+        } else {
             request.setAttribute(NULL_DATE,
                     MessageManager.getInstance(locale).getProperty(NULL_DATE_MESSAGE));
             page = PATH_TO_CHECKOUT_PAGE;

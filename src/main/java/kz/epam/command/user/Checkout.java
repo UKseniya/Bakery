@@ -1,9 +1,9 @@
 package kz.epam.command.user;
 
 import kz.epam.command.Command;
-import kz.epam.constant.Constants;
-import kz.epam.entities.Cart;
-import kz.epam.entities.User;
+import kz.epam.constant.Constant;
+import kz.epam.entity.Cart;
+import kz.epam.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -14,11 +14,13 @@ public class Checkout implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
+        String page;
 
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute(Constants.USER);
-        Cart cart = (Cart) session.getAttribute(Constants.CART);
+        User user = (User) session.getAttribute(Constant.USER);
+        Cart cart = (Cart) session.getAttribute(Constant.CART);
+
+        session.setAttribute(Constant.CART, cart);
 
         page = PATH_TO_CHECKOUT_PAGE;
 

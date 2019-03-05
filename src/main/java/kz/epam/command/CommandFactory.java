@@ -14,11 +14,12 @@ public class CommandFactory {
 
     enum CommandEnum {
 
-        NO_COMMAND, LOGIN_FORM, LOGIN, LOGOUT, REGISTRATION, REGISTRATION_FORM, USER_PAGE, UPDATE_USER_DETAILS,
-        UPDATE_USER_PASSWORD, SELECT_PRODUCTS, ADD_TO_CART, REVIEW_CART, UPDATE_CART, CHECKOUT, CONFIRM_ORDER, REVIEW_ORDERS, ADMIN_PAGE,
-        SHOW_ALL_ORDERS, SHOW_TASKS, SHOW_ALL_REQUESTS, SHOW_AVAILABLE_PRODUCTS,
-        UPDATE_PRODUCT_LIST, SHOW_PRODUCT_INFO, UPDATE_PRODUCT_INFO, ADD_NEW_PRODUCT,
-        SHOW_INCOME, SHOW_ANNUAL_INCOMES, SHOW_ALL_INCOMES, CANCEL_ORDER;
+        NO_COMMAND, LOGIN_FORM, LOGIN, LOGOUT, REGISTRATION, REGISTRATION_FORM, USER_PAGE,
+        UPDATE_USER_DETAILS, UPDATE_USER_PASSWORD, SELECT_PRODUCTS, ADD_TO_CART, REVIEW_CART,
+        UPDATE_CART, CHECKOUT, CONFIRM_ORDER, ADMIN_PAGE, SHOW_ALL_ORDERS, SHOW_TASKS,
+        SHOW_ALL_REQUESTS, SHOW_AVAILABLE_PRODUCTS, UPDATE_PRODUCT_LIST, SHOW_PRODUCT_INFO,
+        UPDATE_PRODUCT_INFO, ADD_NEW_PRODUCT, SHOW_INCOME, SHOW_ANNUAL_INCOMES,
+        SHOW_ALL_INCOMES, CANCEL_ORDER;
     }
 
     public static CommandFactory getInstance() {
@@ -30,10 +31,7 @@ public class CommandFactory {
         // Get the command from the request
         String command = request.getParameter(COMMAND);
 
-        if (command == null || command.isEmpty()) {
-            // if the command is not specified in the current request
-           command = action;
-        } else if (command != action){
+        if (!(command == null || command.isEmpty()) && command != action) {
             action = command;
         }
         // Receive object that corresponds to the request
@@ -69,8 +67,6 @@ public class CommandFactory {
                 return new Checkout();
             case CONFIRM_ORDER:
                 return new ConfirmOrder();
-//            case REVIEW_ORDERS:
-//                return new ShowPendingOrders();
             case ADMIN_PAGE:
                 return new AdminPage();
             case SHOW_ALL_ORDERS:

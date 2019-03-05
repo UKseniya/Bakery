@@ -1,9 +1,9 @@
 package kz.epam.dao;
 
 import kz.epam.config.ConfigManager;
-import kz.epam.constant.Constants;
-import kz.epam.entities.LineItem;
-import kz.epam.entities.Product;
+import kz.epam.constant.Constant;
+import kz.epam.entity.LineItem;
+import kz.epam.entity.Product;
 import kz.epam.pool.ConnectionPool;
 import org.apache.log4j.Logger;
 
@@ -33,9 +33,10 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
     private static String user_name = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_USER);
     private static String password = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_PASSWORD);
     private static int maxConn = Integer.parseInt(ConfigManager.getInstance().getProperty(ConfigManager.MAX_CONN));
+
     private Logger log = Logger.getRootLogger();
 
-    public List<LineItem> findALL (int orderID, String locale) {
+    public List<LineItem> findALL(int orderID, String locale) {
         List<LineItem> items = null;
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
         Connection connection = pool.getConnection();
@@ -58,18 +59,18 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
 
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
             pool.freeConnection(connection);
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
-            return items;
+        return items;
     }
 
 
-    public boolean create (int orderID, LineItem item) {
+    public boolean create(int orderID, LineItem item) {
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
         Connection connection = pool.getConnection();
 
@@ -79,7 +80,8 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
             preparedStatement.setInt(1, orderID);
             preparedStatement.setInt(2, productID);
             preparedStatement.setDouble(3, item.getProduct().getPrice());
-            preparedStatement.setInt(4, item.getQuantity());;
+            preparedStatement.setInt(4, item.getQuantity());
+            ;
             preparedStatement.executeUpdate();
 
             pool.freeConnection(connection);
@@ -87,7 +89,7 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return false;
     }
@@ -115,27 +117,28 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return items;
     }
+
     @Override
     public List<LineItem> findAll() {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
     public LineItem findEntityById(int id) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
     public int findEntityByID(LineItem entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
@@ -152,7 +155,7 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
 
         return false;
@@ -160,16 +163,16 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
 
     @Override
     public boolean delete(LineItem entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
     public boolean create(LineItem entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
     public LineItem update(LineItem entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 }

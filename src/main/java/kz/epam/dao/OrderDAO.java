@@ -1,8 +1,8 @@
 package kz.epam.dao;
 
 import kz.epam.config.ConfigManager;
-import kz.epam.constant.Constants;
-import kz.epam.entities.*;
+import kz.epam.constant.Constant;
+import kz.epam.entity.*;
 import kz.epam.pool.ConnectionPool;
 import org.apache.log4j.Logger;
 
@@ -25,7 +25,7 @@ public class OrderDAO extends AbstractDAO<Order> {
             "date, comment FROM ordering " +
             "WHERE date = ? and status = ?";
     private static final String SQL_FIND_ALL_ORDERS = "SELECT order_id, order_number, user_id, " +
-            "date, comment, status FROM ordering";
+            "date, comment, status FROM ordering ORDER BY date DESC";
     private static final String SQL_FIND_ORDER_BY_ORDER_NUMBER = "SELECT * FROM ordering WHERE order_number = ?";
     private static final String SQL_CREATE_NEW_ORDER = "INSERT INTO ordering (order_number, user_id, date, comment, status)" +
             "VALUES (?, ?, ?, ?, ?)";
@@ -49,6 +49,7 @@ public class OrderDAO extends AbstractDAO<Order> {
     private static String user_name = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_USER);
     private static String password = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_PASSWORD);
     private static int maxConn = Integer.parseInt(ConfigManager.getInstance().getProperty(ConfigManager.MAX_CONN));
+
     private Logger log = Logger.getRootLogger();
 
     public List findAll(String locale) {
@@ -70,9 +71,9 @@ public class OrderDAO extends AbstractDAO<Order> {
                 order.setOrderNumber(resultSet.getString(ORDER_NUMBER));
                 order.setUser(userDAO.findEntityById(resultSet.getInt(USER_ID)));
                 order.setItems(lineItemDAO.findALL(orderID, locale));
-                order.setRequestedDate(resultSet.getDate(Constants.DATE));
+                order.setRequestedDate(resultSet.getDate(Constant.DATE));
                 order.setComment(resultSet.getString(COMMENT));
-                order.setStatus(findStatusNameByID(resultSet.getInt(Constants.STATUS), locale));
+                order.setStatus(findStatusNameByID(resultSet.getInt(Constant.STATUS), locale));
                 orders.add(order);
             }
 
@@ -80,7 +81,7 @@ public class OrderDAO extends AbstractDAO<Order> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
 
         return orders;
@@ -107,7 +108,7 @@ public class OrderDAO extends AbstractDAO<Order> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return orderNumbers;
     }
@@ -127,12 +128,12 @@ public class OrderDAO extends AbstractDAO<Order> {
 
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
             pool.freeConnection(connection);
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return statusID;
     }
@@ -153,12 +154,12 @@ public class OrderDAO extends AbstractDAO<Order> {
 
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
             pool.freeConnection(connection);
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return statusName;
     }
@@ -186,17 +187,17 @@ public class OrderDAO extends AbstractDAO<Order> {
                     Order order = new Order();
                     order.setOrderNumber(resultSet.getString(ORDER_NUMBER));
                     order.setItems(items);
-                    order.setRequestedDate(resultSet.getDate(Constants.DATE));
+                    order.setRequestedDate(resultSet.getDate(Constant.DATE));
                     orders.add(order);
                 }
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return orders;
     }
@@ -210,7 +211,7 @@ public class OrderDAO extends AbstractDAO<Order> {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL_ORDERS_BY_USER)) {
             preparedStatement.setInt(1, user.getId());
-            preparedStatement.setInt(2, findStatusID(Constants.IN_PROGRESS_STATUS));
+            preparedStatement.setInt(2, findStatusID(Constant.IN_PROGRESS_STATUS));
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 orders = new ArrayList<>();
@@ -222,17 +223,17 @@ public class OrderDAO extends AbstractDAO<Order> {
                     Order order = new Order();
                     order.setOrderNumber(resultSet.getString(ORDER_NUMBER));
                     order.setItems(lineItemDAO.findALL(orderID, locale));
-                    order.setRequestedDate(resultSet.getDate(Constants.DATE));
+                    order.setRequestedDate(resultSet.getDate(Constant.DATE));
                     orders.add(order);
                 }
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return orders;
     }
@@ -244,12 +245,11 @@ public class OrderDAO extends AbstractDAO<Order> {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL_ORDERS_BY_DATE_AND_STATUS)) {
             preparedStatement.setDate(1, date);
-            preparedStatement.setInt(2, findStatusID(Constants.IN_PROGRESS_STATUS));
+            preparedStatement.setInt(2, findStatusID(Constant.IN_PROGRESS_STATUS));
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 orders = new ArrayList<>();
 
-                ProductDAO productDAO = new ProductDAO();
                 UserDAO userDAO = new UserDAO();
 
                 while (resultSet.next()) {
@@ -261,20 +261,20 @@ public class OrderDAO extends AbstractDAO<Order> {
                     order.setOrderNumber(resultSet.getString(ORDER_NUMBER));
                     order.setUser(userDAO.findEntityById(resultSet.getInt(USER_ID)));
                     order.setItems(items);
-                    order.setRequestedDate(resultSet.getDate(Constants.DATE));
+                    order.setRequestedDate(resultSet.getDate(Constant.DATE));
                     order.setComment(resultSet.getString(COMMENT));
                     orders.add(order);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
 
             pool.freeConnection(connection);
 
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error("SQL error " + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
 
         return orders;
@@ -292,7 +292,6 @@ public class OrderDAO extends AbstractDAO<Order> {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 orders = new ArrayList<>();
 
-                ProductDAO productDAO = new ProductDAO();
                 UserDAO userDAO = new UserDAO();
 
                 while (resultSet.next()) {
@@ -304,19 +303,19 @@ public class OrderDAO extends AbstractDAO<Order> {
                     order.setOrderNumber(resultSet.getString(ORDER_NUMBER));
                     order.setUser(userDAO.findEntityById(resultSet.getInt(USER_ID)));
                     order.setItems(items);
-                    order.setRequestedDate(resultSet.getDate(Constants.DATE));
+                    order.setRequestedDate(resultSet.getDate(Constant.DATE));
                     orders.add(order);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error("SQL error " + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
 
             pool.freeConnection(connection);
 
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
 
         return orders;
@@ -334,7 +333,6 @@ public class OrderDAO extends AbstractDAO<Order> {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 orders = new ArrayList<>();
 
-                ProductDAO productDAO = new ProductDAO();
                 UserDAO userDAO = new UserDAO();
 
                 while (resultSet.next()) {
@@ -346,19 +344,19 @@ public class OrderDAO extends AbstractDAO<Order> {
                     order.setOrderNumber(resultSet.getString(ORDER_NUMBER));
                     order.setUser(userDAO.findEntityById(resultSet.getInt(USER_ID)));
                     order.setItems(items);
-                    order.setRequestedDate(resultSet.getDate(Constants.DATE));
+                    order.setRequestedDate(resultSet.getDate(Constant.DATE));
                     orders.add(order);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
 
             pool.freeConnection(connection);
 
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
 
         return orders;
@@ -366,7 +364,7 @@ public class OrderDAO extends AbstractDAO<Order> {
 
     @Override
     public List<Order> findAll() {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     public Order findEntityByOrderNumber(String number) {
@@ -383,18 +381,18 @@ public class OrderDAO extends AbstractDAO<Order> {
                     order = new Order();
                     order.setId(resultSet.getInt(ORDER_ID));
                     order.setOrderNumber(resultSet.getString(ORDER_NUMBER));
-                    order.setRequestedDate(resultSet.getDate(Constants.DATE));
+                    order.setRequestedDate(resultSet.getDate(Constant.DATE));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error("SQL error " + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
 
             pool.freeConnection(connection);
 
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
 
         return order;
@@ -402,12 +400,12 @@ public class OrderDAO extends AbstractDAO<Order> {
 
     @Override
     public Order findEntityById(int id) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
     public int findEntityByID(Order entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
@@ -427,7 +425,7 @@ public class OrderDAO extends AbstractDAO<Order> {
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
 
         return false;
@@ -435,7 +433,7 @@ public class OrderDAO extends AbstractDAO<Order> {
 
     @Override
     public boolean delete(Order entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
@@ -471,7 +469,7 @@ public class OrderDAO extends AbstractDAO<Order> {
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
 
         return false;
@@ -479,7 +477,7 @@ public class OrderDAO extends AbstractDAO<Order> {
 
     @Override
     public Order update(Order entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     public  boolean updatePendingOrder(String orderNumber) {
@@ -496,7 +494,7 @@ public class OrderDAO extends AbstractDAO<Order> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return false;
     }
@@ -515,7 +513,7 @@ public class OrderDAO extends AbstractDAO<Order> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return false;
     }

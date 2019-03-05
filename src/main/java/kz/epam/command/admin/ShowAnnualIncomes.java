@@ -1,9 +1,9 @@
 package kz.epam.command.admin;
 
 import kz.epam.command.Command;
-import kz.epam.constant.Constants;
+import kz.epam.constant.Constant;
 import kz.epam.dao.IncomeDAO;
-import kz.epam.entities.Income;
+import kz.epam.entity.Income;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -15,15 +15,16 @@ public class ShowAnnualIncomes implements Command {
 
     private static final String ANNUAL_INCOMES = "annualIncomes";
     private static final String PATH_TO_REVIEW_ANNUAL_INCOMES = "/jsp/admin/show_annual_incomes.jsp";
+
     private List<Income> annualIncomes;
     private int year;
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
+        String page;
 
         HttpSession session = request.getSession();
-        String language = session.getAttribute(Constants.LOCALE).toString();
+        String language = session.getAttribute(Constant.LOCALE).toString();
 
         Locale locale = new Locale(language);
 

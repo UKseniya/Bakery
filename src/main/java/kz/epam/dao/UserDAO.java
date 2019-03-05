@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kz.epam.config.ConfigManager;
-import kz.epam.constant.Constants;
-import kz.epam.entities.User;
+import kz.epam.constant.Constant;
+import kz.epam.entity.User;
 import org.apache.log4j.Logger;
 import kz.epam.pool.ConnectionPool;
 
@@ -70,12 +70,12 @@ public class UserDAO extends AbstractDAO<User> {
             }
             catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
             pool.freeConnection(connection);
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return password;
     }
@@ -101,12 +101,12 @@ public class UserDAO extends AbstractDAO<User> {
                 }
             } catch (SQLException e) {
                     e.printStackTrace();
-                    log.error(Constants.SQL_ERROR + e.toString());
+                    log.error(Constant.SQL_ERROR + e.toString());
                 }
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         return users;
     }
@@ -126,10 +126,10 @@ public class UserDAO extends AbstractDAO<User> {
                 user.setId(resultSet.getInt(USER_ID));
                 user.setFirstName(resultSet.getString(FIRST_NAME));
                 user.setLastName(resultSet.getString(LAST_NAME));
-                user.setLogin(resultSet.getString(Constants.LOGIN));
-                user.setPassword(resultSet.getString(Constants.PASSWORD));
-                user.setEmail(resultSet.getString(Constants.EMAIL));
-                user.setPhoneNumber(resultSet.getString(Constants.PHONE));
+                user.setLogin(resultSet.getString(Constant.LOGIN));
+                user.setPassword(resultSet.getString(Constant.PASSWORD));
+                user.setEmail(resultSet.getString(Constant.EMAIL));
+                user.setPhoneNumber(resultSet.getString(Constant.PHONE));
                 user.setRole(resultSet.getString(ROLE_NAME));
                 users.add(user);
             }
@@ -138,7 +138,7 @@ public class UserDAO extends AbstractDAO<User> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return users;
     }
@@ -159,12 +159,12 @@ public class UserDAO extends AbstractDAO<User> {
             }
             catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
             pool.freeConnection(connection);
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return isRegistered;
     }
@@ -185,21 +185,21 @@ public class UserDAO extends AbstractDAO<User> {
                     user.setId(resultSet.getInt(USER_ID));
                     user.setFirstName(resultSet.getString(FIRST_NAME));
                     user.setLastName(resultSet.getString(LAST_NAME));
-                    user.setLogin(resultSet.getString(Constants.LOGIN));
-//                    user.setPassword(resultSet.getString(Constants.PASSWORD));
-                    user.setEmail(resultSet.getString(Constants.EMAIL));
-                    user.setPhoneNumber(resultSet.getString(Constants.PHONE));
+                    user.setLogin(resultSet.getString(Constant.LOGIN));
+//                    user.setPassword(resultSet.getString(Constant.PASSWORD));
+                    user.setEmail(resultSet.getString(Constant.EMAIL));
+                    user.setPhoneNumber(resultSet.getString(Constant.PHONE));
                     user.setRole(findRoleNameByID(resultSet.getInt(ROLE_ID)));
                 }
 
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
             pool.freeConnection(connection);
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return user;
     }
@@ -219,11 +219,11 @@ public class UserDAO extends AbstractDAO<User> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return isFree;
     }
@@ -243,11 +243,11 @@ public class UserDAO extends AbstractDAO<User> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return userId;
     }
@@ -266,17 +266,17 @@ public class UserDAO extends AbstractDAO<User> {
                     user = new User();
                     user.setFirstName(resultSet.getString(FIRST_NAME));
                     user.setLastName(resultSet.getString(LAST_NAME));
-                    user.setEmail(resultSet.getString(Constants.EMAIL));
-                    user.setPhoneNumber(resultSet.getString(Constants.PHONE));
+                    user.setEmail(resultSet.getString(Constant.EMAIL));
+                    user.setPhoneNumber(resultSet.getString(Constant.PHONE));
                 }
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return user;
     }
@@ -284,17 +284,17 @@ public class UserDAO extends AbstractDAO<User> {
 
     @Override
     public int findEntityByID(User entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
     public boolean delete(int id) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
     public boolean delete(User entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     public int findRoleIDbyName(String role) {
@@ -312,11 +312,11 @@ public class UserDAO extends AbstractDAO<User> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return roleId;
     }
@@ -336,11 +336,11 @@ public class UserDAO extends AbstractDAO<User> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return roleName;
     }
@@ -360,11 +360,11 @@ public class UserDAO extends AbstractDAO<User> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return firstName;
     }
@@ -384,11 +384,11 @@ public class UserDAO extends AbstractDAO<User> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return lastName;
     }
@@ -405,7 +405,7 @@ public class UserDAO extends AbstractDAO<User> {
             preparedStatement.setString(4, user.getPassword());
             preparedStatement.setString(5, user.getEmail());
             preparedStatement.setString(6,user.getPhoneNumber());
-            preparedStatement.setInt(7, findRoleIDbyName(Constants.USER));
+            preparedStatement.setInt(7, findRoleIDbyName(Constant.USER));
             preparedStatement.executeUpdate();
             log.info(USER_INSERTED_MESSAGE + user.getId());
 
@@ -414,7 +414,7 @@ public class UserDAO extends AbstractDAO<User> {
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return false;
     }
@@ -436,7 +436,7 @@ public class UserDAO extends AbstractDAO<User> {
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return false;
     }
@@ -455,13 +455,13 @@ public class UserDAO extends AbstractDAO<User> {
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return false;
     }
 
     @Override
     public User update(User entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 }

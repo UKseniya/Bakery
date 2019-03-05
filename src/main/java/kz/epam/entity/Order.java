@@ -1,6 +1,5 @@
-package kz.epam.entities;
+package kz.epam.entity;
 
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Date;

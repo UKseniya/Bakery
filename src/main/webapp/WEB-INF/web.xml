@@ -2,19 +2,19 @@
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
   <servlet>
-    <servlet-name>Controller</servlet-name>
-    <servlet-class>kz.epam.servlet.Controller</servlet-class>
+    <servlet-name>BakeryController</servlet-name>
+    <servlet-class>kz.epam.servlet.BakeryController</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>Controller</servlet-name>
+    <servlet-name>BakeryController</servlet-name>
     <url-pattern>/controller</url-pattern>
   </servlet-mapping>
     <servlet>
-        <servlet-name>ImageUploadServlet</servlet-name>
-        <servlet-class>kz.epam.servlet.ImageUploadServlet</servlet-class>
+        <servlet-name>ImageUploadController</servlet-name>
+        <servlet-class>kz.epam.servlet.ImageUploadController</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>ImageUploadServlet</servlet-name>
+        <servlet-name>ImageUploadController</servlet-name>
         <url-pattern>/upload</url-pattern>
     </servlet-mapping>
   <session-config>
@@ -38,7 +38,6 @@
     </init-param>
     <init-param>
       <param-name>excludedUrls</param-name>
-      <!-- Comma separated list of excluded servlets  -->
       <param-value>/upload</param-value>
     </init-param>
   </filter>
@@ -51,7 +50,6 @@
     <filter-class>kz.epam.filter.LocaleFilter</filter-class>
     <init-param>
       <param-name>excludedUrls</param-name>
-      <!-- Comma separated list of excluded servlets  -->
       <param-value>/upload</param-value>
     </init-param>
   </filter>

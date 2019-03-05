@@ -1,9 +1,9 @@
 package kz.epam.command.admin;
 
 import kz.epam.command.Command;
-import kz.epam.constant.Constants;
+import kz.epam.constant.Constant;
 import kz.epam.dao.ProductDAO;
-import kz.epam.entities.Product;
+import kz.epam.entity.Product;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,10 +22,10 @@ public class UpdateProductInfo implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
+        String page;
 
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constants.LOCALE).toString();
+        String locale = session.getAttribute(Constant.LOCALE).toString();
 
         String code = request.getParameter(PRODUCT_CODE);
         String price = request.getParameter(PRODUCT_PRICE);
@@ -36,8 +36,7 @@ public class UpdateProductInfo implements Command {
 
         ProductDAO productDAO = new ProductDAO();
 
-        Product product = new Product();
-        product = productDAO.findProductbyCode(code, locale);
+        Product product = productDAO.findProductbyCode(code, locale);
         product.setPrice(Double.parseDouble(price));
         productDAO.updatePrice(product);
         product.setName(ruName);

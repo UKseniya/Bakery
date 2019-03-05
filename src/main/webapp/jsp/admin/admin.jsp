@@ -11,7 +11,7 @@
     <jsp:include page="../includes/admin_menu.jsp"/>
 
     <body>
-<section class="center">
+<section>
     <p><fmt:message key="user.number"/> &nbsp; <b><i>${numberOfUsers}</i></b></p> <br/>
     <p><fmt:message key="top.product.current"/></p>
     <c:choose>

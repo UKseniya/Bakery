@@ -8,7 +8,6 @@ public class GetLoginForm implements Command{
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = PATH_TO_LOGIN_PAGE;
-        return page;
+        return PATH_TO_LOGIN_PAGE;
     }
 }

@@ -1,10 +1,10 @@
 package kz.epam.command.user;
 
 import kz.epam.command.Command;
-import kz.epam.constant.Constants;
+import kz.epam.constant.Constant;
 import kz.epam.dao.OrderDAO;
-import kz.epam.entities.Order;
-import kz.epam.entities.User;
+import kz.epam.entity.Order;
+import kz.epam.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -21,8 +21,8 @@ public class ShowPendingOrders implements Command {
         String page = null;
 
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constants.LOCALE).toString();
-        User user = (User) session.getAttribute(Constants.USER);
+        String locale = session.getAttribute(Constant.LOCALE).toString();
+        User user = (User) session.getAttribute(Constant.USER);
 
         OrderDAO orderDAO = new OrderDAO();
         orders = orderDAO.findAllPendingOrdersByUser(user, locale);

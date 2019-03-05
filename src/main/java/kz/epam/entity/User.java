@@ -1,6 +1,5 @@
-package kz.epam.entities;
+package kz.epam.entity;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 public class User extends Entity {

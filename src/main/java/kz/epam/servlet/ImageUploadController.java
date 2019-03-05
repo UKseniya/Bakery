@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-public class ImageUploadServlet extends HttpServlet {
+public class ImageUploadController extends HttpServlet {
 
     private static final String UPLOAD_DIR = "pictures";
     private static final String FILE_TO_UPLOAD = "file";

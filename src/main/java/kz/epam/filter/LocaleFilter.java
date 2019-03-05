@@ -1,6 +1,6 @@
 package kz.epam.filter;
 
-import kz.epam.constant.Constants;
+import kz.epam.constant.Constant;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -28,15 +28,15 @@ public class LocaleFilter implements Filter {
 
         if (!excludedUrls.contains(path)) {
             HttpServletRequest req = (HttpServletRequest) servletRequest;
-            req.setCharacterEncoding(Constants.ENCODING);
-            if (req.getSession().getAttribute(Constants.LOCALE) == null) {
+            req.setCharacterEncoding(Constant.ENCODING);
+            if (req.getSession().getAttribute(Constant.LOCALE) == null) {
                 Locale locale = req.getLocale();
-                req.getSession().setAttribute(Constants.LOCALE, locale);
+                req.getSession().setAttribute(Constant.LOCALE, locale);
             }
-            String language = servletRequest.getParameter(Constants.LANGUAGE);
+            String language = servletRequest.getParameter(Constant.LANGUAGE);
             if (language != null) {
                 Locale locale = new Locale(language);
-                req.getSession().setAttribute(Constants.LOCALE, locale);
+                req.getSession().setAttribute(Constant.LOCALE, locale);
             }
 
             filterChain.doFilter(servletRequest, servletResponse);

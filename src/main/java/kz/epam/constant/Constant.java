@@ -1,6 +1,6 @@
 package kz.epam.constant;
 
-public class Constants {
+public class Constant {
 
     public static final String ENCODING = "UTF-8";
     public static final String LOCALE = "userLocale";
@@ -16,7 +16,7 @@ public class Constants {
     public static final String EMAIL = "email";
     public static final String PASSWORD = "password";
     public static final String SQL_ERROR = "SQL error ";
-    public static final String NOT_SUPPORTED_EXCEPTION_MESSAGE ="Not supported yet.";
+    public static final String NOT_SUPPORTED_EXCEPTION_MESSAGE = "Not supported yet.";
     public static final String STATUS = "status";
     public static final String CART = "cart";
     public static final String AVAILABLE_PRODUCTS = "availableProducts";

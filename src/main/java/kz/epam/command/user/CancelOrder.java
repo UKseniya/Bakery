@@ -1,10 +1,10 @@
 package kz.epam.command.user;
 
 import kz.epam.command.Command;
-import kz.epam.constant.Constants;
+import kz.epam.constant.Constant;
 import kz.epam.dao.OrderDAO;
-import kz.epam.entities.Order;
-import kz.epam.entities.User;
+import kz.epam.entity.Order;
+import kz.epam.entity.User;
 import kz.epam.message.MessageManager;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,13 +27,13 @@ public class CancelOrder implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
+        String page;
         Date date = null;
 
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute(Constants.USER);
+        User user = (User) session.getAttribute(Constant.USER);
 
-        String language = session.getAttribute(Constants.LOCALE).toString();
+        String language = session.getAttribute(Constant.LOCALE).toString();
 
         Locale locale = new Locale(language);
 
@@ -52,7 +52,7 @@ public class CancelOrder implements Command {
         calendar.add(Calendar.DAY_OF_YEAR, NUMBER_OF_DAYS);
 
         DateFormat formatter;
-        formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
+        formatter = new SimpleDateFormat(Constant.DATE_FORMAT);
         try {
             currentDate = formatter.parse(formatter.format(currentDate));
             date = formatter.parse(formatter.format(calendar.getTime()));
@@ -63,8 +63,7 @@ public class CancelOrder implements Command {
         if (date.after(currentDate)) {
             orderDAO.delete(order.getId());
             page = PATH_TO_UPDATED_ORDER_LIST_PAGE;
-        }
-        else {
+        } else {
             request.setAttribute(LATE_DATE,
                     MessageManager.getInstance(locale).getProperty(LATE_DATE_MESSAGE));
             page = PATH_TO_REVIEW_ORDERS_PAGE;

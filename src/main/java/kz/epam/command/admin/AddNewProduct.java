@@ -1,9 +1,9 @@
 package kz.epam.command.admin;
 
 import kz.epam.command.Command;
-import kz.epam.constant.Constants;
+import kz.epam.constant.Constant;
 import kz.epam.dao.ProductDAO;
-import kz.epam.entities.Product;
+import kz.epam.entity.Product;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -24,10 +24,9 @@ public class AddNewProduct implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
+        String page;
 
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constants.LOCALE).toString();
 
         String addButton = request.getParameter(ADD_BUTTON);
         String code = request.getParameter(PRODUCT_CODE);

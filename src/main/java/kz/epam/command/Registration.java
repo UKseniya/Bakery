@@ -8,7 +8,6 @@ public class Registration implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = PATH_TO_REGISTRATION_PAGE;
-        return page;
+        return PATH_TO_REGISTRATION_PAGE;
     }
 }

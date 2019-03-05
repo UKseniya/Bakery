@@ -1,9 +1,9 @@
 package kz.epam.command.admin;
 
 import kz.epam.command.Command;
-import kz.epam.constant.Constants;
+import kz.epam.constant.Constant;
 import kz.epam.dao.IncomeDAO;
-import kz.epam.entities.Income;
+import kz.epam.entity.Income;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -29,7 +29,7 @@ public class ShowIncome implements Command {
         String page = null;
 
         HttpSession session = request.getSession();
-        String language = session.getAttribute(Constants.LOCALE).toString();
+        String language = session.getAttribute(Constant.LOCALE).toString();
 
         Locale locale = Locale.forLanguageTag(language);
 

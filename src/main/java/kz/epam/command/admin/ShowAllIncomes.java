@@ -1,9 +1,9 @@
 package kz.epam.command.admin;
 
 import kz.epam.command.Command;
-import kz.epam.constant.Constants;
+import kz.epam.constant.Constant;
 import kz.epam.dao.IncomeDAO;
-import kz.epam.entities.Income;
+import kz.epam.entity.Income;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -13,14 +13,14 @@ public class ShowAllIncomes implements Command {
 
     private static final String ALL_INCOMES = "allIncomes";
     private static final String PATH_TO_REVIEW_ALL_INCOMES = "/jsp/admin/show_all_incomes.jsp";
+
     private List<Income> allIncomes;
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
+        String page;
 
         HttpSession session = request.getSession();
-        String language = session.getAttribute(Constants.LOCALE).toString();
 
         IncomeDAO incomeDAO = new IncomeDAO();
 

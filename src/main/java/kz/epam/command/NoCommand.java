@@ -8,7 +8,6 @@ public class NoCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = MAIN_PAGE;
-        return page;
+        return MAIN_PAGE;
     }
 }

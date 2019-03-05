@@ -1,4 +1,4 @@
-package kz.epam.entities;
+package kz.epam.entity;
 
 import java.io.Serializable;
 

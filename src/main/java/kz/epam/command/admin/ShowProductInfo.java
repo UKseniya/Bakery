@@ -2,7 +2,7 @@ package kz.epam.command.admin;
 
 import kz.epam.command.Command;
 import kz.epam.dao.ProductDAO;
-import kz.epam.entities.Product;
+import kz.epam.entity.Product;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -18,17 +18,15 @@ public class ShowProductInfo implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
+        String page;
 
         HttpSession session = request.getSession();
         String productCode = request.getParameter(PRODUCT_CODE);
 
         ProductDAO productDAO = new ProductDAO();
 
-        Product productRu = new Product();
-        productRu = productDAO.findProductbyCode(productCode, RU_LOCALE);
-        Product productEn = new Product();
-        productEn = productDAO.findProductbyCode(productCode, EN_LOCALE);
+        Product productRu = productDAO.findProductbyCode(productCode, RU_LOCALE);
+        Product productEn = productDAO.findProductbyCode(productCode, EN_LOCALE);
 
         session.setAttribute(PRODUCT_IN_RUSSIAN, productRu);
         session.setAttribute(PRODUCT_IN_ENGLISH, productEn);

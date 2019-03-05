@@ -1,10 +1,10 @@
 package kz.epam.command.user;
 
 import kz.epam.command.Command;
-import kz.epam.constant.Constants;
-import kz.epam.entities.Cart;
-import kz.epam.entities.LineItem;
-import kz.epam.entities.User;
+import kz.epam.constant.Constant;
+import kz.epam.entity.Cart;
+import kz.epam.entity.LineItem;
+import kz.epam.entity.User;
 import kz.epam.message.MessageManager;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,19 +25,18 @@ public class UpdateCart implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
+        String page;
         int totalItemQuantity = 0;
         int quantity;
 
         HttpSession session = request.getSession();
-        String language = session.getAttribute(Constants.LOCALE).toString();
-        User user = (User) session.getAttribute(Constants.USER);
+        String language = session.getAttribute(Constant.LOCALE).toString();
 
         Locale locale = new Locale(language);
 
-        Cart cart = (Cart) session.getAttribute(Constants.CART);
+        Cart cart = (Cart) session.getAttribute(Constant.CART);
 
-        String productCode = request.getParameter(Constants.PRODUCT_CODE);
+        String productCode = request.getParameter(Constant.PRODUCT_CODE);
         String receivedQuantity = request.getParameter(QUANTITY);
         String addButton = request.getParameter(ADD_BUTTON);
         String removeButton = request.getParameter(REMOVE_BUTTON);
@@ -49,10 +48,9 @@ public class UpdateCart implements Command {
         quantity = Integer.parseInt(receivedQuantity);
 
         if (addButton != null) {
-            if (totalItemQuantity < MAXIMUM_ORDER_QUANTITY){
+            if (totalItemQuantity < MAXIMUM_ORDER_QUANTITY) {
                 quantity++;
-            }
-            else {
+            } else {
                 request.setAttribute(ORDER_ERROR,
                         MessageManager.getInstance(locale).getProperty(ORDER_ERROR_MESSAGE));
             }
@@ -67,16 +65,15 @@ public class UpdateCart implements Command {
         while (iterator.hasNext()) {
             LineItem item = (LineItem) iterator.next();
             if (item.getProduct().getCode().equals(productCode)) {
-                if (quantity > 0 ) {
+                if (quantity > 0) {
                     item.setQuantity(quantity);
-                }
-                else {
+                } else {
                     iterator.remove();
                 }
             }
         }
 
-        session.setAttribute(Constants.CART, cart);
+        session.setAttribute(Constant.CART, cart);
 
         page = PATH_TO_VIEW_CART;
 

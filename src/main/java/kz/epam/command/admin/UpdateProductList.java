@@ -1,9 +1,9 @@
 package kz.epam.command.admin;
 
 import kz.epam.command.Command;
-import kz.epam.constant.Constants;
+import kz.epam.constant.Constant;
 import kz.epam.dao.ProductDAO;
-import kz.epam.entities.Product;
+import kz.epam.entity.Product;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -17,17 +17,17 @@ public class UpdateProductList implements Command {
     private static final String DISABLED_PRODUCTS = "cancelledProducts";
     private static final String AVAILABLE_STATUS = "available";
     private static final String DISABLED_STATUS = "n/a";
-    private static final String PATH = "/jsp/admin/update_product_list.jsp";
+    private static final String PATH_TO_PRODUCT_UPDATE_PAGE = "/jsp/admin/update_product_list.jsp";
 
     private List<Product> availableProducts;
     private List<Product> cancelledProducts;
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
+        String page;
 
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constants.LOCALE).toString();
+        String locale = session.getAttribute(Constant.LOCALE).toString();
 
         String removeButton = request.getParameter(REMOVE_BUTTON);
         String addButton = request.getParameter(ADD_BUTTON);
@@ -36,26 +36,24 @@ public class UpdateProductList implements Command {
         ProductDAO productDAO = new ProductDAO();
 
         if (removeButton != null) {
-            Product product = new Product();
-            product = productDAO.findProductbyCode(code, locale);
+            Product product = productDAO.findProductbyCode(code, locale);
             productDAO.updateProductStatus(product, DISABLED_STATUS);
         }
 
         if (addButton != null) {
-            Product product = new Product();
-            product = productDAO.findProductbyCode(code, locale);
+            Product product = productDAO.findProductbyCode(code, locale);
             productDAO.updateProductStatus(product, AVAILABLE_STATUS);
         }
 
         availableProducts = productDAO.findAllAvailableProducts(locale);
 
-        session.setAttribute(Constants.AVAILABLE_PRODUCTS, availableProducts);
+        session.setAttribute(Constant.AVAILABLE_PRODUCTS, availableProducts);
 
         cancelledProducts = productDAO.findAllCancelledProducts(locale);
 
         session.setAttribute(DISABLED_PRODUCTS, cancelledProducts);
 
-        page = PATH;
+        page = PATH_TO_PRODUCT_UPDATE_PAGE;
 
         return page;
     }

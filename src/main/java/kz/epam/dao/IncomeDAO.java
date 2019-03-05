@@ -1,8 +1,8 @@
 package kz.epam.dao;
 
 import kz.epam.config.ConfigManager;
-import kz.epam.constant.Constants;
-import kz.epam.entities.Income;
+import kz.epam.constant.Constant;
+import kz.epam.entity.Income;
 import kz.epam.pool.ConnectionPool;
 import org.apache.log4j.Logger;
 
@@ -14,7 +14,8 @@ import java.util.Locale;
 
 public class IncomeDAO extends AbstractDAO<Income> {
 
-    private static final String SQL_FIND_ALL_INCOME_INFORMATION = "SELECT SUM(total_income) AS annual_income, year FROM `income` GROUP BY year";
+    private static final String SQL_FIND_ALL_INCOME_INFORMATION = "SELECT SUM(total_income) AS annual_income, year FROM income " +
+            "GROUP BY year";
     private static final String SQL_FIND_INCOME_FOR_CERTAIN_MONTH = "SELECT * FROM income WHERE month = ? AND year = ?";
     private static final String SQL_FIND_INCOME_FOR_CERTAIN_YEAR = "SELECT * FROM income WHERE year = ?";
 
@@ -28,6 +29,7 @@ public class IncomeDAO extends AbstractDAO<Income> {
     private static String user_name = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_USER);
     private static String password = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_PASSWORD);
     private static int maxConn = Integer.parseInt(ConfigManager.getInstance().getProperty(ConfigManager.MAX_CONN));
+
     private Logger log = Logger.getRootLogger();
 
     @Override
@@ -37,7 +39,7 @@ public class IncomeDAO extends AbstractDAO<Income> {
         Connection connection = pool.getConnection();
 
         try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SQL_FIND_ALL_INCOME_INFORMATION);){
+             ResultSet resultSet = statement.executeQuery(SQL_FIND_ALL_INCOME_INFORMATION);) {
             incomes = new ArrayList<>();
 
             while (resultSet.next()) {
@@ -51,7 +53,7 @@ public class IncomeDAO extends AbstractDAO<Income> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return incomes;
     }
@@ -69,7 +71,7 @@ public class IncomeDAO extends AbstractDAO<Income> {
                 if (resultSet.next()) {
                     Calendar calendar = Calendar.getInstance();
                     int databaseMonth = resultSet.getInt(MONTH);
-                    calendar.set(Calendar.MONTH, databaseMonth-1);
+                    calendar.set(Calendar.MONTH, databaseMonth - 1);
                     String monthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG_STANDALONE, locale);
                     income = new Income();
                     income.setSum(resultSet.getDouble(TOTAL_INCOME));
@@ -80,14 +82,15 @@ public class IncomeDAO extends AbstractDAO<Income> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return income;
     }
+
     public List<Income> findIncomesForYear(int year, Locale locale) {
         List<Income> incomes = null;
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
@@ -101,7 +104,7 @@ public class IncomeDAO extends AbstractDAO<Income> {
                 while (resultSet.next()) {
                     Calendar calendar = Calendar.getInstance();
                     int databaseMonth = resultSet.getInt(MONTH);
-                    calendar.set(Calendar.MONTH, databaseMonth-1);
+                    calendar.set(Calendar.MONTH, databaseMonth - 1);
                     String monthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG_STANDALONE, locale);
                     Income income = new Income();
                     income.setSum(resultSet.getDouble(TOTAL_INCOME));
@@ -112,42 +115,42 @@ public class IncomeDAO extends AbstractDAO<Income> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return incomes;
     }
 
     @Override
     public Income findEntityById(int id) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
     public int findEntityByID(Income entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
     public boolean delete(int id) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
     public boolean delete(Income entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
     public boolean create(Income entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
     public Income update(Income entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 }

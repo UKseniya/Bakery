@@ -1,8 +1,8 @@
 package kz.epam.dao;
 
 import kz.epam.config.ConfigManager;
-import kz.epam.constant.Constants;
-import kz.epam.entities.Product;
+import kz.epam.constant.Constant;
+import kz.epam.entity.Product;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -90,11 +90,11 @@ public class ProductDAO extends AbstractDAO<Product> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return product_name;
     }
@@ -115,11 +115,11 @@ public class ProductDAO extends AbstractDAO<Product> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return description;
     }
@@ -139,11 +139,11 @@ public class ProductDAO extends AbstractDAO<Product> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return localeID;
     }
@@ -163,11 +163,11 @@ public class ProductDAO extends AbstractDAO<Product> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return localeName;
     }
@@ -196,11 +196,11 @@ public class ProductDAO extends AbstractDAO<Product> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return products;
     }
@@ -229,11 +229,11 @@ public class ProductDAO extends AbstractDAO<Product> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return products;
     }
@@ -262,11 +262,11 @@ public class ProductDAO extends AbstractDAO<Product> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return products;
     }
@@ -292,11 +292,11 @@ public class ProductDAO extends AbstractDAO<Product> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return product;
     }
@@ -316,11 +316,11 @@ public class ProductDAO extends AbstractDAO<Product> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return statusID;
     }
@@ -340,11 +340,11 @@ public class ProductDAO extends AbstractDAO<Product> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return statusName;
     }
@@ -365,12 +365,12 @@ public class ProductDAO extends AbstractDAO<Product> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return productID;
     }
@@ -395,18 +395,18 @@ public class ProductDAO extends AbstractDAO<Product> {
                 pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return product;
     }
 
     @Override
     public Product findEntityById(int id) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     public boolean updateProductStatus(Product product, String status) {
@@ -424,24 +424,24 @@ public class ProductDAO extends AbstractDAO<Product> {
                 return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return false;
     }
 
     @Override
     public int findEntityByID(Product entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
     public boolean delete(int id) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
     public boolean delete(Product entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     public boolean addNewProductDescription(Product product, String locale) {
@@ -459,7 +459,7 @@ public class ProductDAO extends AbstractDAO<Product> {
                 return true;
             } catch (SQLException e) {
                 e.printStackTrace();
-                log.error(Constants.SQL_ERROR + e.toString());
+                log.error(Constant.SQL_ERROR + e.toString());
             }
 
         return false;
@@ -479,7 +479,7 @@ public class ProductDAO extends AbstractDAO<Product> {
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return false;
     }
@@ -500,7 +500,7 @@ public class ProductDAO extends AbstractDAO<Product> {
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
         return false;
     }
@@ -524,7 +524,7 @@ public class ProductDAO extends AbstractDAO<Product> {
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(Constants.SQL_ERROR + e.toString());
+            log.error(Constant.SQL_ERROR + e.toString());
         }
 
         return false;
@@ -532,6 +532,6 @@ public class ProductDAO extends AbstractDAO<Product> {
 
     @Override
     public Product update(Product entity) {
-        throw new UnsupportedOperationException(Constants.NOT_SUPPORTED_EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 }
