@@ -13,6 +13,7 @@ public class LocaleFilter implements Filter {
 
     private static final String EXCLUDED_URLS = "excludedUrls";
     private static final String COMMA = ",";
+
     private List<String> excludedUrls;
 
     @Override
@@ -22,7 +23,8 @@ public class LocaleFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
 
         String path = ((HttpServletRequest) servletRequest).getServletPath();
 
@@ -40,8 +42,7 @@ public class LocaleFilter implements Filter {
             }
 
             filterChain.doFilter(servletRequest, servletResponse);
-        }
-        else {
+        } else {
             servletRequest.getRequestDispatcher(path).forward(servletRequest, servletResponse);
         }
     }

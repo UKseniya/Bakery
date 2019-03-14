@@ -2,6 +2,7 @@ package kz.epam.entity;
 
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Product extends Entity {
 
@@ -54,10 +55,9 @@ public class Product extends Entity {
         this.status = status;
     }
 
-    //    TODO: think about moving all methods from entity to util
     public String getFormattedCode() {
         String formattedCode = null;
-        formattedCode = this.code.substring(0,3);
+        formattedCode = this.code.substring(0, 3);
         return formattedCode;
     }
 
@@ -70,5 +70,20 @@ public class Product extends Entity {
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Double.compare(product.price, price) == 0 &&
+                Objects.equals(code, product.code) &&
+                Objects.equals(name, product.name) &&
+                Objects.equals(description, product.description) &&
+                Objects.equals(status, product.status);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(code, name, description, price, status);
+    }
 }

@@ -24,7 +24,6 @@ public class UpdateUserPassword implements Command {
     private static final String PATH_TO_CONFIRMATION_PAGE = "/jsp/password_updated.jsp";
     private static final String PATH_TO_UPDATE_PAGE = "/jsp/user_password_update.jsp";
 
-    //    TODO: split the whole method into several small methods;
     @Override
     public String execute(HttpServletRequest request) {
         String page;
@@ -50,13 +49,13 @@ public class UpdateUserPassword implements Command {
             // Verify password provided by user
             passwordVerified = verifyPassword(password, currentPassword);
 
-            if (currentPassword.equals(newPassword)) {
-                request.setAttribute(SAME_PASSWORD_MESSAGE,
-                        MessageManager.getInstance(locale).getProperty(SAME_PASSWORD));
-                page = PATH_TO_UPDATE_PAGE;
-            } else if (passwordVerified == false) {
+            if (passwordVerified == false) {
                 request.setAttribute(INCORRECT_PASSWORD_MESSAGE,
                         MessageManager.getInstance(locale).getProperty(INCORRECT_PASSWORD));
+                page = PATH_TO_UPDATE_PAGE;
+            } else if (currentPassword.equals(newPassword)) {
+                request.setAttribute(SAME_PASSWORD_MESSAGE,
+                        MessageManager.getInstance(locale).getProperty(SAME_PASSWORD));
                 page = PATH_TO_UPDATE_PAGE;
             } else {
                 // Get new secured password

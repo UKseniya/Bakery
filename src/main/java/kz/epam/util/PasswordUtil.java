@@ -15,6 +15,8 @@ public final class PasswordUtil {
 
     private static final Random RANDOM = new SecureRandom();
     private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private static final String SECRET_KEY_FACTORY = "PBKDF2WithHmacSHA1";
+    private static final String ERROR_MESSAGE = "Error while hashing a password: ";
     private static final int ITERATIONS = 10000;
     private static final int KEY_LENGTH = 256;
 
@@ -27,18 +29,20 @@ public final class PasswordUtil {
         }
         return new String(returnValue);
     }
+
     public static byte[] hash(char[] password, byte[] salt) {
         PBEKeySpec spec = new PBEKeySpec(password, salt, ITERATIONS, KEY_LENGTH);
         Arrays.fill(password, Character.MIN_VALUE);
         try {
-            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            return skf.generateSecret(spec).getEncoded();
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(SECRET_KEY_FACTORY);
+            return keyFactory.generateSecret(spec).getEncoded();
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new AssertionError("Error while hashing a password: " + e.getMessage(), e);
+            throw new AssertionError(ERROR_MESSAGE + e.getMessage(), e);
         } finally {
             spec.clearPassword();
         }
     }
+
     public static String generateSecurePassword(String password, String salt) {
         String returnValue = null;
         byte[] securePassword = hash(password.toCharArray(), salt.getBytes());
@@ -49,8 +53,7 @@ public final class PasswordUtil {
     }
 
     public static boolean verifyUserPassword(String providedPassword,
-                                             String securedPassword, String salt)
-    {
+                                             String securedPassword, String salt) {
         boolean returnValue = false;
 
         // Generate New secure password with the same salt

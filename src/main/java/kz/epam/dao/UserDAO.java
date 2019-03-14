@@ -16,7 +16,7 @@ import kz.epam.pool.ConnectionPool;
 
 public class UserDAO extends AbstractDAO<User> {
 
-    private static final String  SQL_FIND_PASSWORD_BY_LOGIN = "SELECT password FROM user WHERE login = ?";
+    private static final String SQL_FIND_PASSWORD_BY_LOGIN = "SELECT password FROM user WHERE login = ?";
     private static final String SQL_FIND_USERS_BY_ROLE = "SELECT * FROM user WHERE role_id = ?";
     private static final String SQL_SELECT_ALL_USERS = "SELECT user_id, first_name, last_name, login, " +
             "password, email, phone, role_name FROM user u JOIN user_role ur ON (ur.role_id = u.user_id)";
@@ -32,10 +32,6 @@ public class UserDAO extends AbstractDAO<User> {
     private static final String SQL_FIND_USER_BY_LOGIN = "SELECT * FROM user " +
             "WHERE login = ?";
     private static final String SQL_FIND_USER_BY_ID = "SELECT * FROM user " +
-            "WHERE user_id = ?";
-    private static final String SQL_FIND_USER_FIRST_NAME_BY_ID = "SELECT * FROM user " +
-            "WHERE user_id = ?";
-    private static final String SQL_FIND_USER_LAST_NAME_BY_ID = "SELECT * FROM user " +
             "WHERE user_id = ?";
     private static final String SQL_UPDATE_PASSWORD = "UPDATE user SET password = ? WHERE login = ?";
     private static final String SQL_UPDATE_USER_INFO = "UPDATE user SET first_name = ?, last_name = ?, " +
@@ -53,9 +49,10 @@ public class UserDAO extends AbstractDAO<User> {
     private static String db_user = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_USER);
     private static String db_password = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_PASSWORD);
     private static int maxConn = Integer.parseInt(ConfigManager.getInstance().getProperty(ConfigManager.MAX_CONN));
+
     private Logger log = Logger.getRootLogger();
 
-    public String findPasswordByLogin (String login) {
+    public String findPasswordByLogin(String login) {
         String password = null;
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, db_user, db_password, maxConn);
         Connection connection = pool.getConnection();
@@ -65,10 +62,9 @@ public class UserDAO extends AbstractDAO<User> {
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    password = resultSet.getString("password");
+                    password = resultSet.getString(Constant.PASSWORD);
                 }
-            }
-            catch (SQLException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
                 log.error(Constant.SQL_ERROR + e.toString());
             }
@@ -80,7 +76,7 @@ public class UserDAO extends AbstractDAO<User> {
         return password;
     }
 
-    public List<User> findAllUsersByRole (String roleName) {
+    public List<User> findAllUsersByRole(String roleName) {
         List<User> users = null;
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, db_user, db_password, maxConn);
         Connection connection = pool.getConnection();
@@ -93,21 +89,21 @@ public class UserDAO extends AbstractDAO<User> {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     User user = new User();
-                    user.setFirstName(resultSet.getString("first_name"));
-                    user.setLastName(resultSet.getString("last_name"));
-                    user.setLogin(resultSet.getString("login"));
-                    user.setPhoneNumber(resultSet.getString("phone"));
+                    user.setFirstName(resultSet.getString(FIRST_NAME));
+                    user.setLastName(resultSet.getString(LAST_NAME));
+                    user.setLogin(resultSet.getString(Constant.LOGIN));
+                    user.setPhoneNumber(resultSet.getString(Constant.PHONE));
                     users.add(user);
                 }
-            } catch (SQLException e) {
-                    e.printStackTrace();
-                    log.error(Constant.SQL_ERROR + e.toString());
-                }
-                pool.freeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
                 log.error(Constant.SQL_ERROR + e.toString());
             }
+            pool.freeConnection(connection);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            log.error(Constant.SQL_ERROR + e.toString());
+        }
         return users;
     }
 
@@ -118,7 +114,7 @@ public class UserDAO extends AbstractDAO<User> {
         Connection connection = pool.getConnection();
 
         try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_USERS);){
+             ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_USERS);) {
             users = new ArrayList<>();
 
             while (resultSet.next()) {
@@ -143,7 +139,7 @@ public class UserDAO extends AbstractDAO<User> {
         return users;
     }
 
-    public boolean isUserRegistered (String login, String password) {
+    public boolean isUserRegistered(String login, String password) {
         boolean isRegistered = false;
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, db_user, db_password, maxConn);
         Connection connection = pool.getConnection();
@@ -156,8 +152,7 @@ public class UserDAO extends AbstractDAO<User> {
                 if (resultSet.next()) {
                     isRegistered = true;
                 }
-            }
-            catch (SQLException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
                 log.error(Constant.SQL_ERROR + e.toString());
             }
@@ -169,7 +164,7 @@ public class UserDAO extends AbstractDAO<User> {
         return isRegistered;
     }
 
-    public User findUserByLoginAndPassword (String login, String password) {
+    public User findUserByLoginAndPassword(String login, String password) {
         User user = null;
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, db_user, db_password, maxConn);
         Connection connection = pool.getConnection();
@@ -186,7 +181,6 @@ public class UserDAO extends AbstractDAO<User> {
                     user.setFirstName(resultSet.getString(FIRST_NAME));
                     user.setLastName(resultSet.getString(LAST_NAME));
                     user.setLogin(resultSet.getString(Constant.LOGIN));
-//                    user.setPassword(resultSet.getString(Constant.PASSWORD));
                     user.setEmail(resultSet.getString(Constant.EMAIL));
                     user.setPhoneNumber(resultSet.getString(Constant.PHONE));
                     user.setRole(findRoleNameByID(resultSet.getInt(ROLE_ID)));
@@ -226,30 +220,6 @@ public class UserDAO extends AbstractDAO<User> {
             log.error(Constant.SQL_ERROR + e.toString());
         }
         return isFree;
-    }
-
-    public int findUserId (User user) {
-        int userId = 0;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, db_user, db_password, maxConn);
-        Connection connection = pool.getConnection();
-
-        try (PreparedStatement statement = connection.prepareStatement(SQL_FIND_USER_BY_LOGIN)) {
-            statement.setString(1, user.getLogin());
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    userId = resultSet.getInt(USER_ID);
-                }
-                pool.freeConnection(connection);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                log.error(Constant.SQL_ERROR + e.toString());
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            log.error(Constant.SQL_ERROR + e.toString());
-        }
-        return userId;
     }
 
     @Override
@@ -345,54 +315,6 @@ public class UserDAO extends AbstractDAO<User> {
         return roleName;
     }
 
-    public String findFirstNameByID (int userID) {
-        String firstName = null;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, db_user, db_password, maxConn);
-        Connection connection = pool.getConnection();
-
-        try (PreparedStatement statement = connection.prepareStatement(SQL_FIND_USER_FIRST_NAME_BY_ID)) {
-            statement.setInt(1, userID);
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    firstName = resultSet.getString(FIRST_NAME);
-                }
-                pool.freeConnection(connection);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                log.error(Constant.SQL_ERROR + e.toString());
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            log.error(Constant.SQL_ERROR + e.toString());
-        }
-        return firstName;
-    }
-
-    public String findLastNameByID (int userID) {
-        String lastName = null;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, db_user, db_password, maxConn);
-        Connection connection = pool.getConnection();
-
-        try (PreparedStatement statement = connection.prepareStatement(SQL_FIND_USER_LAST_NAME_BY_ID)) {
-            statement.setInt(1, userID);
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    lastName = resultSet.getString(LAST_NAME);
-                }
-                pool.freeConnection(connection);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                log.error(Constant.SQL_ERROR + e.toString());
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            log.error(Constant.SQL_ERROR + e.toString());
-        }
-        return lastName;
-    }
-
     @Override
     public boolean create(User user) {
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, db_user, db_password, maxConn);
@@ -404,7 +326,7 @@ public class UserDAO extends AbstractDAO<User> {
             preparedStatement.setString(3, user.getLogin());
             preparedStatement.setString(4, user.getPassword());
             preparedStatement.setString(5, user.getEmail());
-            preparedStatement.setString(6,user.getPhoneNumber());
+            preparedStatement.setString(6, user.getPhoneNumber());
             preparedStatement.setInt(7, findRoleIDbyName(Constant.USER));
             preparedStatement.executeUpdate();
             log.info(USER_INSERTED_MESSAGE + user.getId());
@@ -419,7 +341,7 @@ public class UserDAO extends AbstractDAO<User> {
         return false;
     }
 
-    public boolean updateUserInfo (User user) {
+    public boolean updateUserInfo(User user) {
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, db_user, db_password, maxConn);
         Connection connection = pool.getConnection();
 
@@ -441,7 +363,7 @@ public class UserDAO extends AbstractDAO<User> {
         return false;
     }
 
-    public boolean updateUserPassword (User user) {
+    public boolean updateUserPassword(User user) {
         ConnectionPool pool = ConnectionPool.getInstance(driverName, url, db_user, db_password, maxConn);
         Connection connection = pool.getConnection();
 

@@ -16,7 +16,7 @@
             <br/><label><fmt:message key="password"/>:</label><br/>
             <input type="password" name="password" value=""/>
             <br/>
-            <i>${loginErrorMessage}</i>
+            <b><i>${loginErrorMessage}</i></b>
             <br/>
             <input type="submit" name="loginButton" value="<fmt:message key="button.login"/>"/>
         </form>

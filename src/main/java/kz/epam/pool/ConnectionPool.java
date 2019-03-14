@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import org.apache.log4j.Logger;
 
 public class ConnectionPool {
@@ -15,6 +16,7 @@ public class ConnectionPool {
     private static final String CONNECTION_CREATION_ERROR = "Connection creation error ";
     private static final String ILLEGAL_MONITOR_EXCEPTION = "Illegal Monitor State Exception ";
     private static final String CONNECTION_RELEASE_ERROR = "Connection release error ";
+    private static final int INCREMENT = 1;
 
     private Logger log = Logger.getRootLogger();
     private static ConnectionPool instance;
@@ -58,7 +60,7 @@ public class ConnectionPool {
         Connection connection = null;
 
         if (!freeConnections.isEmpty()) {
-            connection = (Connection) freeConnections.get(freeConnections.size() - 1);
+            connection = (Connection) freeConnections.get(freeConnections.size() - INCREMENT);
             freeConnections.remove(connection);
             try {
                 if (connection.isClosed()) {
@@ -69,8 +71,7 @@ public class ConnectionPool {
             } catch (Exception e) {
                 connection = getConnection();
             }
-        }
-        else {
+        } else {
             try {
                 synchronized (freeConnections) {
                     while (freeConnections.isEmpty()) {
@@ -121,8 +122,7 @@ public class ConnectionPool {
             Connection connection = (Connection) allConnections.next();
             try {
                 connection.close();
-            }
-            catch (SQLException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
                 log.error(CONNECTION_RELEASE_ERROR + e.toString());
             }

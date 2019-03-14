@@ -11,15 +11,15 @@
     <section>
         <form name="registrationForm" method="POST" action="controller">
             <input type="hidden" name="command" value="update_user_password"/>
-            <i> ${incorrectPasswordMessage}</i>
+            <b><i> ${incorrectPasswordMessage}</i></b>
             <br/><label><fmt:message key="password.current"/>:</label><br/>
             <input type="password" name="currentPassword" value=""
                    oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
                    oninput="this.setCustomValidity('')" required/>
             <br/>
-            <i> ${samePasswordMessage} </i>
-            <br/><label><fmt:message key="password.new"/>:</label><br/>
-            <input type="password" name="newPassword" value=""
+            <br/><label><fmt:message key="password.new"/>:</label>
+            <b><i> ${samePasswordMessage} </i><b/>
+            <br/><input type="password" name="newPassword" value=""
                    oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
                    oninput="this.setCustomValidity('')" required/>
             <br/>

@@ -81,7 +81,6 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
             preparedStatement.setInt(2, productID);
             preparedStatement.setDouble(3, item.getProduct().getPrice());
             preparedStatement.setInt(4, item.getQuantity());
-            ;
             preparedStatement.executeUpdate();
 
             pool.freeConnection(connection);

@@ -2,6 +2,7 @@ package kz.epam.entity;
 
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Objects;
 
 public class LineItem extends Entity {
 
@@ -27,17 +28,29 @@ public class LineItem extends Entity {
         this.quantity = quantity;
     }
 
-    //    TODO: think about moving all methods from entity to util
-    public double getItemTotal()
-    {
+    public double getItemTotal() {
         double total = product.getPrice() * quantity;
         return total;
     }
 
-    public String getTotalCurrencyFormat()
-    {
+    public String getTotalCurrencyFormat() {
         Locale locale = new Locale("ru", "KZ");
         NumberFormat currency = NumberFormat.getCurrencyInstance(locale);
         return currency.format(this.getItemTotal());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LineItem lineItem = (LineItem) o;
+        return quantity == lineItem.quantity &&
+                Objects.equals(product, lineItem.product);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(product, quantity);
+    }
+
 }

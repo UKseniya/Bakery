@@ -5,6 +5,7 @@ import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Order extends Entity {
 
@@ -66,7 +67,6 @@ public class Order extends Entity {
         this.status = status;
     }
 
-    //    TODO: think about moving all methods from entity to util
     public String getRequestedDateFormat() {
         DateFormat dateFormat = DateFormat.getDateInstance();
         String invoiceDateFormatted = dateFormat.format(requestedDate);
@@ -90,4 +90,21 @@ public class Order extends Entity {
         return formattedTotal;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(orderNumber, order.orderNumber) &&
+                Objects.equals(user, order.user) &&
+                Objects.equals(items, order.items) &&
+                Objects.equals(requestedDate, order.requestedDate) &&
+                Objects.equals(comment, order.comment) &&
+                Objects.equals(status, order.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderNumber, user, items, requestedDate, comment, status);
+    }
 }

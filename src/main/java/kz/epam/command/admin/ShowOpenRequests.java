@@ -24,12 +24,14 @@ public class ShowOpenRequests implements Command {
     private static final String ORDER_NUMBER = "orderNumber";
     private static final String PATH_TO_REVIEW_ORDERS = "/jsp/admin/review_orders.jsp";
 
+    private static Date processingDate;
+    private static Date completionDate;
+
     private List<Order> pendingOrders;
     private List<Order> completedOrders;
 
     @Override
     public String execute(HttpServletRequest request) {
-        Date date = null;
         String page;
 
         HttpSession session = request.getSession();
@@ -60,22 +62,24 @@ public class ShowOpenRequests implements Command {
             DateFormat formatter;
             formatter = new SimpleDateFormat(Constant.DATE_FORMAT);
             try {
-                date = formatter.parse(receivedDate);
+                processingDate = formatter.parse(receivedDate);
+                completionDate = processingDate;
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        } else {
-            date = requestProcessingDate;
+        } else if (processingDate == null || completionDate == null){
+            processingDate = requestProcessingDate;
+            completionDate = requestCompletionDate;
         }
 
-        java.util.Date utilCurrentDate = date;
+        java.util.Date utilCurrentDate = processingDate;
         java.sql.Date sqlCurrentDate = new java.sql.Date(utilCurrentDate.getTime());
 
         pendingOrders = orderDAO.findAllPendingOrdersByDate(sqlCurrentDate, locale);
 
         session.setAttribute(Constant.PENDING_ORDERS, pendingOrders);
 
-        java.util.Date utilPickupDate = requestCompletionDate;
+        java.util.Date utilPickupDate = completionDate;
         java.sql.Date sqlPickUpDate = new java.sql.Date(utilPickupDate.getTime());
 
         completedOrders = orderDAO.findAllCompletedOrdersByDate(sqlPickUpDate, locale);

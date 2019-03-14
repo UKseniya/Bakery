@@ -6,14 +6,15 @@ import java.util.ResourceBundle;
 public class MessageManager {
 
     private static final String MESSAGE = "messages";
-    private  static MessageManager instance;
+
     private static ResourceBundle resourceBundle;
+    private static MessageManager instance;
 
     public static MessageManager getInstance(Locale locale) {
-        if (instance == null) {
+
             instance = new MessageManager();
             instance.resourceBundle = ResourceBundle.getBundle(MESSAGE, locale);
-        }
+
         return instance;
     }
 

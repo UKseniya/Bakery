@@ -29,7 +29,6 @@ public class ConfirmOrder implements Command {
     private static final String PATH_TO_CHECKOUT_PAGE = "/jsp/user/checkout.jsp";
     private static final String PATH_TO_CONFIRMATION_PAGE = "/jsp/user/confirmed_order.jsp";
 
-    //    TODO: split the whole method into several small methods;
     @Override
     public String execute(HttpServletRequest request) {
         String page;

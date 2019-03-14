@@ -76,12 +76,12 @@ public class User extends Entity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return phoneNumber == user.phoneNumber &&
-                Objects.equals(firstName, user.firstName) &&
+        return Objects.equals(firstName, user.firstName) &&
                 Objects.equals(lastName, user.lastName) &&
                 Objects.equals(login, user.login) &&
                 Objects.equals(password, user.password) &&
                 Objects.equals(email, user.email) &&
+                Objects.equals(phoneNumber, user.phoneNumber) &&
                 Objects.equals(role, user.role);
     }
 

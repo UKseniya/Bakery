@@ -23,7 +23,6 @@ public class RegistrationForm implements Command {
     private static final String PATH_TO_CONFIRMATION_PAGE = "/jsp/registration_successful.jsp";
     private static final String PATH_TO_REGISTRATION_PAGE = "/jsp/registration.jsp";
 
-    //    TODO: split the whole method into several small methods;
     @Override
     public String execute(HttpServletRequest request) {
         String page;

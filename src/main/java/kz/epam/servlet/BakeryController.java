@@ -2,6 +2,7 @@ package kz.epam.servlet;
 
 import kz.epam.command.Command;
 import kz.epam.command.CommandFactory;
+import kz.epam.config.ConfigManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class BakeryController extends HttpServlet {
+
     private static final long serialVersionUID = 1L;
+    private static final String PAGE_ERROR = "path.page.error";
     CommandFactory commandFactory = CommandFactory.getInstance();
 
     @Override
@@ -28,22 +31,22 @@ public class BakeryController extends HttpServlet {
 
     private void processRequest(HttpServletRequest request,
                                 HttpServletResponse response) throws ServletException, IOException {
-        String page = null;
+        String page;
 
         // get command received from JSP
-        Command command = CommandFactory.getCommand(request);
+        Command command = commandFactory.getCommand(request);
 
         // call execute() method and provide the parameters to the certain command class
 
         page = command.execute(request);
-        // the method return a page in the resposnse
+        // the method return a page in the response
         if (page != null) {
             RequestDispatcher dispatcher = getServletContext()
                     .getRequestDispatcher(page);
-            // вызов страницы ответа на запрос
+            // return required page
             dispatcher.forward(request, response);
         } else {
-//            page = ConfigManager.getProperty("path.page.error");
+            page = ConfigManager.getInstance().getProperty(PAGE_ERROR);
             response.sendRedirect(request.getContextPath() + page);
 
         }

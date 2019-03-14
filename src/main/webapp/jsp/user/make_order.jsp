@@ -34,7 +34,7 @@
                         <td>${product.priceCurrencyFormat}</td>
                         <td>
                             <input type="hidden" name="productCode" value="${product.code}">
-                            <input type="submit" value="<fmt:message key="button.cart.add"/>">
+                            <input type="submit" name="selectButton" value="<fmt:message key="button.cart.add"/>">
                             <%--TODO: add some notification that product has been added, if possible--%>
                         </td>
                     </tr>

@@ -2,6 +2,7 @@ package kz.epam.entity;
 
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Income extends Entity {
 
@@ -33,11 +34,24 @@ public class Income extends Entity {
         this.year = year;
     }
 
-    //    TODO: think about moving all methods from entity to util
-    public String getSumCurrencyFormat()
-    {
+    public String getSumCurrencyFormat() {
         Locale locale = new Locale("ru", "KZ");
         NumberFormat currency = NumberFormat.getCurrencyInstance(locale);
         return currency.format(this.getSum());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Income income = (Income) o;
+        return Double.compare(income.sum, sum) == 0 &&
+                year == income.year &&
+                Objects.equals(month, income.month);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sum, month, year);
     }
 }

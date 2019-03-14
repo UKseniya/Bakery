@@ -16,11 +16,10 @@ public class Login implements Command {
     private static final int SUBSTRING = 0;
     private static final String LOGIN_ERROR = "loginErrorMessage";
     private static final String ERROR_MESSAGE = "error.login";
-    private static final String PATH_TO_LOGIN_PAGE = "/jsp/login.jsp";
+    private static final String PATH_TO_LOGIN_PAGE = "/controller?command=login_form";
     private static final String PATH_TO_ADMIN_PAGE = "/controller?command=admin_page";
     private static final String PATH_TO_USER_PAGE = "/controller?command=user_page";
 
-    //    TODO: split the whole method into several small methods;
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
@@ -41,15 +40,14 @@ public class Login implements Command {
         if (user != null) {
             page = PATH_TO_USER_PAGE;
         } else if (login != "") {
-            boolean isUserRegistered = userDAO.isUserRegistered(login, providedPassword);
+
+            // Retrieve secured password and salt from the password stored in DB.
+            password = userDAO.findPasswordByLogin(login);
+
+            boolean isUserRegistered = userDAO.isUserRegistered(login, password);
 
             if (isUserRegistered) {
-
-                // Retrieve secured password and salt from the password stored in DB.
-                password = userDAO.findPasswordByLogin(login);
-
                 passwordVerified = verifyPassword(password, providedPassword);
-
             } else {
                 request.setAttribute(LOGIN_ERROR, MessageManager.getInstance(locale).getProperty(ERROR_MESSAGE));
                 page = PATH_TO_LOGIN_PAGE;

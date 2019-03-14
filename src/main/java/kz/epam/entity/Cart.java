@@ -4,6 +4,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Cart extends Entity {
 
@@ -21,12 +22,10 @@ public class Cart extends Entity {
         this.items = items;
     }
 
-//    TODO: think about moving all methods from entity to util
     public double getTotal() {
 
         double total = 0.00;
-        for (int i=0; i<items.size(); i++)
-        {
+        for (int i = 0; i < items.size(); i++) {
             LineItem item = items.get(i);
             total += item.getItemTotal();
         }
@@ -42,16 +41,13 @@ public class Cart extends Entity {
         return formattedTotal;
     }
 
-    public void addItem(LineItem item)
-    {
+    public void addItem(LineItem item) {
         //If the item already exists in the cart, only the quantity is changed.
         String code = item.getProduct().getCode();
         int quantity = item.getQuantity();
-        for (int i = 0; i<items.size(); i++)
-        {
+        for (int i = 0; i < items.size(); i++) {
             LineItem lineItem = items.get(i);
-            if (lineItem.getProduct().getCode().equals(code))
-            {
+            if (lineItem.getProduct().getCode().equals(code)) {
                 quantity++;
                 lineItem.setQuantity(quantity);
                 return;
@@ -60,17 +56,16 @@ public class Cart extends Entity {
         items.add(item);
     }
 
-    public void removeItem(LineItem item)
-    {
-        String code = item.getProduct().getCode();
-        for (int i = 0; i<items.size(); i++)
-        {
-            LineItem lineItem = items.get(i);
-            if (lineItem.getProduct().getCode().equals(code))
-            {
-                items.remove(i);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cart cart = (Cart) o;
+        return Objects.equals(items, cart.items);
+    }
 
-            }
-        }
+    @Override
+    public int hashCode() {
+        return Objects.hash(items);
     }
 }

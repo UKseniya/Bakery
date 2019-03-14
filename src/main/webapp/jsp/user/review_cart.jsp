@@ -19,14 +19,14 @@
             <c:otherwise>
                 <table class="productsList">
                     <tr>
-                        <th style="width: 200px"><fmt:message key="name"/></th>
+                        <th><fmt:message key="name"/></th>
                         <th><fmt:message key="price"/></th>
                         <th colspan="3"><fmt:message key="quantity"/></th>
                         <th><fmt:message key="sum"/></th>
                     </tr>
                     <c:forEach var="item" items="${cart.items}">
                         <form name="update" method="POST" action="controller">
-                            <input type="hidden" name="command" value="update_cart">
+                            <input type="hidden" name="command" value="add_to_cart">
                             <tr>
                                 <td style="width: 200px">${item.product.name}</td>
                                 <td>${item.product.priceCurrencyFormat}</td>
