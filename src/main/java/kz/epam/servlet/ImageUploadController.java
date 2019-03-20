@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ImageUploadController extends HttpServlet {
 
-    private static final String UPLOAD_DIR = "pictures";
+    private static final String UPLOAD_DIR = "picture";
     private static final String CONTEXT_TYPE = "text/plain;charset=UTF-8";
     private static final String MESSAGE = "message";
     private static final String MESSAGE_TEXT = "There was an error: ";

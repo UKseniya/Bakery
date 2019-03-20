@@ -11,11 +11,6 @@ body {
 #left {
   min-height: 108px;
 }
-#wrap {
-  min-height:100%;
-  position:relative;
-  padding-bottom: 30px;
-}
 
 section .center {
   text-align: center;
@@ -33,6 +28,9 @@ section {
   color: #000000;
 }
 
+.contacts {
+  font-size: large;
+}
 header {
   display: block;
   background-color: rgba(243, 229, 201, 0.6);
@@ -76,6 +74,7 @@ ul {
 li {
   display: inline;
   margin-bottom: 3px;
+  padding-bottom: 3px;
 }
 .login-option {
   font-size: 180%;
@@ -134,6 +133,7 @@ footer {
   color: #efe5d0;
   text-align: center;
   padding-top: 10px;
+  padding-bottom: 5px;
   font-size: 90%;
   clear: both;
   position: fixed;

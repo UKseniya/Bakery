@@ -17,7 +17,6 @@ public class Checkout implements Command {
         String page;
 
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute(Constant.USER);
         Cart cart = (Cart) session.getAttribute(Constant.CART);
 
         session.setAttribute(Constant.CART, cart);

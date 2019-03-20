@@ -27,7 +27,7 @@ public class UpdateUserPassword implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         String page;
-        boolean passwordVerified = true;
+        boolean passwordVerified;
 
         String updateButton = request.getParameter(UPDATE_BUTTON);
         String currentPassword = request.getParameter(CURRENT_PASSWORD);
@@ -72,7 +72,7 @@ public class UpdateUserPassword implements Command {
     }
 
     private boolean verifyPassword(String databasePassword, String providedPassword) {
-        boolean verified = true;
+        boolean verified;
 
         String securedPassword = databasePassword.substring(SUBSTRING, databasePassword.length() - SALT_LENGTH);
         String salt = databasePassword.length() > SALT_LENGTH ? databasePassword.substring(databasePassword.length() - SALT_LENGTH) : databasePassword;

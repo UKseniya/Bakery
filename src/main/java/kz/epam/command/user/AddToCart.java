@@ -8,7 +8,6 @@ import kz.epam.entity.LineItem;
 import kz.epam.entity.Product;
 import kz.epam.entity.User;
 import kz.epam.message.MessageManager;
-import sun.security.x509.AVA;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -44,18 +43,16 @@ public class AddToCart implements Command {
         String removeButton = request.getParameter(REMOVE_BUTTON);
 
         HttpSession session = request.getSession();
-//        TODO: think how to get value from previous page
+
         String quantity = request.getParameter(AVAILABLE_QUANTITY);
 
         if (maximumOrderQuantity == 0) {
             maximumOrderQuantity = Integer.parseInt(quantity);
         }
-        if (quantity != null){
+        if (quantity != null) {
             availableQuantity = Integer.parseInt(quantity);
         }
 
-//        Object quantity= session.getAttribute(AVAILABLE_QUANTITY);
-//        int availableQuantity = (int) quantity;
         String language = session.getAttribute(Constant.LOCALE).toString();
         User user = (User) session.getAttribute(Constant.USER);
 
@@ -86,26 +83,23 @@ public class AddToCart implements Command {
         if (removeButton != null && itemQuantity != 0) {
             itemQuantity = Integer.parseInt(receivedQuantity);
             itemQuantity--;
-//            for (LineItem item : cart.getItems()) {
-//                totalItemQuantity = item.getQuantity() + totalItemQuantity;
-//            }
             totalItemQuantity--;
             availableQuantity++;
             session.setAttribute(AVAILABLE_QUANTITY, availableQuantity);
             page = PATH_TO_CART_PAGE;
         }
 
-            Iterator iterator = cart.getItems().iterator();
-            while (iterator.hasNext()) {
-                LineItem item = (LineItem) iterator.next();
-                if (item.getProduct().getCode().equals(productCode)) {
-                    if (itemQuantity > 0) {
-                        item.setQuantity(itemQuantity);
-                    } else {
-                        iterator.remove();
-                    }
+        Iterator iterator = cart.getItems().iterator();
+        while (iterator.hasNext()) {
+            LineItem item = (LineItem) iterator.next();
+            if (item.getProduct().getCode().equals(productCode)) {
+                if (itemQuantity > 0) {
+                    item.setQuantity(itemQuantity);
+                } else {
+                    iterator.remove();
                 }
             }
+        }
 
         ProductDAO productDAO = new ProductDAO();
         Product product = productDAO.findProductbyCode(productCode, language);

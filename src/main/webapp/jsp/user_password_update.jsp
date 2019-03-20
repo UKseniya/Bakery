@@ -18,7 +18,7 @@
                    oninput="this.setCustomValidity('')" required/>
             <br/>
             <br/><label><fmt:message key="password.new"/>:</label>
-            <b><i> ${samePasswordMessage} </i><b/>
+            <b><i> ${samePasswordMessage} </i></b>
             <br/><input type="password" name="newPassword" value=""
                    oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
                    oninput="this.setCustomValidity('')" required/>

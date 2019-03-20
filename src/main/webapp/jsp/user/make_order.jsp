@@ -17,7 +17,7 @@
             <input type="hidden" name="command" value="review_cart">
             <input type="submit" value="<fmt:message key="button.cart.go"/> ">
         </form>
-        <%--<br/>--%>
+
         <table class="common">
             <tr>
                 <th>&nbsp;</th>
@@ -29,7 +29,7 @@
                 <form name="productList" method="POST" action="controller">
                     <input type="hidden" name="command" value="add_to_cart">
                     <tr>
-                        <td><img src="pictures/${product.formattedCode}.jpg" width="100" height="100">
+                        <td><img src="picture/${product.formattedCode}.jpg" width="100" height="100">
                         </td>
                         <td>${product.name}</td>
                         <td>${product.priceCurrencyFormat}</td>
@@ -37,7 +37,6 @@
                             <input type="hidden" name="productCode" value="${product.code}">
                             <input type="hidden" name="availableQuantity" value="${availableQuantity}">
                             <input type="submit" name="selectButton" value="<fmt:message key="button.cart.add"/>">
-                            <%--TODO: add some notification that product has been added, if possible--%>
                         </td>
                     </tr>
                 </form>

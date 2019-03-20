@@ -5,7 +5,6 @@ import kz.epam.constant.Constant;
 import kz.epam.dao.OrderDAO;
 import kz.epam.entity.LineItem;
 import kz.epam.entity.Order;
-import kz.epam.entity.User;
 import kz.epam.message.MessageManager;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +35,7 @@ public class SelectDate implements Command {
     private static final String PATH_TO_SELECTING_ORDER_PAGE = "/controller?command=select_products";
 
     private static int availableQuantity;
-// TODO: check 28th of March
+
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
@@ -46,7 +45,6 @@ public class SelectDate implements Command {
         java.sql.Date sqlDate = null;
 
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute(Constant.USER);
         String selectDateButton = request.getParameter(SELECT_DATE_BUTTON);
         String requestedDate = request.getParameter(Constant.DATE);
 
@@ -71,8 +69,7 @@ public class SelectDate implements Command {
 
             java.util.Date utilDate = date;
             sqlDate = new java.sql.Date(utilDate.getTime());
-        }
-        else {
+        } else {
             page = PATH_TO_SELECT_DATE_PAGE;
         }
         OrderDAO orderDAO = new OrderDAO();
@@ -100,7 +97,7 @@ public class SelectDate implements Command {
                     page = PATH_TO_SELECT_DATE_PAGE;
                 }
             }
-        } else if (selectDateButton != null && date == null){
+        } else if (selectDateButton != null && date == null) {
             request.setAttribute(NULL_DATE,
                     MessageManager.getInstance(locale).getProperty(NULL_DATE_MESSAGE));
             page = PATH_TO_SELECT_DATE_PAGE;

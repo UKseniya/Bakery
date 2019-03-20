@@ -5,7 +5,6 @@ import kz.epam.constant.Constant;
 import kz.epam.dao.ProductDAO;
 import kz.epam.entity.Cart;
 import kz.epam.entity.LineItem;
-import kz.epam.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

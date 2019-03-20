@@ -1,10 +1,7 @@
 package kz.epam.util;
 
-import org.apache.log4j.Logger;
-
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -19,8 +16,6 @@ public final class PasswordUtil {
     private static final String ERROR_MESSAGE = "Error while hashing a password: ";
     private static final int ITERATIONS = 10000;
     private static final int KEY_LENGTH = 256;
-
-    private static Logger log = Logger.getRootLogger();
 
     public static String getSalt(int length) {
         StringBuilder returnValue = new StringBuilder(length);

@@ -9,14 +9,14 @@
     <servlet-name>BakeryController</servlet-name>
     <url-pattern>/controller</url-pattern>
   </servlet-mapping>
-    <servlet>
-        <servlet-name>ImageUploadController</servlet-name>
-        <servlet-class>kz.epam.servlet.ImageUploadController</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ImageUploadController</servlet-name>
-        <url-pattern>/upload</url-pattern>
-    </servlet-mapping>
+  <servlet>
+    <servlet-name>ImageUploadController</servlet-name>
+    <servlet-class>kz.epam.servlet.ImageUploadController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ImageUploadController</servlet-name>
+    <url-pattern>/upload</url-pattern>
+  </servlet-mapping>
   <session-config>
     <session-timeout>30</session-timeout>
   </session-config>

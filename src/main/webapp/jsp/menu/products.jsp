@@ -5,8 +5,6 @@
         <fmt:setLocale value="${userLocale}"/>
         <fmt:bundle basename="resources">
             <jsp:include page="../includes/header.jsp"/>
-
-            <input type="hidden" name="jspName" value="controller?command=show_available_products">
             <jsp:include page="../includes/column_right_home.jsp"/>
 
             <body>
@@ -16,7 +14,7 @@
             <table class="common">
             <c:forEach var="product" items="${availableProducts}">
                 <tr>
-                <td><img src="/Bakery/pictures/${product.formattedCode}.jpg" width="200" height="200"></td>
+                <td><img src="/Bakery/picture/${product.formattedCode}.jpg" width="200" height="200"></td>
                 <td><b>${product.name}</b><br/><br/><br/> ${product.description} </td>
                 </tr>
             </c:forEach>

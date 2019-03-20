@@ -5,7 +5,7 @@
 <fmt:setLocale value="${userLocale}"/>
 <fmt:bundle basename="resources">
     <footer>
-        &copy; 2019 <fmt:message key="title"/>
+        <p> &copy; 2019 <fmt:message key="title"/> &nbsp; Developed by Kseniya Nazarova </p>
         <br/>
 
     </footer>

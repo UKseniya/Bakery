@@ -1,7 +1,6 @@
 package kz.epam.command.admin;
 
 import kz.epam.command.Command;
-import kz.epam.constant.Constant;
 import kz.epam.dao.ProductDAO;
 import kz.epam.entity.Product;
 
