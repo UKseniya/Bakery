@@ -32,44 +32,45 @@ public class ConfirmOrder implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         String page;
-        Date date = null;
+//        Date date;
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(Constant.USER);
         Cart cart = (Cart) session.getAttribute(Constant.CART);
-        String requestedDate = request.getParameter(Constant.DATE);
+//        String requestedDate = request.getParameter(Constant.DATE);
         String comment = request.getParameter(COMMENT);
 
+        Date date = (Date) session.getAttribute(Constant.DATE);
         String language = session.getAttribute(Constant.LOCALE).toString();
 
         Locale locale = new Locale(language);
 
         Calendar calendar = Calendar.getInstance();
 
-        calendar.add(Calendar.DAY_OF_YEAR, NUMBER_OF_DAYS);
-        Date minimumDate = calendar.getTime();
+//        calendar.add(Calendar.DAY_OF_YEAR, NUMBER_OF_DAYS);
+//        Date minimumDate = calendar.getTime();
 
-        DateFormat formatter;
-        formatter = new SimpleDateFormat(Constant.DATE_FORMAT);
-        try {
-            minimumDate = formatter.parse(formatter.format(calendar.getTime()));
-            date = formatter.parse(requestedDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+//        DateFormat formatter;
+//        formatter = new SimpleDateFormat(Constant.DATE_FORMAT);
+//        try {
+////            minimumDate = formatter.parse(formatter.format(calendar.getTime()));
+//            date = formatter.parse(requestedDate);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
 
         OrderDAO orderDAO = new OrderDAO();
 
-        if (date != null) {
-            calendar.setTime(date);
-            int dayOfWeek = calendar.get(DAY_OF_WEEK);
-
-            if (date.before(minimumDate) || dayOfWeek == Calendar.SUNDAY || dayOfWeek == Calendar.MONDAY) {
-                request.setAttribute(DATE_ERROR,
-                        MessageManager.getInstance(locale).getProperty(WRONG_DATE_MESSAGE));
-                page = PATH_TO_CHECKOUT_PAGE;
-
-            } else {
+//        if (date != null) {
+//            calendar.setTime(date);
+//            int dayOfWeek = calendar.get(DAY_OF_WEEK);
+//
+//            if (date.before(minimumDate) || dayOfWeek == Calendar.SUNDAY || dayOfWeek == Calendar.MONDAY) {
+//                request.setAttribute(DATE_ERROR,
+//                        MessageManager.getInstance(locale).getProperty(WRONG_DATE_MESSAGE));
+//                page = PATH_TO_CHECKOUT_PAGE;
+//
+//            } else {
 
                 List<Integer> usedNumbers = orderDAO.findAllOrderNumbers();
                 String orderNumber = OrderNumberGenerator.generateOrderNumber(orderDAO.findAllOrderNumbers());
@@ -89,13 +90,13 @@ public class ConfirmOrder implements Command {
                 session.setAttribute(Constant.CART, cart);
 
                 page = PATH_TO_CONFIRMATION_PAGE;
-            }
-
-        } else {
-            request.setAttribute(NULL_DATE,
-                    MessageManager.getInstance(locale).getProperty(NULL_DATE_MESSAGE));
-            page = PATH_TO_CHECKOUT_PAGE;
-        }
+//            }
+//
+//        } else {
+//            request.setAttribute(NULL_DATE,
+//                    MessageManager.getInstance(locale).getProperty(NULL_DATE_MESSAGE));
+//            page = PATH_TO_CHECKOUT_PAGE;
+//        }
 
         return page;
     }

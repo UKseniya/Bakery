@@ -7,7 +7,7 @@
     <div id="left">
         <c:if test="${!empty user}">
             <ul class="user">
-                <li><a href="controller?command=select_products"><fmt:message key="make.order"/> </a></li>
+                <li><a href="controller?command=select_date"><fmt:message key="make.order"/> </a></li>
                 <br>
                 <li><a href="controller?command=show_all_orders"><fmt:message key="review.my.orders"/> </a></li>
                 <br>

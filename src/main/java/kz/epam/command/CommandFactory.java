@@ -15,8 +15,8 @@ public class CommandFactory {
     enum CommandEnum {
 
         NO_COMMAND, LOGIN_FORM, LOGIN, LOGOUT, REGISTRATION, REGISTRATION_FORM, USER_PAGE,
-        UPDATE_USER_DETAILS, UPDATE_USER_PASSWORD, SELECT_PRODUCTS, ADD_TO_CART, REVIEW_CART,
-        UPDATE_CART, CHECKOUT, CONFIRM_ORDER, ADMIN_PAGE, SHOW_ALL_ORDERS, SHOW_TASKS,
+        UPDATE_USER_DETAILS, UPDATE_USER_PASSWORD, SELECT_DATE, SELECT_PRODUCTS, ADD_TO_CART, REVIEW_CART,
+        CHECKOUT, CONFIRM_ORDER, ADMIN_PAGE, SHOW_ALL_ORDERS, SHOW_TASKS,
         SHOW_ALL_REQUESTS, SHOW_AVAILABLE_PRODUCTS, UPDATE_PRODUCT_LIST, SHOW_PRODUCT_INFO,
         UPDATE_PRODUCT_INFO, ADD_NEW_PRODUCT, SHOW_INCOME, SHOW_ANNUAL_INCOMES,
         SHOW_ALL_INCOMES, CANCEL_ORDER;
@@ -55,14 +55,14 @@ public class CommandFactory {
                 return new UpdateUserDetails();
             case UPDATE_USER_PASSWORD:
                 return new UpdateUserPassword();
+            case SELECT_DATE:
+                return new SelectDate();
             case SELECT_PRODUCTS:
                 return new SelectProducts();
             case ADD_TO_CART:
                 return new AddToCart();
             case REVIEW_CART:
                 return new ReviewCart();
-            case UPDATE_CART:
-                return new UpdateCart();
             case CHECKOUT:
                 return new Checkout();
             case CONFIRM_ORDER:

@@ -24,17 +24,24 @@
             </c:forEach>
 
             <br/>
-            <strong><em>${dateNullMessage}</em></strong>
-            <strong><em>${dateErrorMessage}</em></strong>
-            <br/>
-            <p><fmt:message key="order.date"/>:
-                <input type="date" name="date" value=""
-                       oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
-                       oninput="this.setCustomValidity('')"></p>
+
+            <fmt:message key="order.date.selected"/>:
+            <p>
+                <fmt:formatDate value="${date}" type="date"
+                                dateStyle="short"/>
+            </p>
+            <%--<strong><em>${dateNullMessage}</em></strong>--%>
+            <%--<strong><em>${dateErrorMessage}</em></strong>--%>
+            <%--<br/>--%>
+            <%--<p><fmt:message key="order.date"/>:--%>
+                <%--<input type="date" name="date" value=""--%>
+                       <%--oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"--%>
+                       <%--oninput="this.setCustomValidity('')"></p>--%>
             <br/>
             <label><fmt:message key="comment"/></label><br/>
             <textarea name="comment" cols="40" rows="3"></textarea>
             <p>Total: ${cart.totalCurrencyFormat}</p>
+            <input type="hidden" name="date" value="${date}">
             <input type="submit" value="<fmt:message key="order.confirm"/> ">
         </form>
     </section>

@@ -12,6 +12,7 @@
     <body>
 
     <section class="center">
+        <b><p><fmt:message key="order.quantity"/> &nbsp; <i>${availableQuantity}</i> </p></b>
         <form name="cart" method="POST" action="controller">
             <input type="hidden" name="command" value="review_cart">
             <input type="submit" value="<fmt:message key="button.cart.go"/> ">
@@ -34,6 +35,7 @@
                         <td>${product.priceCurrencyFormat}</td>
                         <td>
                             <input type="hidden" name="productCode" value="${product.code}">
+                            <input type="hidden" name="availableQuantity" value="${availableQuantity}">
                             <input type="submit" name="selectButton" value="<fmt:message key="button.cart.add"/>">
                             <%--TODO: add some notification that product has been added, if possible--%>
                         </td>

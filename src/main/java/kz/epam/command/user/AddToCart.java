@@ -8,6 +8,7 @@ import kz.epam.entity.LineItem;
 import kz.epam.entity.Product;
 import kz.epam.entity.User;
 import kz.epam.message.MessageManager;
+import sun.security.x509.AVA;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -25,8 +26,11 @@ public class AddToCart implements Command {
     private static final String ORDER_ERROR_MESSAGE = "error.order.full";
     private static final String PATH_TO_SELECTING_ORDER_PAGE = "/jsp/user/make_order.jsp";
     private static final String PATH_TO_CART_PAGE = "/jsp/user/review_cart.jsp";
+    private static final String AVAILABLE_QUANTITY = "availableQuantity";
 
     private static int totalItemQuantity = 0;
+    private static int maximumOrderQuantity = 0;
+    private static int availableQuantity;
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -40,6 +44,18 @@ public class AddToCart implements Command {
         String removeButton = request.getParameter(REMOVE_BUTTON);
 
         HttpSession session = request.getSession();
+//        TODO: think how to get value from previous page
+        String quantity = request.getParameter(AVAILABLE_QUANTITY);
+
+        if (maximumOrderQuantity == 0) {
+            maximumOrderQuantity = Integer.parseInt(quantity);
+        }
+        if (quantity != null){
+            availableQuantity = Integer.parseInt(quantity);
+        }
+
+//        Object quantity= session.getAttribute(AVAILABLE_QUANTITY);
+//        int availableQuantity = (int) quantity;
         String language = session.getAttribute(Constant.LOCALE).toString();
         User user = (User) session.getAttribute(Constant.USER);
 
@@ -54,9 +70,12 @@ public class AddToCart implements Command {
         if (addButton != null) {
             itemQuantity = Integer.parseInt(receivedQuantity);
 
-            if (totalItemQuantity < MAXIMUM_ORDER_QUANTITY) {
+            if (totalItemQuantity < maximumOrderQuantity) {
                 itemQuantity++;
                 totalItemQuantity++;
+                availableQuantity--;
+
+                session.setAttribute(AVAILABLE_QUANTITY, availableQuantity);
             } else {
                 request.setAttribute(ORDER_ERROR,
                         MessageManager.getInstance(locale).getProperty(ORDER_ERROR_MESSAGE));
@@ -71,6 +90,8 @@ public class AddToCart implements Command {
 //                totalItemQuantity = item.getQuantity() + totalItemQuantity;
 //            }
             totalItemQuantity--;
+            availableQuantity++;
+            session.setAttribute(AVAILABLE_QUANTITY, availableQuantity);
             page = PATH_TO_CART_PAGE;
         }
 
@@ -91,16 +112,18 @@ public class AddToCart implements Command {
         session.setAttribute(Constant.PRODUCT, product);
 
         if (selectButton != null) {
-            if (product != null && totalItemQuantity < MAXIMUM_ORDER_QUANTITY) {
+            if (product != null && totalItemQuantity < maximumOrderQuantity) {
                 LineItem lineItem = new LineItem();
                 lineItem.setProduct(product);
                 lineItem.setQuantity(itemQuantity);
                 cart.addItem(lineItem);
                 totalItemQuantity++;
+                availableQuantity--;
 
                 session.setAttribute(Constant.CART, cart);
+                session.setAttribute(AVAILABLE_QUANTITY, availableQuantity);
 
-                if (totalItemQuantity < MAXIMUM_ORDER_QUANTITY) {
+                if (totalItemQuantity < maximumOrderQuantity) {
 
                     page = PATH_TO_SELECTING_ORDER_PAGE;
                 } else {

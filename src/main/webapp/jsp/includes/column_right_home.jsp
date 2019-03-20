@@ -25,12 +25,6 @@
             <li class="lang"><a href="?lang=ru"><fmt:message key="ru.lang"/></a></li>
         </ul>
 
-        <%--<ul class="locale"/>--%>
-        <%--<li>Currency &nbsp;</li>--%>
-        <%--<li class="lang"><a href="?lang=en"><fmt:message key="en.lang"/></a></li>--%>
-        <%--<li class="lang"><a href="?lang=ru"><fmt:message key="ru.lang"/></a></li>--%>
-        <%--</ul>--%>
-
         <jsp:useBean id="now" class="java.util.Date"/>
         <p>
             <fmt:formatDate value="${now}" type="both"

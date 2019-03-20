@@ -1,6 +1,6 @@
 package kz.epam.constant;
 
-public class Constant {
+public final class Constant {
 
     public static final String ENCODING = "UTF-8";
     public static final String LOCALE = "userLocale";
