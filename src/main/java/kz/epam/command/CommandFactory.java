@@ -34,6 +34,10 @@ public class CommandFactory {
         if (!(command == null || command.isEmpty()) && command != action) {
             action = command;
         }
+
+        if (command == null || command.isEmpty() && action.equals("login")) {
+            action = "user_page";
+        }
         // Receive object that corresponds to the request
         CommandEnum current = CommandEnum.valueOf(action.toUpperCase());
         switch (current) {
