@@ -16,7 +16,6 @@ import java.util.Locale;
 
 public class AddToCart implements Command {
 
-    private static final int MAXIMUM_ORDER_QUANTITY = 5;
     private static final String QUANTITY = "quantity";
     private static final String SELECT_BUTTON = "selectButton";
     private static final String ADD_BUTTON = "addButton";
@@ -56,7 +55,7 @@ public class AddToCart implements Command {
         String language = session.getAttribute(Constant.LOCALE).toString();
         User user = (User) session.getAttribute(Constant.USER);
 
-        Locale locale = new Locale(language);
+        Locale locale = new Locale(language.substring(0,2));
 
         Cart cart = (Cart) session.getAttribute(Constant.CART);
         if (cart == null) {

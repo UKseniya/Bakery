@@ -35,7 +35,7 @@ public class CancelOrder implements Command {
 
         String language = session.getAttribute(Constant.LOCALE).toString();
 
-        Locale locale = new Locale(language);
+        Locale locale = new Locale(language.substring(0,2));
 
         String orderNumber = request.getParameter(ORDER_NUMBER);
 

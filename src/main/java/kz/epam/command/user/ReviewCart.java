@@ -17,7 +17,7 @@ public class ReviewCart implements Command {
     public String execute(HttpServletRequest request) {
         String page;
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constant.LOCALE).toString();
+        String locale = session.getAttribute(Constant.LOCALE).toString().substring(0,2);
 
         Cart cart = (Cart) session.getAttribute(Constant.CART);
 

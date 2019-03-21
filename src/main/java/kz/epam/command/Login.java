@@ -33,7 +33,7 @@ public class Login implements Command {
         User user = (User) session.getAttribute(Constant.USER);
         String language = session.getAttribute(Constant.LOCALE).toString();
 
-        Locale locale = new Locale(language);
+        Locale locale = new Locale(language.substring(0,2));
 
         UserDAO userDAO = new UserDAO();
 

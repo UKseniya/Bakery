@@ -38,7 +38,7 @@ public class RegistrationForm implements Command {
 
         String language = session.getAttribute(Constant.LOCALE).toString();
 
-        Locale locale = new Locale(language);
+        Locale locale = new Locale(language.substring(0,2));
 
         Pattern phoneNumberPattern = Pattern.compile(PHONE_NUMBER_REGEX);
 

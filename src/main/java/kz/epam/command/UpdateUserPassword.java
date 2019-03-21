@@ -38,7 +38,7 @@ public class UpdateUserPassword implements Command {
 
         String language = session.getAttribute(Constant.LOCALE).toString();
 
-        Locale locale = new Locale(language);
+        Locale locale = new Locale(language.substring(0,2));
 
         UserDAO userDAO = new UserDAO();
 

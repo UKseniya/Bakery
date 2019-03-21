@@ -27,7 +27,7 @@ public class UpdateProductList implements Command {
         String page;
 
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constant.LOCALE).toString();
+        String locale = session.getAttribute(Constant.LOCALE).toString().substring(0,2);
 
         String removeButton = request.getParameter(REMOVE_BUTTON);
         String addButton = request.getParameter(ADD_BUTTON);

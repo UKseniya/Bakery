@@ -26,7 +26,7 @@ public class ShowAnnualIncomes implements Command {
         HttpSession session = request.getSession();
         String language = session.getAttribute(Constant.LOCALE).toString();
 
-        Locale locale = new Locale(language);
+        Locale locale = new Locale(language.substring(0,2));
 
         LocalDate today = LocalDate.now();
         year = today.getYear();

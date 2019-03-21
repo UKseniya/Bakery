@@ -31,7 +31,7 @@ public class ShowIncome implements Command {
         HttpSession session = request.getSession();
         String language = session.getAttribute(Constant.LOCALE).toString();
 
-        Locale locale = Locale.forLanguageTag(language);
+        Locale locale = Locale.forLanguageTag(language.substring(0,2));
 
         LocalDate today = LocalDate.now();
         currentMonth = today.getMonthValue();

@@ -21,7 +21,7 @@ public class ShowAvailableProducts implements Command {
         String page;
 
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constant.LOCALE).toString();
+        String locale = session.getAttribute(Constant.LOCALE).toString().substring(0,2);
         User user = (User) session.getAttribute(Constant.USER);
 
         ProductDAO productDAO = new ProductDAO();

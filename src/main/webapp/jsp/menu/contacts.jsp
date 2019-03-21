@@ -7,8 +7,6 @@
         <fmt:bundle basename="resources">
             <jsp:include page="../includes/header.jsp"/>
             <jsp:include page="../includes/column_right_home.jsp"/>
-            <jsp:include page="../includes/welcome.jsp"/>
-            <jsp:include page="../includes/user_menu.jsp"/>
 
             <body>
             <section class="contacts">

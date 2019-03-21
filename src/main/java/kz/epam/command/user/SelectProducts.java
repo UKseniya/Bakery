@@ -20,7 +20,7 @@ public class SelectProducts implements Command {
         String page;
 
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constant.LOCALE).toString();
+        String locale = session.getAttribute(Constant.LOCALE).toString().substring(0,2);
 
         ProductDAO productDAO = new ProductDAO();
         availableProducts = productDAO.findAllAvailableProducts(locale);
