@@ -30,15 +30,15 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
 
     private static String driverName = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_DRIVER_NAME);
     private static String url = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_URL);
-    private static String user_name = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_USER);
-    private static String password = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_PASSWORD);
+    private static String databaseUserName = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_USER);
+    private static String databasePassword = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_PASSWORD);
     private static int maxConn = Integer.parseInt(ConfigManager.getInstance().getProperty(ConfigManager.MAX_CONN));
 
     private Logger log = Logger.getRootLogger();
 
-    public List<LineItem> findALL(int orderID, String locale) {
+    public List<LineItem> findAllByOrderID(int orderID, String locale) {
         List<LineItem> items = null;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_LINE_ITEMS_BY_ORDER_ID)) {
@@ -50,7 +50,7 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
                     lineItem.setId(resultSet.getInt(ITEM_ID));
                     int productID = resultSet.getInt(PRODUCT_ID);
                     ProductDAO productDAO = new ProductDAO();
-                    Product product = productDAO.findEntityById(productID, locale);
+                    Product product = productDAO.findEntityByIdAndLocale(productID, locale);
                     product.setPrice(resultSet.getDouble(PRODUCT_PRICE));
                     lineItem.setProduct(product);
                     lineItem.setQuantity(resultSet.getInt(QUANTITY));
@@ -58,12 +58,10 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
                 }
 
             } catch (SQLException e) {
-                e.printStackTrace();
                 log.error(Constant.SQL_ERROR + e.toString());
             }
             pool.freeConnection(connection);
         } catch (SQLException e) {
-            e.printStackTrace();
             log.error(Constant.SQL_ERROR + e.toString());
         }
         return items;
@@ -71,7 +69,7 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
 
 
     public boolean create(int orderID, LineItem item) {
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
         Connection connection = pool.getConnection();
 
         ProductDAO productDAO = new ProductDAO();
@@ -87,7 +85,6 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
 
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
             log.error(Constant.SQL_ERROR + e.toString());
         }
         return false;
@@ -95,7 +92,7 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
 
     public List<LineItem> findTopProducts(int month, int year, String locale) {
         List<LineItem> items = null;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
         Connection connection = pool.getConnection();
 
         try (PreparedStatement statement = connection.prepareStatement(SQL_FIND_TOP_PRODUCTS_FOR_LAST_MONTH)) {
@@ -109,17 +106,15 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
                     int productID = resultSet.getInt(PRODUCT_ID);
                     LineItem item = new LineItem();
                     ProductDAO productDAO = new ProductDAO();
-                    item.setProduct(productDAO.findEntityById(productID, locale));
+                    item.setProduct(productDAO.findEntityByIdAndLocale(productID, locale));
                     item.setQuantity(resultSet.getInt(QUANTITY));
                     items.add(item);
                 }
                 pool.freeConnection(connection);
             } catch (SQLException e) {
-                e.printStackTrace();
                 log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             log.error(Constant.SQL_ERROR + e.toString());
         }
         return items;
@@ -136,13 +131,13 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
     }
 
     @Override
-    public int findEntityByID(LineItem entity) {
+    public int findIDbyEntity(LineItem entity) {
         throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
     public boolean delete(int id) {
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CANCEL_LINE_ITEM)) {
@@ -153,7 +148,6 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
 
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
             log.error(Constant.SQL_ERROR + e.toString());
         }
 

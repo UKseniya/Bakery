@@ -1,6 +1,7 @@
 package kz.epam.command.admin;
 
 import kz.epam.command.Command;
+import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.dao.LineItemDAO;
 import kz.epam.dao.UserDAO;
@@ -21,15 +22,12 @@ public class AdminPage implements Command {
     private static final int DECREMENT = 1;
     private static final String CURRENT_MONTH_TOP_PRODUCTS = "currentMonthTopProducts";
     private static final String PREVIOUS_MONTH_TOP_PRODUCTS = "previousMonthTopProducts";
+    private static final String PATH_TO_ADMIN_PAGE = ConfigManager.getInstance().getProperty("path.command.admin.page");
 
-    private List<User> registeredUsers = new ArrayList<>();
     private List<LineItem> currentMonthTopProducts = new ArrayList<>();
     private List<LineItem> previousMonthTopProducts = new ArrayList<>();
     private int currentMonthMaxQuantity = 0;
     private int previousMonthMaxQuantity = 0;
-    private int year;
-    private int currentMonth;
-    private int previousMonth;
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -38,14 +36,14 @@ public class AdminPage implements Command {
         String locale = session.getAttribute(Constant.LOCALE).toString();
 
         UserDAO userDAO = new UserDAO();
-        registeredUsers = userDAO.findAllUsersByRole(Constant.USER);
+        List<User> registeredUsers = userDAO.findAllUsersByRole(Constant.USER);
         int numberOfUsers = registeredUsers.size();
 
         session.setAttribute(TOTAL_NUMBER_OF_USERS, numberOfUsers);
 
         LocalDate today = LocalDate.now();
-        currentMonth = today.getMonthValue();
-        year = today.getYear();
+        int currentMonth = today.getMonthValue();
+        int year = today.getYear();
 
         LineItemDAO lineItemDAO = new LineItemDAO();
         List<LineItem> currentMonthProducts = lineItemDAO.findTopProducts(currentMonth, year, locale);
@@ -64,6 +62,7 @@ public class AdminPage implements Command {
 
         session.setAttribute(CURRENT_MONTH_TOP_PRODUCTS, currentMonthTopProducts);
 
+        int previousMonth;
         if (currentMonth == FIRST_MONTH) {
             previousMonth = LAST_MONTH;
             year = year - DECREMENT;
@@ -87,6 +86,6 @@ public class AdminPage implements Command {
 
         session.setAttribute(PREVIOUS_MONTH_TOP_PRODUCTS, previousMonthTopProducts);
 
-        return Constant.PATH_TO_ADMIN_PAGE;
+        return PATH_TO_ADMIN_PAGE;
     }
 }

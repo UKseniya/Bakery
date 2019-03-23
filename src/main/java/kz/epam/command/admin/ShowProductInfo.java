@@ -1,6 +1,7 @@
 package kz.epam.command.admin;
 
 import kz.epam.command.Command;
+import kz.epam.config.ConfigManager;
 import kz.epam.dao.ProductDAO;
 import kz.epam.entity.Product;
 
@@ -14,7 +15,7 @@ public class ShowProductInfo implements Command {
     private static final String PRODUCT_IN_ENGLISH = "productEn";
     private static final String RU_LOCALE = "ru";
     private static final String EN_LOCALE = "en";
-    private static final String PATH_TO_UPDATE_PRODUCT_INFO = "/jsp/admin/update_product_info.jsp";
+    private static final String PATH_TO_UPDATE_PRODUCT_INFO = ConfigManager.getInstance().getProperty("path.page.update.product.info");
 
     @Override
     public String execute(HttpServletRequest request) {

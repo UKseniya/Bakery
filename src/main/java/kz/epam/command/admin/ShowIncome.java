@@ -1,6 +1,7 @@
 package kz.epam.command.admin;
 
 import kz.epam.command.Command;
+import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.dao.IncomeDAO;
 import kz.epam.entity.Income;
@@ -17,12 +18,7 @@ public class ShowIncome implements Command {
     private static final int DECREMENT = 1;
     private static final String CURRENT_MONTH_INCOME = "currentMonthIncome";
     private static final String PREVIOUS_MONTH_INCOME = "previousMonthIncome";
-    private static final String PATH_TO_REVIEW_INCOMES = "/jsp/admin/show_income.jsp";
-    private Income currentMonthIncome;
-    private Income previousMonthIncome;
-    private int currentMonth;
-    private int year;
-    private int previousMonth;
+    private static final String PATH_TO_REVIEW_INCOMES = ConfigManager.getInstance().getProperty("path.page.show.incomes");
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -34,15 +30,16 @@ public class ShowIncome implements Command {
         Locale locale = Locale.forLanguageTag(language.substring(0,2));
 
         LocalDate today = LocalDate.now();
-        currentMonth = today.getMonthValue();
-        year = today.getYear();
+        int currentMonth = today.getMonthValue();
+        int year = today.getYear();
 
         IncomeDAO incomeDAO = new IncomeDAO();
 
-        currentMonthIncome = incomeDAO.findIncomeForMonth(currentMonth, year, locale);
+        Income currentMonthIncome = incomeDAO.findIncomeForMonth(currentMonth, year, locale);
 
         session.setAttribute(CURRENT_MONTH_INCOME, currentMonthIncome);
 
+        int previousMonth;
         if (currentMonth == FIRST_MONTH) {
             previousMonth = LAST_MONTH;
             year = year - DECREMENT;
@@ -50,7 +47,7 @@ public class ShowIncome implements Command {
             previousMonth = currentMonth - DECREMENT;
         }
 
-        previousMonthIncome = incomeDAO.findIncomeForMonth(previousMonth, year, locale);
+        Income previousMonthIncome = incomeDAO.findIncomeForMonth(previousMonth, year, locale);
 
         session.setAttribute(PREVIOUS_MONTH_INCOME, previousMonthIncome);
 

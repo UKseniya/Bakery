@@ -1,11 +1,11 @@
 package kz.epam.command.admin;
 
 import kz.epam.command.Command;
+import kz.epam.config.ConfigManager;
 import kz.epam.dao.ProductDAO;
 import kz.epam.entity.Product;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 public class AddNewProduct implements Command {
 
@@ -18,14 +18,12 @@ public class AddNewProduct implements Command {
     private static final String RU_LOCALE = "ru";
     private static final String EN_LOCALE = "en";
     private static final String ADD_BUTTON = "addButton";
-    private static final String PATH_TO_FORM = "/jsp/admin/add_new_product.jsp";
-    private static final String PATH_TO_PICTURE_UPLOAD = "/jsp/admin/upload_picture.jsp";
+    private static final String PATH_TO_FORM = ConfigManager.getInstance().getProperty("path.page.add.product");
+    private static final String PATH_TO_PICTURE_UPLOAD = ConfigManager.getInstance().getProperty("path.page.upload.picture");
 
     @Override
     public String execute(HttpServletRequest request) {
         String page;
-
-        HttpSession session = request.getSession();
 
         String addButton = request.getParameter(ADD_BUTTON);
         String code = request.getParameter(PRODUCT_CODE);

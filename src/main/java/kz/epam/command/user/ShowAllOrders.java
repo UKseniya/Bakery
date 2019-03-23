@@ -1,6 +1,7 @@
 package kz.epam.command.user;
 
 import kz.epam.command.Command;
+import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.dao.OrderDAO;
 import kz.epam.entity.Order;
@@ -14,10 +15,8 @@ import java.util.List;
 public class ShowAllOrders implements Command {
 
     private static final String ALL_ORDERS = "allOrders";
-    private static final String PATH_TO_REVIEW_ORDERS_PAGE = "/jsp/user/review_orders.jsp";
+    private static final String PATH_TO_REVIEW_ORDERS_PAGE = ConfigManager.getInstance().getProperty("path.page.review.user.orders");
 
-    private List<Order> pendingOrders;
-    private List<Order> completedOrders;
     private List<Order> allOrders = new ArrayList<>();
 
     @Override
@@ -30,11 +29,11 @@ public class ShowAllOrders implements Command {
 
         OrderDAO orderDAO = new OrderDAO();
 
-        pendingOrders = orderDAO.findAllPendingOrdersByUser(user, locale);
+        List<Order> pendingOrders = orderDAO.findAllPendingOrdersByUser(user, locale);
 
         session.setAttribute(Constant.PENDING_ORDERS, pendingOrders);
 
-        completedOrders = orderDAO.findAllOrdersByUser(user, locale);
+        List<Order> completedOrders = orderDAO.findAllOrdersByUser(user, locale);
 
         session.setAttribute(Constant.COMPLETE_ORDERS, completedOrders);
 

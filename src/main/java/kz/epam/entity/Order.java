@@ -16,9 +16,6 @@ public class Order extends Entity {
     private String comment;
     private String status;
 
-    public Order() {
-    }
-
     public String getOrderNumber() {
         return orderNumber;
     }
@@ -69,8 +66,7 @@ public class Order extends Entity {
 
     public String getRequestedDateFormat() {
         DateFormat dateFormat = DateFormat.getDateInstance();
-        String invoiceDateFormatted = dateFormat.format(requestedDate);
-        return invoiceDateFormatted;
+        return dateFormat.format(requestedDate);
     }
 
     public double getOrderTotal() {
@@ -86,8 +82,7 @@ public class Order extends Entity {
         Locale locale = new Locale("ru", "KZ");
         double total = this.getOrderTotal();
         NumberFormat currency = NumberFormat.getCurrencyInstance(locale);
-        String formattedTotal = currency.format(total);
-        return formattedTotal;
+        return currency.format(total);
     }
 
     @Override

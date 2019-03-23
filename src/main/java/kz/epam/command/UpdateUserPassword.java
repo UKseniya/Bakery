@@ -1,5 +1,6 @@
 package kz.epam.command;
 
+import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.dao.UserDAO;
 import kz.epam.entity.User;
@@ -21,8 +22,8 @@ public class UpdateUserPassword implements Command {
     private static final String INCORRECT_PASSWORD = "error.incorrect.password";
     private static final String SAME_PASSWORD_MESSAGE = "samePasswordMessage";
     private static final String SAME_PASSWORD = "error.password";
-    private static final String PATH_TO_CONFIRMATION_PAGE = "/jsp/password_updated.jsp";
-    private static final String PATH_TO_UPDATE_PAGE = "/jsp/user_password_update.jsp";
+    private static final String PATH_TO_CONFIRMATION_PAGE = ConfigManager.getInstance().getProperty("path.page.password.update.confirmation");
+    private static final String PATH_TO_UPDATE_PAGE = ConfigManager.getInstance().getProperty("path.page.password.update");
 
     @Override
     public String execute(HttpServletRequest request) {

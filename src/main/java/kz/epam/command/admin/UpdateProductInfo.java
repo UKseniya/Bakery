@@ -1,6 +1,7 @@
 package kz.epam.command.admin;
 
 import kz.epam.command.Command;
+import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.dao.ProductDAO;
 import kz.epam.entity.Product;
@@ -18,7 +19,7 @@ public class UpdateProductInfo implements Command {
     private static final String EN_PRODUCT_DESCRIPTION = "englishDescription";
     private static final String RU_LOCALE = "ru";
     private static final String EN_LOCALE = "en";
-    private static final String PATH_TO_CONFIRMATION_PAGE = "/jsp/admin/successful_update.jsp";
+    private static final String PATH_TO_CONFIRMATION_PAGE = ConfigManager.getInstance().getProperty("path.page.product.info.confirmation");
 
     @Override
     public String execute(HttpServletRequest request) {

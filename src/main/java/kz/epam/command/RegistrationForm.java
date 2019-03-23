@@ -1,5 +1,6 @@
 package kz.epam.command;
 
+import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.dao.UserDAO;
 import kz.epam.entity.User;
@@ -20,8 +21,8 @@ public class RegistrationForm implements Command {
     private static final String INCORRECT_PHONE_MESSAGE = "phoneNumberError";
     private static final String REGISTRATION_ERROR = "registrationErrorMessage";
     private static final String REGISTRATION_ERROR_MESSAGE = "error.registration";
-    private static final String PATH_TO_CONFIRMATION_PAGE = "/jsp/registration_successful.jsp";
-    private static final String PATH_TO_REGISTRATION_PAGE = "/jsp/registration.jsp";
+    private static final String PATH_TO_CONFIRMATION_PAGE = ConfigManager.getInstance().getProperty("path.page.registration.confirmation");
+    private static final String PATH_TO_REGISTRATION_PAGE = ConfigManager.getInstance().getProperty("path.page.registration");
 
     @Override
     public String execute(HttpServletRequest request) {

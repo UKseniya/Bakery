@@ -35,8 +35,8 @@ public class CommandFactory {
             action = command;
         }
 
-        if (command == null || command.isEmpty() && action.equals("login")) {
-            action = "user_page";
+        if ((command == null || command.isEmpty()) && action.equalsIgnoreCase(CommandEnum.LOGIN.name())) {
+            action = String.valueOf(CommandEnum.USER_PAGE).toLowerCase();
         }
         // Receive object that corresponds to the request
         CommandEnum current = CommandEnum.valueOf(action.toUpperCase());

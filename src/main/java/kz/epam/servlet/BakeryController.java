@@ -15,7 +15,7 @@ public class BakeryController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private static final String PAGE_ERROR = "path.page.error";
-    CommandFactory commandFactory = CommandFactory.getInstance();
+    private CommandFactory commandFactory = CommandFactory.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request,

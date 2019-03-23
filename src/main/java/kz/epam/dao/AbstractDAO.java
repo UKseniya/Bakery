@@ -1,6 +1,7 @@
 package kz.epam.dao;
 
 import kz.epam.entity.Entity;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,11 +11,13 @@ import java.util.List;
 
 public abstract class AbstractDAO<T extends Entity> {
 
+    private Logger log = Logger.getRootLogger();
+
     public abstract List<T> findAll();
 
     public abstract T findEntityById(int id);
 
-    public abstract int findEntityByID(T entity);
+    public abstract int findIDbyEntity(T entity);
 
     public abstract boolean delete(int id);
 
@@ -30,7 +33,7 @@ public abstract class AbstractDAO<T extends Entity> {
                 st.close();
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            log.error(ex.toString());
         }
 
     }
@@ -41,7 +44,7 @@ public abstract class AbstractDAO<T extends Entity> {
                 ps.close();
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            log.error(ex.toString());
         }
 
     }
@@ -52,7 +55,7 @@ public abstract class AbstractDAO<T extends Entity> {
                 cn.close();
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            log.error(ex.toString());
         }
     }
 }

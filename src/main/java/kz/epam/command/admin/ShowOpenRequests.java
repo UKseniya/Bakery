@@ -1,6 +1,7 @@
 package kz.epam.command.admin;
 
 import kz.epam.command.Command;
+import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.dao.OrderDAO;
 import kz.epam.entity.Order;
@@ -22,13 +23,10 @@ public class ShowOpenRequests implements Command {
     private static final String RECEIVED_DATE = "date";
     private static final int NUMBER_OF_DAYS = 1;
     private static final String ORDER_NUMBER = "orderNumber";
-    private static final String PATH_TO_REVIEW_ORDERS = "/jsp/admin/review_orders.jsp";
+    private static final String PATH_TO_REVIEW_ORDERS = ConfigManager.getInstance().getProperty("path.page.review.admin.orders");
 
-    private static Date processingDate;
-    private static Date completionDate;
-
-    private List<Order> pendingOrders;
-    private List<Order> completedOrders;
+    private Date processingDate;
+    private Date completionDate;
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -75,14 +73,14 @@ public class ShowOpenRequests implements Command {
         java.util.Date utilCurrentDate = processingDate;
         java.sql.Date sqlCurrentDate = new java.sql.Date(utilCurrentDate.getTime());
 
-        pendingOrders = orderDAO.findAllPendingOrdersByDate(sqlCurrentDate, locale);
+        List<Order> pendingOrders = orderDAO.findAllPendingOrdersByDate(sqlCurrentDate, locale);
 
         session.setAttribute(Constant.PENDING_ORDERS, pendingOrders);
 
         java.util.Date utilPickupDate = completionDate;
         java.sql.Date sqlPickUpDate = new java.sql.Date(utilPickupDate.getTime());
 
-        completedOrders = orderDAO.findAllCompletedOrdersByDate(sqlPickUpDate, locale);
+        List<Order> completedOrders = orderDAO.findAllCompletedOrdersByDate(sqlPickUpDate, locale);
 
         session.setAttribute(Constant.COMPLETE_ORDERS, completedOrders);
 

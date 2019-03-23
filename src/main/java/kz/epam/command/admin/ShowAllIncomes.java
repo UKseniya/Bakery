@@ -1,6 +1,7 @@
 package kz.epam.command.admin;
 
 import kz.epam.command.Command;
+import kz.epam.config.ConfigManager;
 import kz.epam.dao.IncomeDAO;
 import kz.epam.entity.Income;
 
@@ -11,9 +12,7 @@ import java.util.List;
 public class ShowAllIncomes implements Command {
 
     private static final String ALL_INCOMES = "allIncomes";
-    private static final String PATH_TO_REVIEW_ALL_INCOMES = "/jsp/admin/show_all_incomes.jsp";
-
-    private List<Income> allIncomes;
+    private static final String PATH_TO_REVIEW_ALL_INCOMES = ConfigManager.getInstance().getProperty("path.page.show.all.incomes");
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -23,7 +22,7 @@ public class ShowAllIncomes implements Command {
 
         IncomeDAO incomeDAO = new IncomeDAO();
 
-        allIncomes = incomeDAO.findAll();
+        List<Income> allIncomes = incomeDAO.findAll();
 
         session.setAttribute(ALL_INCOMES, allIncomes);
 

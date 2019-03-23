@@ -1,5 +1,6 @@
 package kz.epam.command;
 
+import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.dao.UserDAO;
 import kz.epam.entity.User;
@@ -16,9 +17,10 @@ public class Login implements Command {
     private static final int SUBSTRING = 0;
     private static final String LOGIN_ERROR = "loginErrorMessage";
     private static final String ERROR_MESSAGE = "error.login";
-    private static final String PATH_TO_LOGIN_PAGE = "/controller?command=login_form";
-    private static final String PATH_TO_ADMIN_PAGE = "/controller?command=admin_page";
-    private static final String PATH_TO_USER_PAGE = "/controller?command=user_page";
+    private static final String PATH_TO_LOGIN_PAGE = ConfigManager.getInstance().getProperty("path.command.login");
+    private static final String PATH_TO_ADMIN_PAGE = ConfigManager.getInstance().getProperty("path.command.admin.page");
+    private static final String PATH_TO_USER_SELECT_PAGE = ConfigManager.getInstance().getProperty("path.command.user.page");
+    private static final String PATH_TO_USER_PAGE = ConfigManager.getInstance().getProperty("path.page.user.main");
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -38,7 +40,7 @@ public class Login implements Command {
         UserDAO userDAO = new UserDAO();
 
         if (user != null) {
-            page = PATH_TO_USER_PAGE;
+            page = PATH_TO_USER_SELECT_PAGE;
         } else if (login != "") {
 
             // Retrieve secured password and salt from the password stored in DB.
@@ -62,7 +64,7 @@ public class Login implements Command {
             session.setAttribute(Constant.USER, user);
 
             if (user.getRole().equals(Constant.USER)) {
-                page = Constant.PATH_TO_USER_PAGE;
+                page = PATH_TO_USER_PAGE;
             } else if (user.getRole().equals(Constant.ADMIN)) {
 
                 page = PATH_TO_ADMIN_PAGE;

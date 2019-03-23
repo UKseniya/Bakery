@@ -12,9 +12,6 @@ public class Product extends Entity {
     private double price;
     private String status;
 
-    public Product() {
-    }
-
     public String getCode() {
         return code;
     }

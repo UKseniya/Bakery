@@ -2,11 +2,12 @@ package kz.epam.constant;
 
 public final class Constant {
 
+    private Constant() {
+    }
+
     public static final String ENCODING = "UTF-8";
     public static final String LOCALE = "userLocale";
     public static final String LANGUAGE = "lang";
-    public static final String PATH_TO_USER_PAGE = "/jsp/user/user.jsp";
-    public static final String PATH_TO_ADMIN_PAGE = "/jsp/admin/admin.jsp";
     public static final String USER = "user";
     public static final String ADMIN = "admin";
     public static final String LOGIN = "login";
@@ -27,4 +28,6 @@ public final class Constant {
     public static final String IN_PROGRESS_STATUS = "in progress";
     public static final String PENDING_ORDERS = "pendingOrders";
     public static final String COMPLETE_ORDERS = "completedOrders";
+
+
 }

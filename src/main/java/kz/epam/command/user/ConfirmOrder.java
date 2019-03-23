@@ -1,6 +1,7 @@
 package kz.epam.command.user;
 
 import kz.epam.command.Command;
+import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.dao.OrderDAO;
 import kz.epam.entity.Cart;
@@ -15,7 +16,7 @@ import java.util.*;
 public class ConfirmOrder implements Command {
 
     private static final String COMMENT = "comment";
-    private static final String PATH_TO_CONFIRMATION_PAGE = "/jsp/user/confirmed_order.jsp";
+    private static final String PATH_TO_CONFIRMATION_PAGE = ConfigManager.getInstance().getProperty("path.page.order.confirmation");
 
     @Override
     public String execute(HttpServletRequest request) {

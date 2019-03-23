@@ -4,24 +4,29 @@ import java.util.List;
 
 public class OrderNumberGenerator {
 
+    private static final String UTILITY_CLASS_MESSAGE = "Utility Class";
     private static final String ORDER_NUMBER_FORMAT = "%06d";
     private static final int NULL = 0;
     private static final int INCREMENT = 1;
-    private static int INITIAL_NUMBER = 000001;
+    private static int initialNumber = 000001;
+
+    private OrderNumberGenerator() {
+        throw new IllegalStateException(UTILITY_CLASS_MESSAGE);
+    }
 
     public static String generateOrderNumber(List<Integer> usedNumbers) {
         String number = null;
 
         if (usedNumbers.size() != NULL) {
             for (int i = NULL; i < usedNumbers.size() + INCREMENT; i++) {
-                if (!usedNumbers.contains(INITIAL_NUMBER)) {
-                    number = String.format(ORDER_NUMBER_FORMAT, INITIAL_NUMBER);
+                if (!usedNumbers.contains(initialNumber)) {
+                    number = String.format(ORDER_NUMBER_FORMAT, initialNumber);
                     break;
                 }
-                INITIAL_NUMBER++;
+                initialNumber++;
             }
         } else {
-            number = String.format(ORDER_NUMBER_FORMAT, INITIAL_NUMBER);
+            number = String.format(ORDER_NUMBER_FORMAT, initialNumber);
         }
         return number;
     }

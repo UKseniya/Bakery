@@ -9,9 +9,6 @@ public class LineItem extends Entity {
     private Product product;
     private int quantity;
 
-    public LineItem() {
-    }
-
     public Product getProduct() {
         return product;
     }
@@ -29,8 +26,7 @@ public class LineItem extends Entity {
     }
 
     public double getItemTotal() {
-        double total = product.getPrice() * quantity;
-        return total;
+        return product.getPrice() * quantity;
     }
 
     public String getTotalCurrencyFormat() {

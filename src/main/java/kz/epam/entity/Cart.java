@@ -37,8 +37,7 @@ public class Cart extends Entity {
         Locale locale = new Locale("ru", "KZ");
         double total = this.getTotal();
         NumberFormat currency = NumberFormat.getCurrencyInstance(locale);
-        String formattedTotal = currency.format(total);
-        return formattedTotal;
+        return currency.format(total);
     }
 
     public void addItem(LineItem item) {

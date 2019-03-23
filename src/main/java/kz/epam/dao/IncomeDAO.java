@@ -26,8 +26,8 @@ public class IncomeDAO extends AbstractDAO<Income> {
 
     private static String driverName = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_DRIVER_NAME);
     private static String url = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_URL);
-    private static String user_name = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_USER);
-    private static String password = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_PASSWORD);
+    private static String databaseUserName = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_USER);
+    private static String databasePassword = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_PASSWORD);
     private static int maxConn = Integer.parseInt(ConfigManager.getInstance().getProperty(ConfigManager.MAX_CONN));
 
     private Logger log = Logger.getRootLogger();
@@ -35,7 +35,7 @@ public class IncomeDAO extends AbstractDAO<Income> {
     @Override
     public List<Income> findAll() {
         List<Income> incomes = null;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
         Connection connection = pool.getConnection();
 
         try (Statement statement = connection.createStatement();
@@ -52,7 +52,6 @@ public class IncomeDAO extends AbstractDAO<Income> {
             pool.freeConnection(connection);
 
         } catch (SQLException e) {
-            e.printStackTrace();
             log.error(Constant.SQL_ERROR + e.toString());
         }
         return incomes;
@@ -60,7 +59,7 @@ public class IncomeDAO extends AbstractDAO<Income> {
 
     public Income findIncomeForMonth(int month, int year, Locale locale) {
         Income income = null;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_INCOME_FOR_CERTAIN_MONTH)) {
@@ -81,11 +80,9 @@ public class IncomeDAO extends AbstractDAO<Income> {
                 }
                 pool.freeConnection(connection);
             } catch (SQLException e) {
-                e.printStackTrace();
                 log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             log.error(Constant.SQL_ERROR + e.toString());
         }
         return income;
@@ -93,7 +90,7 @@ public class IncomeDAO extends AbstractDAO<Income> {
 
     public List<Income> findIncomesForYear(int year, Locale locale) {
         List<Income> incomes = null;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, user_name, password, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_INCOME_FOR_CERTAIN_YEAR)) {
@@ -114,11 +111,9 @@ public class IncomeDAO extends AbstractDAO<Income> {
                 }
                 pool.freeConnection(connection);
             } catch (SQLException e) {
-                e.printStackTrace();
                 log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             log.error(Constant.SQL_ERROR + e.toString());
         }
         return incomes;
@@ -130,7 +125,7 @@ public class IncomeDAO extends AbstractDAO<Income> {
     }
 
     @Override
-    public int findEntityByID(Income entity) {
+    public int findIDbyEntity(Income entity) {
         throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 

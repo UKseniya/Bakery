@@ -14,22 +14,21 @@ public class ConnectionPool {
     private static final String DRIVER_ERROR = "Driver loading error ";
     private static final String WAITING_ERROR = "Waiting error ";
     private static final String CONNECTION_CREATION_ERROR = "Connection creation error ";
-    private static final String ILLEGAL_MONITOR_EXCEPTION = "Illegal Monitor State Exception ";
     private static final String CONNECTION_RELEASE_ERROR = "Connection release error ";
     private static final int INCREMENT = 1;
 
     private Logger log = Logger.getRootLogger();
     private static ConnectionPool instance;
-    private final String DRIVER_NAME;
+    private String driverName;
     private ArrayList<Connection> freeConnections = new ArrayList<>();
-    private String URL;
+    private String url;
     private String user;
     private String password;
     private int maxConn;
 
-    public ConnectionPool(String DRIVER_NAME, String URL, String user, String password, int maxConn) {
-        this.DRIVER_NAME = DRIVER_NAME;
-        this.URL = URL;
+    public ConnectionPool(String driverName, String url, String user, String password, int maxConn) {
+        this.driverName = driverName;
+        this.url = url;
         this.user = user;
         this.password = password;
         this.maxConn = maxConn;
@@ -39,19 +38,18 @@ public class ConnectionPool {
         }
     }
 
-    static synchronized public ConnectionPool getInstance(String DRIVER_NAME, String URL, String user, String password, int maxConn) {
+    public static synchronized ConnectionPool getInstance(String driverName, String url, String user, String password, int maxConn) {
         if (instance == null) {
-            instance = new ConnectionPool(DRIVER_NAME, URL, user, password, maxConn);
+            instance = new ConnectionPool(driverName, url, user, password, maxConn);
         }
         return instance;
     }
 
     private void loadDrivers() {
         try {
-            Driver driver = (Driver) Class.forName(DRIVER_NAME).newInstance();
+            Driver driver = (Driver) Class.forName(driverName).newInstance();
             DriverManager.registerDriver(driver);
         } catch (Exception e) {
-            e.printStackTrace();
             log.error(DRIVER_ERROR + e.toString());
         }
     }
@@ -60,15 +58,13 @@ public class ConnectionPool {
         Connection connection = null;
 
         if (!freeConnections.isEmpty()) {
-            connection = (Connection) freeConnections.get(freeConnections.size() - INCREMENT);
+            connection = freeConnections.get(freeConnections.size() - INCREMENT);
             freeConnections.remove(connection);
             try {
                 if (connection.isClosed()) {
                     connection = getConnection();
                 }
             } catch (SQLException e) {
-                connection = getConnection();
-            } catch (Exception e) {
                 connection = getConnection();
             }
         } else {
@@ -79,8 +75,8 @@ public class ConnectionPool {
                     }
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace();
                 log.error(WAITING_ERROR + e.toString());
+                Thread.currentThread().interrupt();
             }
         }
         return connection;
@@ -90,12 +86,11 @@ public class ConnectionPool {
         Connection connection = null;
         try {
             if (user == null) {
-                connection = DriverManager.getConnection(URL);
+                connection = DriverManager.getConnection(url);
             } else {
-                connection = DriverManager.getConnection(URL, user, password);
+                connection = DriverManager.getConnection(url, user, password);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
             log.error(CONNECTION_CREATION_ERROR + ex.toString());
             return null;
         }
@@ -104,15 +99,10 @@ public class ConnectionPool {
 
     public synchronized void freeConnection(Connection connection) {
         if ((connection != null) && (freeConnections.size() <= maxConn)) {
-            try {
                 synchronized (freeConnections) {
                     freeConnections.add(connection);
                     freeConnections.notifyAll();
                 }
-            } catch (IllegalMonitorStateException ex) {
-                ex.printStackTrace();
-                log.error(ILLEGAL_MONITOR_EXCEPTION + ex.toString());
-            }
         }
     }
 
@@ -123,7 +113,6 @@ public class ConnectionPool {
             try {
                 connection.close();
             } catch (SQLException e) {
-                e.printStackTrace();
                 log.error(CONNECTION_RELEASE_ERROR + e.toString());
             }
         }

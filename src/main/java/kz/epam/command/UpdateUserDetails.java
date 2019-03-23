@@ -1,5 +1,6 @@
 package kz.epam.command;
 
+import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.dao.UserDAO;
 import kz.epam.entity.User;
@@ -17,8 +18,8 @@ public class UpdateUserDetails implements Command {
     private static final String PHONE_NUMBER_REGEX = "\\d+";
     private static final String INCORRECT_PHONE = "error.phone";
     private static final String INCORRECT_PHONE_MESSAGE = "phoneNumberError";
-    private static final String PATH_TO_CONFIRMATION_PAGE = "/jsp/details_updated.jsp";
-    private static final String PATH_TO_UPDATE_PAGE = "/jsp/user_details_update.jsp";
+    private static final String PATH_TO_CONFIRMATION_PAGE = ConfigManager.getInstance().getProperty("path.page.user.info.update.confirmation");
+    private static final String PATH_TO_UPDATE_PAGE = ConfigManager.getInstance().getProperty("path.page.user.info.update");
 
     @Override
     public String execute(HttpServletRequest request) {

@@ -1,5 +1,6 @@
 package kz.epam.servlet;
 
+import kz.epam.config.ConfigManager;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -21,7 +22,7 @@ public class ImageUploadController extends HttpServlet {
     private static final String CONTEXT_TYPE = "text/plain;charset=UTF-8";
     private static final String MESSAGE = "message";
     private static final String MESSAGE_TEXT = "There was an error: ";
-    private static final String PATH_TO_CONFIRMATION = "/jsp/admin/product_added.jsp";
+    private static final String PATH_TO_CONFIRMATION = ConfigManager.getInstance().getProperty("path.page.product.added.confirmation");
 
     private static final int MEMORY_THRESHOLD = 1024 * 1024 * 3;  // 3MB
     private static final int MAX_FILE_SIZE = 1024 * 1024 * 40; // 40MB
@@ -30,12 +31,13 @@ public class ImageUploadController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String page = null;
+        String page;
 
         response.setContentType(CONTEXT_TYPE);
 
@@ -72,7 +74,7 @@ public class ImageUploadController extends HttpServlet {
 
                         // creates the directory if it does not exist
                         if (!path.exists()) {
-                            boolean status = path.mkdirs();
+                            path.mkdirs();
                         }
 
                         // constructs the directory path to store upload file

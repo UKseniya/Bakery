@@ -12,9 +12,6 @@ public class User extends Entity {
     private String phoneNumber;
     private String role;
 
-    public User() {
-    }
-
     public String getFirstName() {
         return firstName;
     }

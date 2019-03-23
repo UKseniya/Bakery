@@ -1,11 +1,13 @@
 package kz.epam.command.user;
 
 import kz.epam.command.Command;
+import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.dao.OrderDAO;
 import kz.epam.entity.LineItem;
 import kz.epam.entity.Order;
 import kz.epam.message.MessageManager;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -31,17 +33,17 @@ public class SelectDate implements Command {
     private static final String AVAILABLE_QUANTITY = "availableQuantity";
     private static final String FULL_DATE = "dateFullMessage";
     private static final String FULL_DATE_MESSAGE = "error.date.full";
-    private static final String PATH_TO_SELECT_DATE_PAGE = "/jsp/user/select_date.jsp";
-    private static final String PATH_TO_SELECTING_ORDER_PAGE = "/controller?command=select_products";
+    private static final String PATH_TO_SELECT_DATE_PAGE = ConfigManager.getInstance().getProperty("path.page.select.date");
+    private static final String PATH_TO_SELECTING_ORDER_PAGE = ConfigManager.getInstance().getProperty("path.command.ordering");
 
-    private static int availableQuantity;
+    private Logger log = Logger.getRootLogger();
 
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
         int totalItemQuantity;
 
-        Date date = null;
+        Date date = new Date();
         java.sql.Date sqlDate = null;
 
         HttpSession session = request.getSession();
@@ -50,7 +52,7 @@ public class SelectDate implements Command {
 
         String language = session.getAttribute(Constant.LOCALE).toString();
 
-        Locale locale = new Locale(language.substring(0,2));
+        Locale locale = new Locale(language.substring(0, 2));
 
         Calendar calendar = Calendar.getInstance();
 
@@ -64,7 +66,7 @@ public class SelectDate implements Command {
                 minimumDate = formatter.parse(formatter.format(calendar.getTime()));
                 date = formatter.parse(requestedDate);
             } catch (ParseException e) {
-                e.printStackTrace();
+                log.error(e.toString());
             }
 
             java.util.Date utilDate = date;
@@ -74,33 +76,35 @@ public class SelectDate implements Command {
         }
         OrderDAO orderDAO = new OrderDAO();
 
-        if (selectDateButton != null && date != null) {
-            calendar.setTime(date);
-            int dayOfWeek = calendar.get(DAY_OF_WEEK);
+        if (selectDateButton != null) {
+            if (requestedDate.equalsIgnoreCase("")) {
+                calendar.setTime(date);
+                int dayOfWeek = calendar.get(DAY_OF_WEEK);
 
-            if (date.before(minimumDate) || dayOfWeek == Calendar.SUNDAY || dayOfWeek == Calendar.MONDAY) {
-                request.setAttribute(DATE_ERROR,
-                        MessageManager.getInstance(locale).getProperty(WRONG_DATE_MESSAGE));
-                page = PATH_TO_SELECT_DATE_PAGE;
-            } else {
-                List<Order> orders = orderDAO.findAllPendingOrdersByDate(sqlDate, language);
-                totalItemQuantity = getItemTotal(orders);
-
-                if (totalItemQuantity < MAXIMUM_ORDER_QUANTITY) {
-                    availableQuantity = getAvailableQuantity(totalItemQuantity);
-                    session.setAttribute(AVAILABLE_QUANTITY, availableQuantity);
-                    session.setAttribute(Constant.DATE, date);
-                    page = PATH_TO_SELECTING_ORDER_PAGE;
-                } else {
-                    request.setAttribute(FULL_DATE,
-                            MessageManager.getInstance(locale).getProperty(FULL_DATE_MESSAGE));
+                if (date.before(minimumDate) || dayOfWeek == Calendar.SUNDAY || dayOfWeek == Calendar.MONDAY) {
+                    request.setAttribute(DATE_ERROR,
+                            MessageManager.getInstance(locale).getProperty(WRONG_DATE_MESSAGE));
                     page = PATH_TO_SELECT_DATE_PAGE;
+                } else {
+                    List<Order> orders = orderDAO.findAllPendingOrdersByDate(sqlDate, language);
+                    totalItemQuantity = getItemTotal(orders);
+
+                    if (totalItemQuantity < MAXIMUM_ORDER_QUANTITY) {
+                        int availableQuantity = getAvailableQuantity(totalItemQuantity);
+                        session.setAttribute(AVAILABLE_QUANTITY, availableQuantity);
+                        session.setAttribute(Constant.DATE, date);
+                        page = PATH_TO_SELECTING_ORDER_PAGE;
+                    } else {
+                        request.setAttribute(FULL_DATE,
+                                MessageManager.getInstance(locale).getProperty(FULL_DATE_MESSAGE));
+                        page = PATH_TO_SELECT_DATE_PAGE;
+                    }
                 }
+            } else {
+                request.setAttribute(NULL_DATE,
+                        MessageManager.getInstance(locale).getProperty(NULL_DATE_MESSAGE));
+                page = PATH_TO_SELECT_DATE_PAGE;
             }
-        } else if (selectDateButton != null && date == null) {
-            request.setAttribute(NULL_DATE,
-                    MessageManager.getInstance(locale).getProperty(NULL_DATE_MESSAGE));
-            page = PATH_TO_SELECT_DATE_PAGE;
         }
 
         return page;
@@ -118,9 +122,8 @@ public class SelectDate implements Command {
     }
 
     private static int getAvailableQuantity(int total) {
-        int availableQuantity = 0;
 
-        availableQuantity = MAXIMUM_ORDER_QUANTITY - total;
+        int availableQuantity = MAXIMUM_ORDER_QUANTITY - total;
 
         if (availableQuantity > 5) {
             availableQuantity = 5;

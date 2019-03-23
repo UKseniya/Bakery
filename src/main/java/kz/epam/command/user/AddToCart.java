@@ -1,12 +1,12 @@
 package kz.epam.command.user;
 
 import kz.epam.command.Command;
+import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.dao.ProductDAO;
 import kz.epam.entity.Cart;
 import kz.epam.entity.LineItem;
 import kz.epam.entity.Product;
-import kz.epam.entity.User;
 import kz.epam.message.MessageManager;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,8 +22,8 @@ public class AddToCart implements Command {
     private static final String REMOVE_BUTTON = "removeButton";
     private static final String ORDER_ERROR = "orderErrorMessage";
     private static final String ORDER_ERROR_MESSAGE = "error.order.full";
-    private static final String PATH_TO_SELECTING_ORDER_PAGE = "/jsp/user/make_order.jsp";
-    private static final String PATH_TO_CART_PAGE = "/jsp/user/review_cart.jsp";
+    private static final String PATH_TO_SELECTING_ORDER_PAGE = ConfigManager.getInstance().getProperty("path.page.ordering");
+    private static final String PATH_TO_CART_PAGE = ConfigManager.getInstance().getProperty("path.page.cart.review");
     private static final String AVAILABLE_QUANTITY = "availableQuantity";
 
     private static int totalItemQuantity = 0;
@@ -53,7 +53,6 @@ public class AddToCart implements Command {
         }
 
         String language = session.getAttribute(Constant.LOCALE).toString();
-        User user = (User) session.getAttribute(Constant.USER);
 
         Locale locale = new Locale(language.substring(0,2));
 

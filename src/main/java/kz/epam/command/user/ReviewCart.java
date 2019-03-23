@@ -1,6 +1,7 @@
 package kz.epam.command.user;
 
 import kz.epam.command.Command;
+import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.dao.ProductDAO;
 import kz.epam.entity.Cart;
@@ -11,7 +12,7 @@ import javax.servlet.http.HttpSession;
 
 public class ReviewCart implements Command {
 
-    private static final String PATH_TO_REVIEW_CART_PAGE = "/jsp/user/review_cart.jsp";
+    private static final String PATH_TO_REVIEW_CART_PAGE = ConfigManager.getInstance().getProperty("path.page.cart.review");
 
     @Override
     public String execute(HttpServletRequest request) {

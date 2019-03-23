@@ -1,6 +1,7 @@
 package kz.epam.command.user;
 
 import kz.epam.command.Command;
+import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.dao.ProductDAO;
 import kz.epam.entity.Product;
@@ -11,9 +12,7 @@ import java.util.List;
 
 public class SelectProducts implements Command {
 
-    private static final String PATH_TO_SELECTING_ORDER_PAGE = "/jsp/user/make_order.jsp";
-
-    private List<Product> availableProducts;
+    private static final String PATH_TO_SELECTING_ORDER_PAGE = ConfigManager.getInstance().getProperty("path.page.ordering");
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -23,7 +22,7 @@ public class SelectProducts implements Command {
         String locale = session.getAttribute(Constant.LOCALE).toString().substring(0,2);
 
         ProductDAO productDAO = new ProductDAO();
-        availableProducts = productDAO.findAllAvailableProducts(locale);
+        List<Product> availableProducts = productDAO.findAllAvailableProducts(locale);
 
         session.setAttribute(Constant.AVAILABLE_PRODUCTS, availableProducts);
 
