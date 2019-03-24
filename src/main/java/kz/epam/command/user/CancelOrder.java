@@ -16,9 +16,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class CancelOrder implements Command {
 
+    private static final String UTC = "UTC";
     private static final String ORDER_NUMBER = "orderNumber";
     private static final int NUMBER_OF_DAYS = -5;
     private static final String LATE_DATE = "lateDateMessage";
@@ -41,7 +43,7 @@ public class CancelOrder implements Command {
 
         String orderNumber = request.getParameter(ORDER_NUMBER);
 
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(UTC));
         Date currentDate = calendar.getTime();
 
         OrderDAO orderDAO = new OrderDAO();

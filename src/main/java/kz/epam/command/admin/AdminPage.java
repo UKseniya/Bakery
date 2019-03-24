@@ -22,7 +22,7 @@ public class AdminPage implements Command {
     private static final int DECREMENT = 1;
     private static final String CURRENT_MONTH_TOP_PRODUCTS = "currentMonthTopProducts";
     private static final String PREVIOUS_MONTH_TOP_PRODUCTS = "previousMonthTopProducts";
-    private static final String PATH_TO_ADMIN_PAGE = ConfigManager.getInstance().getProperty("path.command.admin.page");
+    private static final String PATH_TO_ADMIN_PAGE = ConfigManager.getInstance().getProperty("path.page.admin.main");
 
     private List<LineItem> currentMonthTopProducts = new ArrayList<>();
     private List<LineItem> previousMonthTopProducts = new ArrayList<>();

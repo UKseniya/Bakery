@@ -59,6 +59,7 @@ public class AddToCart implements Command {
         Cart cart = (Cart) session.getAttribute(Constant.CART);
         if (cart == null) {
             cart = new Cart();
+            totalItemQuantity = 0;
             session.setAttribute(Constant.CART, cart);
         }
 

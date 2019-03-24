@@ -14,9 +14,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class ShowOpenRequests implements Command {
 
+    private static final String UTC = "UTC";
     private static final String CHANGE_BUTTON = "changeDateButton";
     private static final String COMPLETE_BUTTON = "completeButton";
     private static final String CLOSE_BUTTON = "closeButton";
@@ -51,7 +53,7 @@ public class ShowOpenRequests implements Command {
             orderDAO.updateCompletedOrder(orderNumber);
         }
 
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(UTC));
         Date requestCompletionDate = calendar.getTime();
         calendar.add(Calendar.DAY_OF_YEAR, NUMBER_OF_DAYS);
         Date requestProcessingDate = calendar.getTime();

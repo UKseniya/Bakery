@@ -26,7 +26,7 @@ public class Login implements Command {
     public String execute(HttpServletRequest request) {
         String page = null;
         String password = null;
-        boolean passwordVerified = true;
+        boolean passwordVerified = false;
 
         String login = request.getParameter(Constant.LOGIN);
         String providedPassword = request.getParameter(Constant.PASSWORD);
@@ -48,10 +48,19 @@ public class Login implements Command {
 
             boolean isUserRegistered = userDAO.isUserRegistered(login, password);
 
-            if (isUserRegistered) {
-                passwordVerified = verifyPassword(password, providedPassword);
+            if (isUserRegistered && verifyPassword(password, providedPassword)) {
+                user = userDAO.findUserByLoginAndPassword(login, password);
+                session.setAttribute(Constant.USER, user);
+
+                if (user.getRole().equals(Constant.USER)) {
+                    page = PATH_TO_USER_PAGE;
+                } else if (user.getRole().equals(Constant.ADMIN)) {
+                    page = PATH_TO_ADMIN_PAGE;
+                }
+                session.setAttribute(Constant.USER, user);
             } else {
-                request.setAttribute(LOGIN_ERROR, MessageManager.getInstance(locale).getProperty(ERROR_MESSAGE));
+                request.setAttribute(LOGIN_ERROR,
+                        MessageManager.getInstance(locale).getProperty(ERROR_MESSAGE));
                 page = PATH_TO_LOGIN_PAGE;
             }
         } else {
@@ -59,22 +68,21 @@ public class Login implements Command {
             page = PATH_TO_LOGIN_PAGE;
         }
 
-        if (passwordVerified) {
-            user = userDAO.findUserByLoginAndPassword(login, password);
-            session.setAttribute(Constant.USER, user);
-
-            if (user.getRole().equals(Constant.USER)) {
-                page = PATH_TO_USER_PAGE;
-            } else if (user.getRole().equals(Constant.ADMIN)) {
-
-                page = PATH_TO_ADMIN_PAGE;
-            }
-            session.setAttribute(Constant.USER, user);
-        } else {
-            request.setAttribute(LOGIN_ERROR,
-                    MessageManager.getInstance(locale).getProperty(ERROR_MESSAGE));
-            page = PATH_TO_LOGIN_PAGE;
-        }
+//        if (passwordVerified) {
+//            user = userDAO.findUserByLoginAndPassword(login, password);
+//            session.setAttribute(Constant.USER, user);
+//
+//            if (user.getRole().equals(Constant.USER)) {
+//                page = PATH_TO_USER_PAGE;
+//            } else if (user.getRole().equals(Constant.ADMIN)) {
+//                page = PATH_TO_ADMIN_PAGE;
+//            }
+//            session.setAttribute(Constant.USER, user);
+//        } else {
+//            request.setAttribute(LOGIN_ERROR,
+//                    MessageManager.getInstance(locale).getProperty(ERROR_MESSAGE));
+//            page = PATH_TO_LOGIN_PAGE;
+//        }
 
         return page;
     }

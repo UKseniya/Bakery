@@ -14,10 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static java.util.Calendar.DAY_OF_WEEK;
 
@@ -25,6 +22,7 @@ public class SelectDate implements Command {
 
     private static final int MAXIMUM_ORDER_QUANTITY = 10;
     private static final int NUMBER_OF_DAYS = 2;
+    private static final String  UTC = "UTC";
     private static final String SELECT_DATE_BUTTON = "selectDateButton";
     private static final String DATE_ERROR = "dateErrorMessage";
     private static final String NULL_DATE = "dateNullMessage";
@@ -43,7 +41,7 @@ public class SelectDate implements Command {
         String page = null;
         int totalItemQuantity;
 
-        Date date = new Date();
+        Date date = null;
         java.sql.Date sqlDate = null;
 
         HttpSession session = request.getSession();
@@ -54,12 +52,12 @@ public class SelectDate implements Command {
 
         Locale locale = new Locale(language.substring(0, 2));
 
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(UTC));
 
         calendar.add(Calendar.DAY_OF_YEAR, NUMBER_OF_DAYS);
         Date minimumDate = calendar.getTime();
 
-        if (selectDateButton != null) {
+        if (requestedDate != null && !requestedDate.equals("")) {
             DateFormat formatter;
             formatter = new SimpleDateFormat(Constant.DATE_FORMAT);
             try {
@@ -77,11 +75,13 @@ public class SelectDate implements Command {
         OrderDAO orderDAO = new OrderDAO();
 
         if (selectDateButton != null) {
-            if (requestedDate.equalsIgnoreCase("")) {
+            if (!requestedDate.equals("")) {
                 calendar.setTime(date);
                 int dayOfWeek = calendar.get(DAY_OF_WEEK);
 
-                if (date.before(minimumDate) || dayOfWeek == Calendar.SUNDAY || dayOfWeek == Calendar.MONDAY) {
+                boolean possibleDate = date.before(minimumDate);
+
+                if (date.before(minimumDate) || (dayOfWeek == Calendar.SUNDAY || dayOfWeek == Calendar.MONDAY)) {
                     request.setAttribute(DATE_ERROR,
                             MessageManager.getInstance(locale).getProperty(WRONG_DATE_MESSAGE));
                     page = PATH_TO_SELECT_DATE_PAGE;
