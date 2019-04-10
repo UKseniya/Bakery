@@ -11,8 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public class ShowAllRequests implements Command {
-
-    private static final String ALL_ORDERS = "allOrders";
+    
     private static final String PATH_TO_REVIEW_ALL_ORDERS = ConfigManager.getInstance().getProperty("path.page.review.all.orders");
 
     @Override
@@ -26,7 +25,7 @@ public class ShowAllRequests implements Command {
 
         List<Order> allOrders = orderDAO.findAll(locale);
 
-        session.setAttribute(ALL_ORDERS, allOrders);
+        session.setAttribute(Constant.ALL_ORDERS, allOrders);
 
         page = PATH_TO_REVIEW_ALL_ORDERS;
 

@@ -13,9 +13,6 @@ import java.util.regex.Pattern;
 
 public class UpdateUserDetails implements Command {
 
-    private static final int PHONE_NUMBER_LENGTH = 11;
-    private static final String UPDATE_BUTTON = "updateButton";
-    private static final String PHONE_NUMBER_REGEX = "\\d+";
     private static final String INCORRECT_PHONE = "error.phone";
     private static final String INCORRECT_PHONE_MESSAGE = "phoneNumberError";
     private static final String PATH_TO_CONFIRMATION_PAGE = ConfigManager.getInstance().getProperty("path.page.user.info.update.confirmation");
@@ -25,7 +22,7 @@ public class UpdateUserDetails implements Command {
     public String execute(HttpServletRequest request) {
         String page;
 
-        String updateButton = request.getParameter(UPDATE_BUTTON);
+        String updateButton = request.getParameter(Constant.UPDATE_BUTTON);
         String firstName = request.getParameter(Constant.FIRST_NAME);
         String lastName = request.getParameter(Constant.LAST_NAME);
         String email = request.getParameter(Constant.EMAIL);
@@ -39,9 +36,9 @@ public class UpdateUserDetails implements Command {
         Locale locale = new Locale(language.substring(0,2));
 
         if (updateButton != null) {
-            Pattern phoneNumberPattern = Pattern.compile(PHONE_NUMBER_REGEX);
+            Pattern phoneNumberPattern = Pattern.compile(Constant.PHONE_NUMBER_REGEX);
             UserDAO userDAO = new UserDAO();
-            if (phoneNumberPattern.matcher(phone).matches() && phone.length() == PHONE_NUMBER_LENGTH) {
+            if (phoneNumberPattern.matcher(phone).matches() && phone.length() == Constant.PHONE_NUMBER_LENGTH) {
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
                 user.setEmail(email);

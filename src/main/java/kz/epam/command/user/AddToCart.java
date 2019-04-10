@@ -17,9 +17,6 @@ import java.util.Locale;
 public class AddToCart implements Command {
 
     private static final String QUANTITY = "quantity";
-    private static final String SELECT_BUTTON = "selectButton";
-    private static final String ADD_BUTTON = "addButton";
-    private static final String REMOVE_BUTTON = "removeButton";
     private static final String ORDER_ERROR = "orderErrorMessage";
     private static final String ORDER_ERROR_MESSAGE = "error.order.full";
     private static final String PATH_TO_SELECTING_ORDER_PAGE = ConfigManager.getInstance().getProperty("path.page.ordering");
@@ -37,9 +34,9 @@ public class AddToCart implements Command {
 
         String productCode = request.getParameter(Constant.PRODUCT_CODE);
         String receivedQuantity = request.getParameter(QUANTITY);
-        String selectButton = request.getParameter(SELECT_BUTTON);
-        String addButton = request.getParameter(ADD_BUTTON);
-        String removeButton = request.getParameter(REMOVE_BUTTON);
+        String selectButton = request.getParameter(Constant.SELECT_BUTTON);
+        String addButton = request.getParameter(Constant.ADD_BUTTON);
+        String removeButton = request.getParameter(Constant.REMOVE_BUTTON);
 
         HttpSession session = request.getSession();
 

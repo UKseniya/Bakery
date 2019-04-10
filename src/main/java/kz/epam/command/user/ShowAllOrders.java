@@ -14,7 +14,6 @@ import java.util.List;
 
 public class ShowAllOrders implements Command {
 
-    private static final String ALL_ORDERS = "allOrders";
     private static final String PATH_TO_REVIEW_ORDERS_PAGE = ConfigManager.getInstance().getProperty("path.page.review.user.orders");
 
     private List<Order> allOrders = new ArrayList<>();
@@ -40,7 +39,7 @@ public class ShowAllOrders implements Command {
         allOrders.addAll(pendingOrders);
         allOrders.addAll(completedOrders);
 
-        session.setAttribute(ALL_ORDERS, allOrders);
+        session.setAttribute(Constant.ALL_ORDERS, allOrders);
 
         page = PATH_TO_REVIEW_ORDERS_PAGE;
 

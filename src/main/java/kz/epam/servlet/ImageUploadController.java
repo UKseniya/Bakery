@@ -1,6 +1,8 @@
 package kz.epam.servlet;
 
 import kz.epam.config.ConfigManager;
+import kz.epam.constant.Constant;
+import kz.epam.message.MessageManager;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -11,17 +13,24 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 public class ImageUploadController extends HttpServlet {
 
     private static final String UPLOAD_DIR = "picture";
     private static final String CONTEXT_TYPE = "text/plain;charset=UTF-8";
+    private static final String MIME_IMAGE_JPEG = "image/jpeg";
+    private static final String MIME_IMAGE_PNG = "image/png";
+    private static final String INCORRECT_FILE_TYPE = "error.image";
+    private static final String INCORRECT_FILE_TYPE_MESSAGE = "imageError";
     private static final String MESSAGE = "message";
     private static final String MESSAGE_TEXT = "There was an error: ";
+    private static final String PATH_TO_PICTURE_UPLOAD = ConfigManager.getInstance().getProperty("path.page.upload.picture");
     private static final String PATH_TO_CONFIRMATION = ConfigManager.getInstance().getProperty("path.page.product.added.confirmation");
 
     private static final int MEMORY_THRESHOLD = 1024 * 1024 * 3;  // 3MB
@@ -37,56 +46,54 @@ public class ImageUploadController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String page;
+        String page = null;
 
+        HttpSession session = request.getSession();
+        String language = session.getAttribute(Constant.LOCALE).toString();
+        Locale locale = new Locale(language.substring(0,2));
         response.setContentType(CONTEXT_TYPE);
 
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 
         if (isMultipart) {
-            // configures upload settings
+
             FileItemFactory factory = new DiskFileItemFactory();
-            // sets memory threshold - beyond which files are stored in disk
             ((DiskFileItemFactory) factory).setSizeThreshold(MEMORY_THRESHOLD);
 
             ServletFileUpload upload = new ServletFileUpload(factory);
-
-            // sets maximum size of upload file
             upload.setFileSizeMax(MAX_FILE_SIZE);
-
-            // sets maximum size of request (include file + form data)
             upload.setSizeMax(MAX_REQUEST_SIZE);
 
             try {
-                // parses the request's content to extract file data
-                List items = upload.parseRequest(request);
+                List<FileItem> items = upload.parseRequest(request);
 
-                // iterates over form's fields
                 Iterator iterator = items.iterator();
                 while (iterator.hasNext()) {
                     FileItem item = (FileItem) iterator.next();
-                    // processes only fields that are not form fields
+
                     if (!item.isFormField()) {
                         String fileName = item.getName();
+                        String contentType = item.getContentType();
 
-                        String root = getServletContext().getRealPath(File.separator);
-                        File path = new File(root + UPLOAD_DIR);
+                        if (contentType.equals(MIME_IMAGE_JPEG) || contentType.equals(MIME_IMAGE_PNG)) {
+                            String root = getServletContext().getRealPath(File.separator);
+                            File path = new File(root + File.separator + UPLOAD_DIR);
 
-                        // creates the directory if it does not exist
-                        if (!path.exists()) {
-                            path.mkdirs();
+                            if (!path.exists()) {
+                                path.mkdirs();
+                            }
+                            File uploadedFile = new File(path + File.separator + fileName);
+                        item.write(uploadedFile);
+                            page = PATH_TO_CONFIRMATION;
+                        } else {
+
+                            request.setAttribute(INCORRECT_FILE_TYPE_MESSAGE,
+                                    MessageManager.getInstance(locale).getProperty(INCORRECT_FILE_TYPE));
+                            page = PATH_TO_PICTURE_UPLOAD;
                         }
 
-                        // constructs the directory path to store upload file
-                        // this path is relative to application's directory
-                        File uploadedFile = new File(path + File.separator + fileName);
-
-                        // saves the file on disk
-                        item.write(uploadedFile);
                     }
                 }
-                page = PATH_TO_CONFIRMATION;
-
                 RequestDispatcher dispatcher = request.getRequestDispatcher(page);
                 dispatcher.forward(request, response);
 

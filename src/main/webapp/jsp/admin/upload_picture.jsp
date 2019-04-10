@@ -14,13 +14,13 @@
 
     <section>
         <form enctype="multipart/form-data" method="POST" action="upload">
-            <p><fmt:message key="message.upload"/> </p>
+            <p><fmt:message key="message.upload"/></p>
             <label><fmt:message key="picture.select"/></label><br/> <br/>
-                    <input type="file" name="file" id="file" /><br /><br/>
+            <input type="file" name="file" id="file"/><br/><br/>
+            <i>${imageError}</i><br/>
+            <input type="submit" name="addButton" value="<fmt:message key="button.add.picture"/>" id="upload"/>
 
-                    <input type="submit" name="addButton" value="<fmt:message key="button.add.picture"/>" id="upload" />
-
-        <br/> <br/>
+            <br/> <br/>
         </form>
     </section>
 

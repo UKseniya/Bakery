@@ -18,13 +18,10 @@ import java.util.TimeZone;
 
 public class ShowOpenRequests implements Command {
 
-    private static final String UTC = "UTC";
-    private static final String CHANGE_BUTTON = "changeDateButton";
+    private static final String CHANGE_DATE_BUTTON = "changeButton";
     private static final String COMPLETE_BUTTON = "completeButton";
     private static final String CLOSE_BUTTON = "closeButton";
-    private static final String RECEIVED_DATE = "date";
     private static final int NUMBER_OF_DAYS = 1;
-    private static final String ORDER_NUMBER = "orderNumber";
     private static final String PATH_TO_REVIEW_ORDERS = ConfigManager.getInstance().getProperty("path.page.review.admin.orders");
 
     private Date processingDate;
@@ -37,11 +34,11 @@ public class ShowOpenRequests implements Command {
         HttpSession session = request.getSession();
         String locale = session.getAttribute(Constant.LOCALE).toString();
 
-        String changeButton = request.getParameter(CHANGE_BUTTON);
+        String changeButton = request.getParameter(CHANGE_DATE_BUTTON);
         String completeButton = request.getParameter(COMPLETE_BUTTON);
         String closeButton = request.getParameter(CLOSE_BUTTON);
-        String receivedDate = request.getParameter(RECEIVED_DATE);
-        String orderNumber = request.getParameter(ORDER_NUMBER);
+        String receivedDate = request.getParameter(Constant.DATE);
+        String orderNumber = request.getParameter(Constant.ORDER_NUMBER);
 
         OrderDAO orderDAO = new OrderDAO();
 
@@ -53,7 +50,7 @@ public class ShowOpenRequests implements Command {
             orderDAO.updateCompletedOrder(orderNumber);
         }
 
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(UTC));
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(Constant.UTC));
         Date requestCompletionDate = calendar.getTime();
         calendar.add(Calendar.DAY_OF_YEAR, NUMBER_OF_DAYS);
         Date requestProcessingDate = calendar.getTime();

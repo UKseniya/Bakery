@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-public abstract class AbstractDAO<T extends Entity> {
+abstract class AbstractDAO<T extends Entity> {
 
     private Logger log = Logger.getRootLogger();
 
@@ -17,11 +17,7 @@ public abstract class AbstractDAO<T extends Entity> {
 
     public abstract T findEntityById(int id);
 
-    public abstract int findIDbyEntity(T entity);
-
     public abstract boolean delete(int id);
-
-    public abstract boolean delete(T entity);
 
     public abstract boolean create(T entity);
 

@@ -20,7 +20,7 @@
             <form name="date" method="GET" action="controller">
                 <input type="hidden" name="command" value="show_tasks">
                 <input type="date" name="date" value="">
-                <input type="submit" name="changeDateButton" value="<fmt:message key="button.ok"/>">
+                <input type="submit" name="changeButton" value="<fmt:message key="button.ok"/>">
             </form>
         </div>
 

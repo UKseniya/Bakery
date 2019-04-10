@@ -17,9 +17,6 @@ import java.util.List;
 public class AdminPage implements Command {
 
     private static final String TOTAL_NUMBER_OF_USERS = "numberOfUsers";
-    private static final int FIRST_MONTH = 1;
-    private static final int LAST_MONTH = 12;
-    private static final int DECREMENT = 1;
     private static final String CURRENT_MONTH_TOP_PRODUCTS = "currentMonthTopProducts";
     private static final String PREVIOUS_MONTH_TOP_PRODUCTS = "previousMonthTopProducts";
     private static final String PATH_TO_ADMIN_PAGE = ConfigManager.getInstance().getProperty("path.page.admin.main");
@@ -63,11 +60,11 @@ public class AdminPage implements Command {
         session.setAttribute(CURRENT_MONTH_TOP_PRODUCTS, currentMonthTopProducts);
 
         int previousMonth;
-        if (currentMonth == FIRST_MONTH) {
-            previousMonth = LAST_MONTH;
-            year = year - DECREMENT;
+        if (currentMonth == Constant.FIRST_MONTH) {
+            previousMonth = Constant.LAST_MONTH;
+            year = year - Constant.DECREMENT;
         } else {
-            previousMonth = currentMonth - DECREMENT;
+            previousMonth = currentMonth - Constant.DECREMENT;
         }
 
         List<LineItem> previousMonthProducts = lineItemDAO.findTopProducts(previousMonth, year, locale);

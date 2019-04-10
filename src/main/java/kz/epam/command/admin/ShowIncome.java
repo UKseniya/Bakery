@@ -13,9 +13,6 @@ import java.util.Locale;
 
 public class ShowIncome implements Command {
 
-    private static final int FIRST_MONTH = 1;
-    private static final int LAST_MONTH = 12;
-    private static final int DECREMENT = 1;
     private static final String CURRENT_MONTH_INCOME = "currentMonthIncome";
     private static final String PREVIOUS_MONTH_INCOME = "previousMonthIncome";
     private static final String PATH_TO_REVIEW_INCOMES = ConfigManager.getInstance().getProperty("path.page.show.incomes");
@@ -40,11 +37,11 @@ public class ShowIncome implements Command {
         session.setAttribute(CURRENT_MONTH_INCOME, currentMonthIncome);
 
         int previousMonth;
-        if (currentMonth == FIRST_MONTH) {
-            previousMonth = LAST_MONTH;
-            year = year - DECREMENT;
+        if (currentMonth == Constant.FIRST_MONTH) {
+            previousMonth = Constant.LAST_MONTH;
+            year = year - Constant.DECREMENT;
         } else {
-            previousMonth = currentMonth - DECREMENT;
+            previousMonth = currentMonth - Constant.DECREMENT;
         }
 
         Income previousMonthIncome = incomeDAO.findIncomeForMonth(previousMonth, year, locale);

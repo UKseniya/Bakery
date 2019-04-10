@@ -20,6 +20,7 @@
                    oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
                    oninput="this.setCustomValidity('')" required/>
             <br/><label><fmt:message key="email"/>:</label><br/>
+            <i>${emailError}</i><br/>
             <input type="email" name="email" value=""/>
             <br/><label><fmt:message key="phone"/>:</label><br/>
             <i>${phoneNumberError}</i>

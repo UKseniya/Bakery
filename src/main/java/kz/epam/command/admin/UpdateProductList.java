@@ -12,9 +12,6 @@ import java.util.List;
 
 public class UpdateProductList implements Command {
 
-    private static final String REMOVE_BUTTON = "removeButton";
-    private static final String ADD_BUTTON = "addButton";
-    private static final String PRODUCT_CODE = "productCode";
     private static final String DISABLED_PRODUCTS = "cancelledProducts";
     private static final String AVAILABLE_STATUS = "available";
     private static final String DISABLED_STATUS = "n/a";
@@ -27,9 +24,9 @@ public class UpdateProductList implements Command {
         HttpSession session = request.getSession();
         String locale = session.getAttribute(Constant.LOCALE).toString().substring(0,2);
 
-        String removeButton = request.getParameter(REMOVE_BUTTON);
-        String addButton = request.getParameter(ADD_BUTTON);
-        String code = request.getParameter(PRODUCT_CODE);
+        String removeButton = request.getParameter(Constant.REMOVE_BUTTON);
+        String addButton = request.getParameter(Constant.ADD_BUTTON);
+        String code = request.getParameter(Constant.PRODUCT_CODE);
 
         ProductDAO productDAO = new ProductDAO();
 

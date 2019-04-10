@@ -15,10 +15,11 @@ import java.util.regex.Pattern;
 public class RegistrationForm implements Command {
 
     private static final int SALT_LENGTH = 30;
-    private static final int PHONE_NUMBER_LENGTH = 11;
-    private static final String PHONE_NUMBER_REGEX = "\\d+";
+    private static final String EMAIL_REGEX = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
     private static final String INCORRECT_PHONE = "error.phone";
     private static final String INCORRECT_PHONE_MESSAGE = "phoneNumberError";
+    private static final String INCORRECT_EMAIL = "error.email";
+    private static final String INCORRECT_EMAIL_MESSAGE = "emailError";
     private static final String REGISTRATION_ERROR = "registrationErrorMessage";
     private static final String REGISTRATION_ERROR_MESSAGE = "error.registration";
     private static final String PATH_TO_CONFIRMATION_PAGE = ConfigManager.getInstance().getProperty("path.page.registration.confirmation");
@@ -41,7 +42,9 @@ public class RegistrationForm implements Command {
 
         Locale locale = new Locale(language.substring(0,2));
 
-        Pattern phoneNumberPattern = Pattern.compile(PHONE_NUMBER_REGEX);
+        Pattern phoneNumberPattern = Pattern.compile(Constant.PHONE_NUMBER_REGEX);
+
+        Pattern emailPattern = Pattern.compile(EMAIL_REGEX);
 
         UserDAO userDAO = new UserDAO();
         boolean isLoginFree = userDAO.isLoginFree(login);
@@ -49,22 +52,29 @@ public class RegistrationForm implements Command {
 
             String password = generateSecuredPassword(providedPassword);
 
-            if (phoneNumberPattern.matcher(phone).matches() && phone.length() == PHONE_NUMBER_LENGTH) {
-                User user = new User();
-                user.setFirstName(firstName);
-                user.setLastName(lastName);
-                user.setEmail(email);
-                user.setPhoneNumber(phone);
-                user.setLogin(login);
-                user.setPassword(password);
+            if (email.isEmpty() || emailPattern.matcher(email).matches()) {
+                if (phoneNumberPattern.matcher(phone).matches() && phone.length() == Constant.PHONE_NUMBER_LENGTH) {
+                    User user = new User();
+                    user.setFirstName(firstName);
+                    user.setLastName(lastName);
+                    user.setEmail(email);
+                    user.setPhoneNumber(phone);
+                    user.setLogin(login);
+                    user.setPassword(password);
 
-                userDAO.create(user);
-                page = PATH_TO_CONFIRMATION_PAGE;
+                    userDAO.create(user);
+                    page = PATH_TO_CONFIRMATION_PAGE;
+                } else {
+                    request.setAttribute(INCORRECT_PHONE_MESSAGE,
+                            MessageManager.getInstance(locale).getProperty(INCORRECT_PHONE));
+                    page = PATH_TO_REGISTRATION_PAGE;
+                }
             } else {
-                request.setAttribute(INCORRECT_PHONE_MESSAGE,
-                        MessageManager.getInstance(locale).getProperty(INCORRECT_PHONE));
+                request.setAttribute(INCORRECT_EMAIL_MESSAGE,
+                        MessageManager.getInstance(locale).getProperty(INCORRECT_EMAIL));
                 page = PATH_TO_REGISTRATION_PAGE;
             }
+
         } else {
             request.setAttribute(REGISTRATION_ERROR,
                     MessageManager.getInstance(locale).getProperty(REGISTRATION_ERROR_MESSAGE));
@@ -74,14 +84,12 @@ public class RegistrationForm implements Command {
     }
 
     private String generateSecuredPassword(String providedPassword) {
+
         String password;
-        // Generate Salt. The generated value can be stored in DB.
         String salt = PasswordUtil.getSalt(SALT_LENGTH);
 
-        // Protect user's providedPassword. The generated value can be stored in DB.
         String securedPassword = PasswordUtil.generateSecurePassword(providedPassword, salt);
 
-        // Get the value of securedPassword and salt to be stored in DB
         StringBuilder saltedSecuredPassword = new StringBuilder();
         saltedSecuredPassword.append(securedPassword).append(salt);
         password = saltedSecuredPassword.toString();

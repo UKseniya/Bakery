@@ -125,17 +125,7 @@ public class IncomeDAO extends AbstractDAO<Income> {
     }
 
     @Override
-    public int findIDbyEntity(Income entity) {
-        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
-    }
-
-    @Override
     public boolean delete(int id) {
-        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
-    }
-
-    @Override
-    public boolean delete(Income entity) {
         throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 

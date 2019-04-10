@@ -15,7 +15,6 @@ public class UpdateUserPassword implements Command {
 
     private static final int SALT_LENGTH = 30;
     private static final int SUBSTRING = 0;
-    private static final String UPDATE_BUTTON = "updateButton";
     private static final String CURRENT_PASSWORD = "currentPassword";
     private static final String NEW_PASSWORD = "newPassword";
     private static final String INCORRECT_PASSWORD_MESSAGE = "incorrectPasswordMessage";
@@ -30,7 +29,7 @@ public class UpdateUserPassword implements Command {
         String page;
         boolean passwordVerified;
 
-        String updateButton = request.getParameter(UPDATE_BUTTON);
+        String updateButton = request.getParameter(Constant.UPDATE_BUTTON);
         String currentPassword = request.getParameter(CURRENT_PASSWORD);
         String newPassword = request.getParameter(NEW_PASSWORD);
 

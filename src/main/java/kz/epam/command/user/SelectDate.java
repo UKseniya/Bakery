@@ -22,7 +22,6 @@ public class SelectDate implements Command {
 
     private static final int MAXIMUM_ORDER_QUANTITY = 10;
     private static final int NUMBER_OF_DAYS = 2;
-    private static final String  UTC = "UTC";
     private static final String SELECT_DATE_BUTTON = "selectDateButton";
     private static final String DATE_ERROR = "dateErrorMessage";
     private static final String NULL_DATE = "dateNullMessage";
@@ -52,7 +51,7 @@ public class SelectDate implements Command {
 
         Locale locale = new Locale(language.substring(0, 2));
 
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(UTC));
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(Constant.UTC));
 
         calendar.add(Calendar.DAY_OF_YEAR, NUMBER_OF_DAYS);
         Date minimumDate = calendar.getTime();

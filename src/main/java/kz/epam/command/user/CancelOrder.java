@@ -20,8 +20,6 @@ import java.util.TimeZone;
 
 public class CancelOrder implements Command {
 
-    private static final String UTC = "UTC";
-    private static final String ORDER_NUMBER = "orderNumber";
     private static final int NUMBER_OF_DAYS = -5;
     private static final String LATE_DATE = "lateDateMessage";
     private static final String LATE_DATE_MESSAGE = "late.date";
@@ -41,9 +39,9 @@ public class CancelOrder implements Command {
 
         Locale locale = new Locale(language.substring(0,2));
 
-        String orderNumber = request.getParameter(ORDER_NUMBER);
+        String orderNumber = request.getParameter(Constant.ORDER_NUMBER);
 
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(UTC));
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(Constant.UTC));
         Date currentDate = calendar.getTime();
 
         OrderDAO orderDAO = new OrderDAO();
