@@ -1,44 +1,47 @@
 package kz.epam.pool;
 
+import kz.epam.config.ConfigManager;
+import kz.epam.constant.Constant;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Iterator;
-
-import org.apache.log4j.Logger;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 public class ConnectionPool {
 
-    private static final String DRIVER_ERROR = "Driver loading error ";
-    private static final String WAITING_ERROR = "Waiting error ";
-    private static final String CONNECTION_CREATION_ERROR = "Connection creation error ";
-    private static final String CONNECTION_RELEASE_ERROR = "Connection release error ";
-    private static final int INCREMENT = 1;
+    private static final String DRIVER_ERROR = "Driver loading error.";
+    private static final String CONNECTION_CREATION_ERROR = "Connection creation error.";
+    private static final String CONNECTION_RELEASE_ERROR = "Connection release error.";
 
     private Logger log = Logger.getRootLogger();
     private static ConnectionPool instance;
-    private String driverName;
-    private ArrayList<Connection> freeConnections = new ArrayList<>();
-    private String url;
-    private String user;
-    private String password;
-    private int maxConn;
+    private BlockingQueue<Connection> freeConnections;
 
-    public ConnectionPool(String driverName, String url, String user, String password, int maxConn) {
+    private static String driverName = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_DRIVER_NAME);
+    private static String url = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_URL);
+    private static String user = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_USER);
+    private static String password = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_PASSWORD);
+    private static int maxConn = Integer.parseInt(ConfigManager.getInstance().getProperty(ConfigManager.MAX_CONN));
+
+    private ConnectionPool(String driverName, String url, String user, String password, int maximumConnectionNumber) {
         this.driverName = driverName;
         this.url = url;
         this.user = user;
         this.password = password;
-        this.maxConn = maxConn;
+        this.maxConn = maximumConnectionNumber;
         loadDrivers();
-        for (int i = 0; i < maxConn; i++) {
-            freeConnections.add(newConnection());
+        freeConnections = new ArrayBlockingQueue<>(maximumConnectionNumber);
+        for (int i = 0; i < maximumConnectionNumber; i++) {
+            freeConnections.offer(newConnection());
         }
     }
 
-    public static synchronized ConnectionPool getInstance(String driverName, String url, String user, String password, int maxConn) {
+    public static ConnectionPool getInstance() {
         if (instance == null) {
             instance = new ConnectionPool(driverName, url, user, password, maxConn);
         }
@@ -50,40 +53,25 @@ public class ConnectionPool {
             Driver driver = (Driver) Class.forName(driverName).newInstance();
             DriverManager.registerDriver(driver);
         } catch (Exception e) {
-            log.error(DRIVER_ERROR + e.toString());
+            log.error(String.format(Constant.STRING_FORMAT, DRIVER_ERROR, e.toString()));
         }
     }
 
-    public synchronized Connection getConnection() {
+    public Connection getConnection() {
         Connection connection = null;
 
         if (!freeConnections.isEmpty()) {
-            connection = freeConnections.get(freeConnections.size() - INCREMENT);
-            freeConnections.remove(connection);
             try {
-                if (connection.isClosed()) {
-                    connection = getConnection();
-                }
-            } catch (SQLException e) {
-                connection = getConnection();
-            }
-        } else {
-            try {
-                synchronized (freeConnections) {
-                    while (freeConnections.isEmpty()) {
-                        freeConnections.wait();
-                    }
-                }
+                connection = freeConnections.take();
             } catch (InterruptedException e) {
-                log.error(WAITING_ERROR + e.toString());
-                Thread.currentThread().interrupt();
+                log.error(e.toString());
             }
         }
         return connection;
     }
 
     private Connection newConnection() {
-        Connection connection = null;
+        Connection connection;
         try {
             if (user == null) {
                 connection = DriverManager.getConnection(url);
@@ -91,31 +79,20 @@ public class ConnectionPool {
                 connection = DriverManager.getConnection(url, user, password);
             }
         } catch (SQLException ex) {
-            log.error(CONNECTION_CREATION_ERROR + ex.toString());
+            log.error(String.format(Constant.STRING_FORMAT, CONNECTION_CREATION_ERROR, ex.toString()));
             return null;
         }
         return connection;
     }
 
-    public synchronized void freeConnection(Connection connection) {
-        if ((connection != null) && (freeConnections.size() <= maxConn)) {
-                synchronized (freeConnections) {
-                    freeConnections.add(connection);
-                    freeConnections.notifyAll();
-                }
+    public void releaseConnection(Connection connection) {
+        if (connection != null) {
+            try {
+                freeConnections.put(connection);
+            } catch (InterruptedException e) {
+                log.error(String.format(Constant.STRING_FORMAT, CONNECTION_RELEASE_ERROR, e.toString()));
+            }
         }
     }
 
-    public synchronized void release() {
-        Iterator allConnections = freeConnections.iterator();
-        while (allConnections.hasNext()) {
-            Connection connection = (Connection) allConnections.next();
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                log.error(CONNECTION_RELEASE_ERROR + e.toString());
-            }
-        }
-        freeConnections.clear();
-    }
 }

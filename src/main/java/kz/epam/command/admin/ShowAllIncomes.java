@@ -21,9 +21,7 @@ public class ShowAllIncomes implements Command {
         HttpSession session = request.getSession();
 
         IncomeDAO incomeDAO = new IncomeDAO();
-
         List<Income> allIncomes = incomeDAO.findAll();
-
         session.setAttribute(ALL_INCOMES, allIncomes);
 
         page = PATH_TO_REVIEW_ALL_INCOMES;

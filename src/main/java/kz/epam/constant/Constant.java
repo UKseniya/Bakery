@@ -15,9 +15,12 @@ public final class Constant {
     public static final String LAST_NAME = "lastName";
     public static final String PHONE = "phone";
     public static final String PHONE_NUMBER_REGEX = "\\d+";
+    public static final String EMAIL_REGEX = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
     public static final String EMAIL = "email";
     public static final String PASSWORD = "password";
-    public static final String SQL_ERROR = "SQL error ";
+    public static final String STRING_FORMAT = "%1$s %2$s";
+    public static final String SQL_ERROR = "SQL error:";
+    public static final String DATE_FORMAT_PARCING_ERROR_MESSAGE = "Date Format Parcing Error.";
     public static final String NOT_SUPPORTED_EXCEPTION_MESSAGE = "Not supported yet.";
     public static final String STATUS = "status";
     public static final String CART = "cart";
@@ -43,6 +46,7 @@ public final class Constant {
     public static final String EN_NAME = "englishName";
     public static final String RU_PRODUCT_DESCRIPTION = "russianDescription";
     public static final String EN_PRODUCT_DESCRIPTION = "englishDescription";
+    public static final int SALT = 30;
     public static final int PHONE_NUMBER_LENGTH = 11;
     public static final int FIRST_MONTH = 1;
     public static final int LAST_MONTH = 12;

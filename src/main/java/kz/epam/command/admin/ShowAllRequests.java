@@ -19,12 +19,10 @@ public class ShowAllRequests implements Command {
         String page;
 
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constant.LOCALE).toString();
+        String locale = session.getAttribute(Constant.LOCALE).toString().substring(0,2);
 
         OrderDAO orderDAO = new OrderDAO();
-
         List<Order> allOrders = orderDAO.findAll(locale);
-
         session.setAttribute(Constant.ALL_ORDERS, allOrders);
 
         page = PATH_TO_REVIEW_ALL_ORDERS;

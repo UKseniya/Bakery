@@ -24,7 +24,6 @@ public class UserPage implements Command {
         } else if (user.getRole().equals(Constant.ADMIN)) {
             page = PATH_TO_ADMIN_PAGE;
         }
-
         return page;
     }
 }

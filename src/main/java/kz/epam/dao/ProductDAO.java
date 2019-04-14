@@ -1,6 +1,5 @@
 package kz.epam.dao;
 
-import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.entity.Product;
 
@@ -40,6 +39,7 @@ public class ProductDAO extends AbstractDAO<Product> {
             "product_name, description) VALUES (?, ?, ?, ?)";
     private static final String SQL_FIND_LOCALE_ID_BY_NAME = "SELECT locale_id FROM locale WHERE locale_name = ?";
 
+    private static final Logger LOG = Logger.getRootLogger();
     private static final String PRODUCT_NAME = "product_name";
     private static final String DESCRIPTION = "description";
     private static final String LOCALE_ID = "locale_id";
@@ -51,14 +51,6 @@ public class ProductDAO extends AbstractDAO<Product> {
     private static final String STATUS_ID = "status_id";
     private static final String PRODUCT_INSERTION_MESSAGE = "Product has been inserted ";
 
-    private static String driverName = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_DRIVER_NAME);
-    private static String url = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_URL);
-    private static String databaseUserName = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_USER);
-    private static String databasePassword = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_PASSWORD);
-    private static int maxConn = Integer.parseInt(ConfigManager.getInstance().getProperty(ConfigManager.MAX_CONN));
-
-    private Logger log = Logger.getRootLogger();
-
     @Override
     public List findAll() {
         throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
@@ -66,7 +58,7 @@ public class ProductDAO extends AbstractDAO<Product> {
 
     public String findProductNameById(int id, String locale) {
         String productName = null;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement statement = connection.prepareStatement(SQL_FIND_PRODUCT_NAME_BY_ID)) {
@@ -77,19 +69,18 @@ public class ProductDAO extends AbstractDAO<Product> {
                 if (resultSet.next()) {
                     productName = resultSet.getString(PRODUCT_NAME);
                 }
-                pool.freeConnection(connection);
-            } catch (SQLException e) {
-                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return productName;
     }
 
     public String findProductDescriptionById(int id, String locale) {
         String description = null;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement statement = connection.prepareStatement(SQL_FIND_PRODUCT_DESCRIPTION_BY_ID)) {
@@ -100,19 +91,18 @@ public class ProductDAO extends AbstractDAO<Product> {
                 if (resultSet.next()) {
                     description = resultSet.getString(DESCRIPTION);
                 }
-                pool.freeConnection(connection);
-            } catch (SQLException e) {
-                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return description;
     }
 
     public int findLocaleIDbyName(String locale) {
         int localeID = 0;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement statement = connection.prepareStatement(SQL_FIND_LOCALE_ID_BY_NAME)) {
@@ -122,12 +112,11 @@ public class ProductDAO extends AbstractDAO<Product> {
                 if (resultSet.next()) {
                     localeID = resultSet.getInt(LOCALE_ID);
                 }
-                pool.freeConnection(connection);
-            } catch (SQLException e) {
-                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return localeID;
     }
@@ -135,7 +124,7 @@ public class ProductDAO extends AbstractDAO<Product> {
     public List<Product> findAllAvailableProducts(String locale) {
         List<Product> products = null;
 
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL_PRODUCTS_BY_STATUS)) {
@@ -143,6 +132,7 @@ public class ProductDAO extends AbstractDAO<Product> {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 products = new ArrayList<>();
+
                 while (resultSet.next()) {
                     Product product = new Product();
                     product.setId(resultSet.getInt(PRODUCT_ID));
@@ -153,12 +143,11 @@ public class ProductDAO extends AbstractDAO<Product> {
                     product.setPrice(resultSet.getDouble(PRICE));
                     products.add(product);
                 }
-                pool.freeConnection(connection);
-            } catch (SQLException e) {
-                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return products;
     }
@@ -166,7 +155,7 @@ public class ProductDAO extends AbstractDAO<Product> {
     public List<Product> findAllCancelledProducts(String locale) {
         List<Product> products = null;
 
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL_PRODUCTS_BY_STATUS)) {
@@ -174,6 +163,7 @@ public class ProductDAO extends AbstractDAO<Product> {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 products = new ArrayList<>();
+
                 while (resultSet.next()) {
                     Product product = new Product();
                     product.setId(resultSet.getInt(PRODUCT_ID));
@@ -184,12 +174,11 @@ public class ProductDAO extends AbstractDAO<Product> {
                     product.setPrice(resultSet.getDouble(PRICE));
                     products.add(product);
                 }
-                pool.freeConnection(connection);
-            } catch (SQLException e) {
-                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return products;
     }
@@ -197,7 +186,7 @@ public class ProductDAO extends AbstractDAO<Product> {
     public Product findProductbyCode(String code, String locale) {
         Product product = null;
 
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_PRODUCT_BY_PRODUCT_CODE)) {
@@ -212,19 +201,18 @@ public class ProductDAO extends AbstractDAO<Product> {
                     product.setCode(resultSet.getString(CODE));
                     product.setPrice(resultSet.getDouble(PRICE));
                 }
-                pool.freeConnection(connection);
-            } catch (SQLException e) {
-                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return product;
     }
 
     public int findStatusIDbyName(String status) {
         int statusID = 0;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement statement = connection.prepareStatement(SQL_FIND_STATUS_ID_BY_NAME)) {
@@ -234,12 +222,11 @@ public class ProductDAO extends AbstractDAO<Product> {
                 if (resultSet.next()) {
                     statusID = resultSet.getInt(STATUS_ID);
                 }
-                pool.freeConnection(connection);
-            } catch (SQLException e) {
-                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return statusID;
     }
@@ -247,7 +234,7 @@ public class ProductDAO extends AbstractDAO<Product> {
     public int findProductIdByCode(Product product) {
         int productID = 0;
 
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_PRODUCT_ID_BY_PRODUCT_CODE)) {
@@ -257,13 +244,11 @@ public class ProductDAO extends AbstractDAO<Product> {
                 if (resultSet.next()) {
                     productID = resultSet.getInt(PRODUCT_ID);
                 }
-                pool.freeConnection(connection);
-            } catch (SQLException e) {
-                log.error(Constant.SQL_ERROR + e.toString());
             }
-
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return productID;
     }
@@ -271,7 +256,7 @@ public class ProductDAO extends AbstractDAO<Product> {
     public Product findEntityByIdAndLocale(int id, String locale) {
         Product product = null;
 
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_PRODUCT_BY_PRODUCT_ID)) {
@@ -285,12 +270,11 @@ public class ProductDAO extends AbstractDAO<Product> {
                     product.setDescription(findProductDescriptionById(id, locale));
 
                 }
-                pool.freeConnection(connection);
-            } catch (SQLException e) {
-                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return product;
     }
@@ -302,26 +286,20 @@ public class ProductDAO extends AbstractDAO<Product> {
 
     public boolean updateProductStatus(Product product, String status) {
 
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CHANGE_STATUS)) {
             preparedStatement.setInt(1, findStatusIDbyName(status));
             preparedStatement.setString(2, product.getCode());
             preparedStatement.executeUpdate();
-
-            pool.freeConnection(connection);
-
             return true;
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return false;
-    }
-
-    @Override
-    public int findIDbyEntity(Product entity) {
-        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override
@@ -329,13 +307,8 @@ public class ProductDAO extends AbstractDAO<Product> {
         throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
-    @Override
-    public boolean delete(Product entity) {
-        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
-    }
-
     public boolean addNewProductDescription(Product product, String locale) {
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_ADD_PRODUCT_DESCRIPTION)) {
@@ -344,36 +317,34 @@ public class ProductDAO extends AbstractDAO<Product> {
             preparedStatement.setString(3, product.getName());
             preparedStatement.setString(4, product.getDescription());
             preparedStatement.executeUpdate();
-
-            pool.freeConnection(connection);
             return true;
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
-
         return false;
     }
 
     public boolean updatePrice(Product product) {
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CHANGE_PRODUCT_PRICE)) {
             preparedStatement.setDouble(1, product.getPrice());
             preparedStatement.setString(2, product.getCode());
             preparedStatement.executeUpdate();
-
-            pool.freeConnection(connection);
-
             return true;
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return false;
     }
 
     public boolean update(Product product, String locale) {
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CHANGE_PRODUCT_DESCRIPTION)) {
@@ -382,12 +353,11 @@ public class ProductDAO extends AbstractDAO<Product> {
             preparedStatement.setInt(3, findProductIdByCode(product));
             preparedStatement.setInt(4, findLocaleIDbyName(locale));
             preparedStatement.executeUpdate();
-
-            pool.freeConnection(connection);
-
             return true;
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return false;
     }
@@ -395,7 +365,7 @@ public class ProductDAO extends AbstractDAO<Product> {
     @Override
     public boolean create(Product product) {
 
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_ADD_NEW_PRODUCT)) {
@@ -404,15 +374,13 @@ public class ProductDAO extends AbstractDAO<Product> {
             preparedStatement.setInt(3, findStatusIDbyName(STATUS_AVAILABLE));
             preparedStatement.executeUpdate();
 
-            log.info(PRODUCT_INSERTION_MESSAGE + product.getId());
-
-            pool.freeConnection(connection);
-
+            LOG.info(PRODUCT_INSERTION_MESSAGE + product.getId());
             return true;
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
-
         return false;
     }
 

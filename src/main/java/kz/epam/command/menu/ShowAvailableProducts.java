@@ -23,7 +23,6 @@ public class ShowAvailableProducts implements Command {
 
         ProductDAO productDAO = new ProductDAO();
         List<Product> availableProducts = productDAO.findAllAvailableProducts(locale);
-
         session.setAttribute(Constant.AVAILABLE_PRODUCTS, availableProducts);
 
         page = PATH_TO_PRODUCT_LIST;

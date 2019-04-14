@@ -41,7 +41,6 @@ public class Cart extends Entity {
     }
 
     public void addItem(LineItem item) {
-        //If the item already exists in the cart, only the quantity is changed.
         String code = item.getProduct().getCode();
         int quantity = item.getQuantity();
         for (int i = 0; i < items.size(); i++) {

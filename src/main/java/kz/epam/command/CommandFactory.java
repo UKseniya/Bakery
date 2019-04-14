@@ -28,7 +28,6 @@ public class CommandFactory {
 
     public static Command getCommand(HttpServletRequest request) {
 
-        // Get the command from the request
         String command = request.getParameter(COMMAND);
 
         if (!(command == null || command.isEmpty()) && command != action) {
@@ -38,7 +37,7 @@ public class CommandFactory {
         if ((command == null || command.isEmpty()) && action.equalsIgnoreCase(CommandEnum.LOGIN.name())) {
             action = String.valueOf(CommandEnum.USER_PAGE).toLowerCase();
         }
-        // Receive object that corresponds to the request
+
         CommandEnum current = CommandEnum.valueOf(action.toUpperCase());
         switch (current) {
             case NO_COMMAND:

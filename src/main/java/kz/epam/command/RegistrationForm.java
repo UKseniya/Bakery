@@ -14,8 +14,6 @@ import java.util.regex.Pattern;
 
 public class RegistrationForm implements Command {
 
-    private static final int SALT_LENGTH = 30;
-    private static final String EMAIL_REGEX = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
     private static final String INCORRECT_PHONE = "error.phone";
     private static final String INCORRECT_PHONE_MESSAGE = "phoneNumberError";
     private static final String INCORRECT_EMAIL = "error.email";
@@ -37,56 +35,50 @@ public class RegistrationForm implements Command {
         String providedPassword = request.getParameter(Constant.PASSWORD);
 
         HttpSession session = request.getSession();
-
         String language = session.getAttribute(Constant.LOCALE).toString();
-
         Locale locale = new Locale(language.substring(0,2));
 
         Pattern phoneNumberPattern = Pattern.compile(Constant.PHONE_NUMBER_REGEX);
-
-        Pattern emailPattern = Pattern.compile(EMAIL_REGEX);
+        Pattern emailPattern = Pattern.compile(Constant.EMAIL_REGEX);
 
         UserDAO userDAO = new UserDAO();
         boolean isLoginFree = userDAO.isLoginFree(login);
-        if (isLoginFree) {
-
-            String password = generateSecuredPassword(providedPassword);
-
-            if (email.isEmpty() || emailPattern.matcher(email).matches()) {
-                if (phoneNumberPattern.matcher(phone).matches() && phone.length() == Constant.PHONE_NUMBER_LENGTH) {
-                    User user = new User();
-                    user.setFirstName(firstName);
-                    user.setLastName(lastName);
-                    user.setEmail(email);
-                    user.setPhoneNumber(phone);
-                    user.setLogin(login);
-                    user.setPassword(password);
-
-                    userDAO.create(user);
-                    page = PATH_TO_CONFIRMATION_PAGE;
-                } else {
-                    request.setAttribute(INCORRECT_PHONE_MESSAGE,
-                            MessageManager.getInstance(locale).getProperty(INCORRECT_PHONE));
-                    page = PATH_TO_REGISTRATION_PAGE;
-                }
-            } else {
-                request.setAttribute(INCORRECT_EMAIL_MESSAGE,
-                        MessageManager.getInstance(locale).getProperty(INCORRECT_EMAIL));
-                page = PATH_TO_REGISTRATION_PAGE;
-            }
-
-        } else {
+        if (!isLoginFree) {
             request.setAttribute(REGISTRATION_ERROR,
                     MessageManager.getInstance(locale).getProperty(REGISTRATION_ERROR_MESSAGE));
             page = PATH_TO_REGISTRATION_PAGE;
+        } else if (!email.isEmpty() && !emailPattern.matcher(email).matches()) {
+            request.setAttribute(INCORRECT_EMAIL_MESSAGE,
+                    MessageManager.getInstance(locale).getProperty(INCORRECT_EMAIL));
+            page = PATH_TO_REGISTRATION_PAGE;
+        } else if (!phoneNumberPattern.matcher(phone).matches() || phone.length() != Constant.PHONE_NUMBER_LENGTH) {
+            request.setAttribute(INCORRECT_PHONE_MESSAGE,
+                    MessageManager.getInstance(locale).getProperty(INCORRECT_PHONE));
+            page = PATH_TO_REGISTRATION_PAGE;
+        } else {
+            registerUser(firstName, lastName, email, phone, login, providedPassword);
+            page = PATH_TO_CONFIRMATION_PAGE;
         }
         return page;
     }
 
-    private String generateSecuredPassword(String providedPassword) {
+    private static void registerUser(String firstName, String lastName, String email, String phone, String login, String password) {
+        String securedPassword = generateSecuredPassword(password);
+        User user = new User();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPhoneNumber(phone);
+        user.setLogin(login);
+        user.setPassword(securedPassword);
+
+        UserDAO userDAO = new UserDAO();
+        userDAO.create(user);
+    }
+    private static String generateSecuredPassword(String providedPassword) {
 
         String password;
-        String salt = PasswordUtil.getSalt(SALT_LENGTH);
+        String salt = PasswordUtil.getSalt(Constant.SALT);
 
         String securedPassword = PasswordUtil.generateSecurePassword(providedPassword, salt);
 

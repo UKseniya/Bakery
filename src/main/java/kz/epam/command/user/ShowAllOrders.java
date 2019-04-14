@@ -16,8 +16,6 @@ public class ShowAllOrders implements Command {
 
     private static final String PATH_TO_REVIEW_ORDERS_PAGE = ConfigManager.getInstance().getProperty("path.page.review.user.orders");
 
-    private List<Order> allOrders = new ArrayList<>();
-
     @Override
     public String execute(HttpServletRequest request) {
         String page;
@@ -29,16 +27,14 @@ public class ShowAllOrders implements Command {
         OrderDAO orderDAO = new OrderDAO();
 
         List<Order> pendingOrders = orderDAO.findAllPendingOrdersByUser(user, locale);
-
         session.setAttribute(Constant.PENDING_ORDERS, pendingOrders);
 
         List<Order> completedOrders = orderDAO.findAllOrdersByUser(user, locale);
-
         session.setAttribute(Constant.COMPLETE_ORDERS, completedOrders);
 
+        List<Order> allOrders = new ArrayList<>();
         allOrders.addAll(pendingOrders);
         allOrders.addAll(completedOrders);
-
         session.setAttribute(Constant.ALL_ORDERS, allOrders);
 
         page = PATH_TO_REVIEW_ORDERS_PAGE;

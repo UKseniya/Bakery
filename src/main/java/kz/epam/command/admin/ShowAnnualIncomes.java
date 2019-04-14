@@ -23,16 +23,13 @@ public class ShowAnnualIncomes implements Command {
 
         HttpSession session = request.getSession();
         String language = session.getAttribute(Constant.LOCALE).toString();
-
         Locale locale = new Locale(language.substring(0,2));
 
         LocalDate today = LocalDate.now();
         int year = today.getYear();
 
         IncomeDAO incomeDAO = new IncomeDAO();
-
         List<Income> annualIncomes = incomeDAO.findIncomesForYear(year, locale);
-
         session.setAttribute(ANNUAL_INCOMES, annualIncomes);
 
         page = PATH_TO_REVIEW_ANNUAL_INCOMES;

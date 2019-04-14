@@ -1,6 +1,5 @@
 package kz.epam.dao;
 
-import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.entity.Income;
 import kz.epam.pool.ConnectionPool;
@@ -19,23 +18,16 @@ public class IncomeDAO extends AbstractDAO<Income> {
     private static final String SQL_FIND_INCOME_FOR_CERTAIN_MONTH = "SELECT * FROM income WHERE month = ? AND year = ?";
     private static final String SQL_FIND_INCOME_FOR_CERTAIN_YEAR = "SELECT * FROM income WHERE year = ?";
 
+    private static final Logger LOG = Logger.getRootLogger();
     private static final String TOTAL_INCOME = "total_income";
     private static final String ANNUAL_INCOME = "annual_income";
     private static final String MONTH = "month";
     private static final String YEAR = "year";
 
-    private static String driverName = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_DRIVER_NAME);
-    private static String url = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_URL);
-    private static String databaseUserName = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_USER);
-    private static String databasePassword = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_PASSWORD);
-    private static int maxConn = Integer.parseInt(ConfigManager.getInstance().getProperty(ConfigManager.MAX_CONN));
-
-    private Logger log = Logger.getRootLogger();
-
     @Override
     public List<Income> findAll() {
         List<Income> incomes = null;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (Statement statement = connection.createStatement();
@@ -48,18 +40,18 @@ public class IncomeDAO extends AbstractDAO<Income> {
                 income.setYear(resultSet.getInt(YEAR));
                 incomes.add(income);
             }
-
-            pool.freeConnection(connection);
-
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        }
+        finally {
+            pool.releaseConnection(connection);
         }
         return incomes;
     }
 
     public Income findIncomeForMonth(int month, int year, Locale locale) {
         Income income = null;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_INCOME_FOR_CERTAIN_MONTH)) {
@@ -78,19 +70,18 @@ public class IncomeDAO extends AbstractDAO<Income> {
                     income.setYear(resultSet.getInt(YEAR));
 
                 }
-                pool.freeConnection(connection);
-            } catch (SQLException e) {
-                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return income;
     }
 
     public List<Income> findIncomesForYear(int year, Locale locale) {
         List<Income> incomes = null;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_INCOME_FOR_CERTAIN_YEAR)) {
@@ -109,12 +100,11 @@ public class IncomeDAO extends AbstractDAO<Income> {
                     income.setYear(resultSet.getInt(YEAR));
                     incomes.add(income);
                 }
-                pool.freeConnection(connection);
-            } catch (SQLException e) {
-                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return incomes;
     }

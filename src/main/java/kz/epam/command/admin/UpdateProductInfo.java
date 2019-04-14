@@ -18,7 +18,7 @@ public class UpdateProductInfo implements Command {
         String page;
 
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constant.LOCALE).toString();
+        String locale = session.getAttribute(Constant.LOCALE).toString().substring(0, 2);
 
         String code = request.getParameter(Constant.PRODUCT_CODE);
         String price = request.getParameter(Constant.PRODUCT_PRICE);
@@ -28,19 +28,26 @@ public class UpdateProductInfo implements Command {
         String enDescription = request.getParameter(Constant.EN_PRODUCT_DESCRIPTION);
 
         ProductDAO productDAO = new ProductDAO();
-
         Product product = productDAO.findProductbyCode(code, locale);
-        product.setPrice(Double.parseDouble(price));
-        productDAO.updatePrice(product);
-        product.setName(ruName);
-        product.setDescription(ruDescription);
-        productDAO.update(product, Constant.RU_LOCALE);
-        product.setName(enName);
-        product.setDescription(enDescription);
-        productDAO.update(product, Constant.EN_LOCALE);
+        updateProductPrice(product, price);
+        updateProductInfo(product, ruName, ruDescription, Constant.RU_LOCALE);
+        updateProductInfo(product, enName, enDescription, Constant.EN_LOCALE);
 
         page = PATH_TO_CONFIRMATION_PAGE;
 
         return page;
+    }
+
+    private static void updateProductPrice (Product product, String price) {
+        ProductDAO productDAO = new ProductDAO();
+        product.setPrice(Double.parseDouble(price));
+        productDAO.updatePrice(product);
+    }
+
+    private static void updateProductInfo (Product product, String name, String description, String locale) {
+        ProductDAO productDAO = new ProductDAO();
+        product.setName(name);
+        product.setDescription(description);
+        productDAO.update(product, locale);
     }
 }

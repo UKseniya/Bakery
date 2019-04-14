@@ -24,28 +24,25 @@ public class UpdateProductList implements Command {
         HttpSession session = request.getSession();
         String locale = session.getAttribute(Constant.LOCALE).toString().substring(0,2);
 
-        String removeButton = request.getParameter(Constant.REMOVE_BUTTON);
-        String addButton = request.getParameter(Constant.ADD_BUTTON);
+        String removeProductFromListButton = request.getParameter(Constant.REMOVE_BUTTON);
+        String addProductToListButton = request.getParameter(Constant.ADD_BUTTON);
         String code = request.getParameter(Constant.PRODUCT_CODE);
 
         ProductDAO productDAO = new ProductDAO();
+        Product product = productDAO.findProductbyCode(code, locale);
 
-        if (removeButton != null) {
-            Product product = productDAO.findProductbyCode(code, locale);
+        if (removeProductFromListButton != null) {
             productDAO.updateProductStatus(product, DISABLED_STATUS);
         }
 
-        if (addButton != null) {
-            Product product = productDAO.findProductbyCode(code, locale);
+        if (addProductToListButton != null) {
             productDAO.updateProductStatus(product, AVAILABLE_STATUS);
         }
 
         List<Product> availableProducts = productDAO.findAllAvailableProducts(locale);
-
         session.setAttribute(Constant.AVAILABLE_PRODUCTS, availableProducts);
 
         List<Product> cancelledProducts = productDAO.findAllCancelledProducts(locale);
-
         session.setAttribute(DISABLED_PRODUCTS, cancelledProducts);
 
         page = PATH_TO_PRODUCT_UPDATE_PAGE;

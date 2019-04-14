@@ -5,6 +5,7 @@ import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.dao.OrderDAO;
 import kz.epam.entity.Order;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -18,73 +19,85 @@ import java.util.TimeZone;
 
 public class ShowOpenRequests implements Command {
 
+    private static final Logger LOG = Logger.getRootLogger();
     private static final String CHANGE_DATE_BUTTON = "changeButton";
     private static final String COMPLETE_BUTTON = "completeButton";
     private static final String CLOSE_BUTTON = "closeButton";
     private static final int NUMBER_OF_DAYS = 1;
     private static final String PATH_TO_REVIEW_ORDERS = ConfigManager.getInstance().getProperty("path.page.review.admin.orders");
 
-    private Date processingDate;
-    private Date completionDate;
+    private static Date requestedDate;
 
     @Override
     public String execute(HttpServletRequest request) {
         String page;
+        Date processingDate;
+        Date completionDate;
 
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constant.LOCALE).toString();
+        String locale = session.getAttribute(Constant.LOCALE).toString().substring(0, 2);
 
-        String changeButton = request.getParameter(CHANGE_DATE_BUTTON);
-        String completeButton = request.getParameter(COMPLETE_BUTTON);
-        String closeButton = request.getParameter(CLOSE_BUTTON);
+        String changeDateButton = request.getParameter(CHANGE_DATE_BUTTON);
+        String completeRequestButton = request.getParameter(COMPLETE_BUTTON);
+        String closeRequestButton = request.getParameter(CLOSE_BUTTON);
         String receivedDate = request.getParameter(Constant.DATE);
         String orderNumber = request.getParameter(Constant.ORDER_NUMBER);
 
         OrderDAO orderDAO = new OrderDAO();
 
-        if (completeButton != null) {
+        if (completeRequestButton != null) {
             orderDAO.updatePendingOrder(orderNumber);
         }
 
-        if (closeButton != null) {
+        if (closeRequestButton != null) {
             orderDAO.updateCompletedOrder(orderNumber);
         }
 
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(Constant.UTC));
         Date requestCompletionDate = calendar.getTime();
-        calendar.add(Calendar.DAY_OF_YEAR, NUMBER_OF_DAYS);
-        Date requestProcessingDate = calendar.getTime();
+        Date requestProcessingDate = getProcessingDate(requestCompletionDate);
 
-        if (changeButton != null) {
-            DateFormat formatter;
-            formatter = new SimpleDateFormat(Constant.DATE_FORMAT);
-            try {
-                processingDate = formatter.parse(receivedDate);
-                completionDate = processingDate;
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        } else if (processingDate == null || completionDate == null){
+        if (changeDateButton != null) {
+            completionDate = getRequestedDate(receivedDate);
+            processingDate = getProcessingDate(completionDate);
+        } else if (requestedDate != null) {
+            completionDate = requestedDate;
+            processingDate = getProcessingDate(completionDate);
+        } else {
             processingDate = requestProcessingDate;
             completionDate = requestCompletionDate;
         }
 
-        java.util.Date utilCurrentDate = processingDate;
-        java.sql.Date sqlCurrentDate = new java.sql.Date(utilCurrentDate.getTime());
-
-        List<Order> pendingOrders = orderDAO.findAllPendingOrdersByDate(sqlCurrentDate, locale);
-
+        List<Order> pendingOrders = orderDAO.findAllPendingOrdersByDate(getSQLDate(processingDate), locale);
         session.setAttribute(Constant.PENDING_ORDERS, pendingOrders);
 
-        java.util.Date utilPickupDate = completionDate;
-        java.sql.Date sqlPickUpDate = new java.sql.Date(utilPickupDate.getTime());
-
-        List<Order> completedOrders = orderDAO.findAllCompletedOrdersByDate(sqlPickUpDate, locale);
-
+        List<Order> completedOrders = orderDAO.findAllCompletedOrdersByDate(getSQLDate(completionDate), locale);
         session.setAttribute(Constant.COMPLETE_ORDERS, completedOrders);
 
         page = PATH_TO_REVIEW_ORDERS;
 
         return page;
+    }
+
+    private static Date getProcessingDate(Date date) {
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(Constant.UTC));
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_YEAR, NUMBER_OF_DAYS);
+        return calendar.getTime();
+    }
+
+    private static Date getRequestedDate(String date) {
+        DateFormat formatter = new SimpleDateFormat(Constant.DATE_FORMAT);
+        try {
+            requestedDate = formatter.parse(date);
+        } catch (ParseException e) {
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.DATE_FORMAT_PARCING_ERROR_MESSAGE, e.toString()));
+        }
+        return requestedDate;
+    }
+
+    private static java.sql.Date getSQLDate(Date date) {
+        java.util.Date utilDate = date;
+        return new java.sql.Date(utilDate.getTime());
     }
 }

@@ -13,19 +13,16 @@ import java.util.Locale;
 
 public class Login implements Command {
 
-    private static final int SALT_LENGTH = 30;
     private static final int SUBSTRING = 0;
     private static final String LOGIN_ERROR = "loginErrorMessage";
     private static final String ERROR_MESSAGE = "error.login";
     private static final String PATH_TO_LOGIN_PAGE = ConfigManager.getInstance().getProperty("path.command.login");
     private static final String PATH_TO_ADMIN_PAGE = ConfigManager.getInstance().getProperty("path.command.admin.page");
-    private static final String PATH_TO_USER_SELECT_PAGE = ConfigManager.getInstance().getProperty("path.command.user.page");
     private static final String PATH_TO_USER_PAGE = ConfigManager.getInstance().getProperty("path.page.user.main");
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
-        String password = null;
+        String page;
 
         String login = request.getParameter(Constant.LOGIN);
         String providedPassword = request.getParameter(Constant.PASSWORD);
@@ -33,52 +30,54 @@ public class Login implements Command {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(Constant.USER);
         String language = session.getAttribute(Constant.LOCALE).toString();
-
-        Locale locale = new Locale(language.substring(0,2));
+        Locale locale = new Locale(language.substring(0, 2));
 
         UserDAO userDAO = new UserDAO();
 
         if (user != null) {
-            page = PATH_TO_USER_SELECT_PAGE;
-        } else if (login != "") {
-
-            // Retrieve secured password and salt from the password stored in DB.
-            password = userDAO.findPasswordByLogin(login);
-
-            boolean isUserRegistered = userDAO.isUserRegistered(login, password);
-
-            if (isUserRegistered && verifyPassword(password, providedPassword)) {
-                user = userDAO.findUserByLoginAndPassword(login, password);
-                session.setAttribute(Constant.USER, user);
-
-                if (user.getRole().equals(Constant.USER)) {
-                    page = PATH_TO_USER_PAGE;
-                } else if (user.getRole().equals(Constant.ADMIN)) {
-                    page = PATH_TO_ADMIN_PAGE;
-                }
-                session.setAttribute(Constant.USER, user);
-            } else {
-                request.setAttribute(LOGIN_ERROR,
-                        MessageManager.getInstance(locale).getProperty(ERROR_MESSAGE));
-                page = PATH_TO_LOGIN_PAGE;
-            }
+            page = determinePage(user);
+        } else if (isLoginAndPasswordCorrect(login, providedPassword)) {
+            String password = userDAO.findPasswordByLogin(login);
+            user = userDAO.findUserByLoginAndPassword(login, password);
+            page = determinePage(user);
+            session.setAttribute(Constant.USER, user);
         } else {
             request.setAttribute(LOGIN_ERROR, MessageManager.getInstance(locale).getProperty(ERROR_MESSAGE));
             page = PATH_TO_LOGIN_PAGE;
-        }
 
+        }
         return page;
     }
 
-    private boolean verifyPassword(String databasePassword, String providedPassword) {
-        boolean verified = true;
+    private static boolean verifyPassword(String databasePassword, String providedPassword) {
+        boolean verified;
 
-        String securedPassword = databasePassword.substring(SUBSTRING, databasePassword.length() - SALT_LENGTH);
-        String salt = databasePassword.length() > SALT_LENGTH ? databasePassword.substring(databasePassword.length() - SALT_LENGTH) : databasePassword;
+        String securedPassword = databasePassword.substring(SUBSTRING, databasePassword.length() - Constant.SALT);
+        String salt = databasePassword.length() > Constant.SALT ? databasePassword.substring(databasePassword.length() - Constant.SALT) : databasePassword;
 
-        // Verify databasePassword provided by user
         verified = PasswordUtil.verifyUserPassword(providedPassword, securedPassword, salt);
 
         return verified;
+    }
+
+    private static String determinePage(User user) {
+        String page = null;
+        if (user.getRole().equals(Constant.USER)) {
+            page = PATH_TO_USER_PAGE;
+        } else if (user.getRole().equals(Constant.ADMIN)) {
+            page = PATH_TO_ADMIN_PAGE;
+        }
+        return page;
+    }
+
+    private static boolean isLoginAndPasswordCorrect(String login, String providedPassword) {
+        UserDAO userDAO = new UserDAO();
+        if (!login.isEmpty()) {
+            String password = userDAO.findPasswordByLogin(login);
+            if (verifyPassword(password, providedPassword)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

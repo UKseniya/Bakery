@@ -21,42 +21,20 @@ public class AdminPage implements Command {
     private static final String PREVIOUS_MONTH_TOP_PRODUCTS = "previousMonthTopProducts";
     private static final String PATH_TO_ADMIN_PAGE = ConfigManager.getInstance().getProperty("path.page.admin.main");
 
-    private List<LineItem> currentMonthTopProducts = new ArrayList<>();
-    private List<LineItem> previousMonthTopProducts = new ArrayList<>();
-    private int currentMonthMaxQuantity = 0;
-    private int previousMonthMaxQuantity = 0;
-
     @Override
     public String execute(HttpServletRequest request) {
 
         HttpSession session = request.getSession();
-        String locale = session.getAttribute(Constant.LOCALE).toString();
+        String locale = session.getAttribute(Constant.LOCALE).toString().substring(0, 2);
 
-        UserDAO userDAO = new UserDAO();
-        List<User> registeredUsers = userDAO.findAllUsersByRole(Constant.USER);
-        int numberOfUsers = registeredUsers.size();
-
+        int numberOfUsers = getTotalNumberOfUsers();
         session.setAttribute(TOTAL_NUMBER_OF_USERS, numberOfUsers);
 
         LocalDate today = LocalDate.now();
         int currentMonth = today.getMonthValue();
         int year = today.getYear();
 
-        LineItemDAO lineItemDAO = new LineItemDAO();
-        List<LineItem> currentMonthProducts = lineItemDAO.findTopProducts(currentMonth, year, locale);
-
-        for (LineItem lineItem : currentMonthProducts) {
-            if (lineItem.getQuantity() > currentMonthMaxQuantity) {
-                currentMonthMaxQuantity = lineItem.getQuantity();
-            }
-        }
-
-        for (LineItem lineItem : currentMonthProducts) {
-            if (lineItem.getQuantity() == currentMonthMaxQuantity) {
-                currentMonthTopProducts.add(lineItem);
-            }
-        }
-
+        List<LineItem> currentMonthTopProducts = getTopProductOfMonth(getAllProductsOrderedForMonth(currentMonth, year, locale));
         session.setAttribute(CURRENT_MONTH_TOP_PRODUCTS, currentMonthTopProducts);
 
         int previousMonth;
@@ -67,22 +45,37 @@ public class AdminPage implements Command {
             previousMonth = currentMonth - Constant.DECREMENT;
         }
 
-        List<LineItem> previousMonthProducts = lineItemDAO.findTopProducts(previousMonth, year, locale);
-
-        for (LineItem lineItem : previousMonthProducts) {
-            if (lineItem.getQuantity() >= previousMonthMaxQuantity) {
-                previousMonthMaxQuantity = lineItem.getQuantity();
-            }
-        }
-
-        for (LineItem lineItem : previousMonthProducts) {
-            if (lineItem.getQuantity() == previousMonthMaxQuantity) {
-                previousMonthTopProducts.add(lineItem);
-            }
-        }
-
+        List<LineItem> previousMonthTopProducts = getTopProductOfMonth(getAllProductsOrderedForMonth(previousMonth, year, locale));
         session.setAttribute(PREVIOUS_MONTH_TOP_PRODUCTS, previousMonthTopProducts);
 
         return PATH_TO_ADMIN_PAGE;
+    }
+
+    private static int getTotalNumberOfUsers() {
+        UserDAO userDAO = new UserDAO();
+        List<User> registeredUsers = userDAO.findAllUsersByRole(Constant.USER);
+        return registeredUsers.size();
+    }
+
+    private static List<LineItem> getAllProductsOrderedForMonth(int month, int year, String locale) {
+        LineItemDAO lineItemDAO = new LineItemDAO();
+        return lineItemDAO.findTopProducts(month, year, locale);
+    }
+
+    private static List<LineItem> getTopProductOfMonth (List<LineItem> items) {
+        List<LineItem> topProducts = new ArrayList<>();
+        int maxQuantity = 0;
+        for (LineItem lineItem : items) {
+            if (lineItem.getQuantity() > maxQuantity) {
+                maxQuantity = lineItem.getQuantity();
+            }
+        }
+
+        for (LineItem lineItem : items) {
+            if (lineItem.getQuantity() == maxQuantity) {
+                topProducts.add(lineItem);
+            }
+        }
+        return topProducts;
     }
 }

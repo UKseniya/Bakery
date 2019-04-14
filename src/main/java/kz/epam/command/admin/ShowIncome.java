@@ -19,7 +19,7 @@ public class ShowIncome implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
+        String page;
 
         HttpSession session = request.getSession();
         String language = session.getAttribute(Constant.LOCALE).toString();
@@ -30,10 +30,7 @@ public class ShowIncome implements Command {
         int currentMonth = today.getMonthValue();
         int year = today.getYear();
 
-        IncomeDAO incomeDAO = new IncomeDAO();
-
-        Income currentMonthIncome = incomeDAO.findIncomeForMonth(currentMonth, year, locale);
-
+        Income currentMonthIncome = findIncomeForMonth(currentMonth, year, locale);
         session.setAttribute(CURRENT_MONTH_INCOME, currentMonthIncome);
 
         int previousMonth;
@@ -44,13 +41,17 @@ public class ShowIncome implements Command {
             previousMonth = currentMonth - Constant.DECREMENT;
         }
 
-        Income previousMonthIncome = incomeDAO.findIncomeForMonth(previousMonth, year, locale);
-
+        Income previousMonthIncome = findIncomeForMonth(previousMonth, year, locale);
         session.setAttribute(PREVIOUS_MONTH_INCOME, previousMonthIncome);
 
         page = PATH_TO_REVIEW_INCOMES;
 
         return page;
+    }
+
+    private static Income findIncomeForMonth (int month, int year, Locale locale) {
+        IncomeDAO incomeDAO = new IncomeDAO();
+        return incomeDAO.findIncomeForMonth(month, year, locale);
     }
 
 }

@@ -1,6 +1,5 @@
 package kz.epam.dao;
 
-import kz.epam.config.ConfigManager;
 import kz.epam.constant.Constant;
 import kz.epam.entity.LineItem;
 import kz.epam.entity.Product;
@@ -23,22 +22,15 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
             "WHERE month = ? AND year = ?";
     private static final String SQL_CANCEL_LINE_ITEM = "DELETE FROM line_item WHERE order_id = ?";
 
+    private static final Logger LOG = Logger.getRootLogger();
     private static final String ITEM_ID = "item_id";
     private static final String PRODUCT_ID = "product_id";
     private static final String PRODUCT_PRICE = "product_price";
     private static final String QUANTITY = "quantity";
 
-    private static String driverName = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_DRIVER_NAME);
-    private static String url = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_URL);
-    private static String databaseUserName = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_USER);
-    private static String databasePassword = ConfigManager.getInstance().getProperty(ConfigManager.DATABASE_PASSWORD);
-    private static int maxConn = Integer.parseInt(ConfigManager.getInstance().getProperty(ConfigManager.MAX_CONN));
-
-    private Logger log = Logger.getRootLogger();
-
     public List<LineItem> findAllByOrderID(int orderID, String locale) {
         List<LineItem> items = null;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_LINE_ITEMS_BY_ORDER_ID)) {
@@ -56,20 +48,17 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
                     lineItem.setQuantity(resultSet.getInt(QUANTITY));
                     items.add(lineItem);
                 }
-
-            } catch (SQLException e) {
-                log.error(Constant.SQL_ERROR + e.toString());
             }
-            pool.freeConnection(connection);
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return items;
     }
 
-
     public boolean create(int orderID, LineItem item) {
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         ProductDAO productDAO = new ProductDAO();
@@ -80,19 +69,18 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
             preparedStatement.setDouble(3, item.getProduct().getPrice());
             preparedStatement.setInt(4, item.getQuantity());
             preparedStatement.executeUpdate();
-
-            pool.freeConnection(connection);
-
             return true;
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return false;
     }
 
     public List<LineItem> findTopProducts(int month, int year, String locale) {
         List<LineItem> items = null;
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement statement = connection.prepareStatement(SQL_FIND_TOP_PRODUCTS_FOR_LAST_MONTH)) {
@@ -110,12 +98,11 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
                     item.setQuantity(resultSet.getInt(QUANTITY));
                     items.add(item);
                 }
-                pool.freeConnection(connection);
-            } catch (SQLException e) {
-                log.error(Constant.SQL_ERROR + e.toString());
             }
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
         return items;
     }
@@ -131,32 +118,20 @@ public class LineItemDAO extends AbstractDAO<LineItem> {
     }
 
     @Override
-    public int findIDbyEntity(LineItem entity) {
-        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
-    }
-
-    @Override
     public boolean delete(int id) {
-        ConnectionPool pool = ConnectionPool.getInstance(driverName, url, databaseUserName, databasePassword, maxConn);
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CANCEL_LINE_ITEM)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
-
-            pool.freeConnection(connection);
-
             return true;
         } catch (SQLException e) {
-            log.error(Constant.SQL_ERROR + e.toString());
+            LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));
+        } finally {
+            pool.releaseConnection(connection);
         }
-
         return false;
-    }
-
-    @Override
-    public boolean delete(LineItem entity) {
-        throw new UnsupportedOperationException(Constant.NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     @Override

@@ -12,19 +12,18 @@
         <form name="registrationForm" method="POST" action="controller">
             <input type="hidden" name="command" value="registration_form"/>
             <label><fmt:message key="first.name"/>:</label><br/>
-            <input type="text" name="firstName" value=""
+            <input type="text" name="firstName" placeholder="Ivan" value=""
                    oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
                    oninput="this.setCustomValidity('')" required/>
             <br/><label><fmt:message key="last.name"/>:</label><br/>
-            <input type="text" name="lastName" value=""
+            <input type="text" name="lastName" placeholder="Ivanov" value=""
                    oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
                    oninput="this.setCustomValidity('')" required/>
-            <br/><label><fmt:message key="email"/>:</label><br/>
-            <i>${emailError}</i><br/>
-            <input type="email" name="email" value=""/>
-            <br/><label><fmt:message key="phone"/>:</label><br/>
-            <i>${phoneNumberError}</i>
-            <input type="text" id="phone" name="phone" pattern= "[0-9]{11}" value=""
+            <br/><label><fmt:message key="email"/>:</label> &nbsp; <i>${emailError}</i><br/>
+            <input type="email" name="email" placeholder="ivan@test.com"
+                   pattern="^[\w!#$%&'*+/=?`{|}~^-]+(?:\.[\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$" value=""/>
+            <br/><label><fmt:message key="phone"/>:</label> &nbsp; <i>${phoneNumberError}</i><br/>
+            <input type="text" id="phone" name="phone" placeholder="87017776655" pattern= "[0-9]{11}" value=""
                    oninvalid="this.setCustomValidity(<fmt:message key="input.message"/>)"
                    oninput="this.setCustomValidity('')" required/>
             <br/><label><fmt:message key="login"/>:</label><br/>

@@ -15,6 +15,8 @@ public class UpdateUserDetails implements Command {
 
     private static final String INCORRECT_PHONE = "error.phone";
     private static final String INCORRECT_PHONE_MESSAGE = "phoneNumberError";
+    private static final String INCORRECT_EMAIL = "error.email";
+    private static final String INCORRECT_EMAIL_MESSAGE = "emailError";
     private static final String PATH_TO_CONFIRMATION_PAGE = ConfigManager.getInstance().getProperty("path.page.user.info.update.confirmation");
     private static final String PATH_TO_UPDATE_PAGE = ConfigManager.getInstance().getProperty("path.page.user.info.update");
 
@@ -32,29 +34,37 @@ public class UpdateUserDetails implements Command {
         User user = (User) session.getAttribute(Constant.USER);
 
         String language = session.getAttribute(Constant.LOCALE).toString();
+        Locale locale = new Locale(language.substring(0, 2));
 
-        Locale locale = new Locale(language.substring(0,2));
+        Pattern phoneNumberPattern = Pattern.compile(Constant.PHONE_NUMBER_REGEX);
+        Pattern emailPattern = Pattern.compile(Constant.EMAIL_REGEX);
 
         if (updateButton != null) {
-            Pattern phoneNumberPattern = Pattern.compile(Constant.PHONE_NUMBER_REGEX);
-            UserDAO userDAO = new UserDAO();
-            if (phoneNumberPattern.matcher(phone).matches() && phone.length() == Constant.PHONE_NUMBER_LENGTH) {
-                user.setFirstName(firstName);
-                user.setLastName(lastName);
-                user.setEmail(email);
-                user.setPhoneNumber(phone);
-
-                userDAO.updateUserInfo(user);
-                page = PATH_TO_CONFIRMATION_PAGE;
-            } else {
+            if (!email.isEmpty() && !emailPattern.matcher(email).matches()) {
+                request.setAttribute(INCORRECT_EMAIL_MESSAGE,
+                        MessageManager.getInstance(locale).getProperty(INCORRECT_EMAIL));
+                page = PATH_TO_UPDATE_PAGE;
+            } else if (!phoneNumberPattern.matcher(phone).matches() || phone.length() != Constant.PHONE_NUMBER_LENGTH) {
                 request.setAttribute(INCORRECT_PHONE_MESSAGE,
                         MessageManager.getInstance(locale).getProperty(INCORRECT_PHONE));
                 page = PATH_TO_UPDATE_PAGE;
+            } else {
+                updateUserInfo(user, firstName, lastName, email, phone);
+                page = PATH_TO_CONFIRMATION_PAGE;
             }
         } else {
             page = PATH_TO_UPDATE_PAGE;
         }
-
         return page;
+    }
+
+    private static void updateUserInfo(User user, String firstName, String lastName, String email, String phone) {
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPhoneNumber(phone);
+
+        UserDAO userDAO = new UserDAO();
+        userDAO.updateUserInfo(user);
     }
 }

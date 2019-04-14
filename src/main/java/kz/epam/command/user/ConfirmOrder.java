@@ -25,31 +25,34 @@ public class ConfirmOrder implements Command {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(Constant.USER);
         Cart cart = (Cart) session.getAttribute(Constant.CART);
-        String comment = request.getParameter(COMMENT);
-
         Date date = (Date) session.getAttribute(Constant.DATE);
 
-        OrderDAO orderDAO = new OrderDAO();
+        String comment = request.getParameter(COMMENT);
 
+        OrderDAO orderDAO = new OrderDAO();
         List<Integer> usedNumbers = orderDAO.findAllOrderNumbers();
         String orderNumber = OrderNumberGenerator.generateOrderNumber(orderDAO.findAllOrderNumbers());
 
         if (!usedNumbers.contains(Integer.parseInt(orderNumber))) {
-            Order order = new Order();
-            order.setOrderNumber(orderNumber);
-            order.setUser(user);
-            order.setItems(cart.getItems());
-            order.setRequestedDate(date);
-            order.setComment(comment);
-            order.setStatus(Constant.IN_PROGRESS_STATUS);
-            orderDAO.create(order);
+            registerOrder(user, cart, date, comment, orderNumber);
             cart.getItems().clear();
         }
-
         session.setAttribute(Constant.CART, cart);
 
         page = PATH_TO_CONFIRMATION_PAGE;
 
         return page;
+    }
+
+    private static void registerOrder (User user, Cart cart, Date date, String comment, String orderNumber) {
+        OrderDAO orderDAO = new OrderDAO();
+        Order order = new Order();
+        order.setOrderNumber(orderNumber);
+        order.setUser(user);
+        order.setItems(cart.getItems());
+        order.setRequestedDate(date);
+        order.setComment(comment);
+        order.setStatus(Constant.IN_PROGRESS_STATUS);
+        orderDAO.create(order);
     }
 }

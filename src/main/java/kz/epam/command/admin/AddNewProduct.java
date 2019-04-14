@@ -26,24 +26,30 @@ public class AddNewProduct implements Command {
         String enDescription = request.getParameter(Constant.EN_PRODUCT_DESCRIPTION);
 
         if (addButton != null) {
-            ProductDAO productDAO = new ProductDAO();
-
-            Product product = new Product();
-            product.setCode(code);
-            product.setPrice(Double.parseDouble(price));
-            productDAO.create(product);
-            product.setName(ruName);
-            product.setDescription(ruDescription);
-            productDAO.addNewProductDescription(product, Constant.RU_LOCALE);
-            product.setName(enName);
-            product.setDescription(enDescription);
-            productDAO.addNewProductDescription(product, Constant.EN_LOCALE);
+            addProductToDatabase(code, price);
+            addProductDescriptionToDatabase(ruName, ruDescription, Constant.RU_LOCALE);
+            addProductDescriptionToDatabase(enName, enDescription, Constant.EN_LOCALE);
 
             page = PATH_TO_PICTURE_UPLOAD;
         } else {
             page = PATH_TO_FORM;
         }
-
         return page;
+    }
+
+    private static void addProductToDatabase(String code, String price){
+        ProductDAO productDAO = new ProductDAO();
+        Product product = new Product();
+        product.setCode(code);
+        product.setPrice(Double.parseDouble(price));
+        productDAO.create(product);
+    }
+
+    private static void addProductDescriptionToDatabase(String name, String description, String locale) {
+        ProductDAO productDAO = new ProductDAO();
+        Product product = new Product();
+        product.setName(name);
+        product.setDescription(description);
+        productDAO.addNewProductDescription(product, locale);
     }
 }

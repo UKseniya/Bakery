@@ -44,14 +44,6 @@ public class Product extends Entity {
         this.price = price;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public String getFormattedCode() {
         String formattedCode = null;
         formattedCode = this.code.substring(0, 3);

@@ -26,7 +26,6 @@ public class ReviewCart implements Command {
             Cart reviewCart = new Cart();
 
             ProductDAO productDAO = new ProductDAO();
-
             for (LineItem item : cart.getItems()) {
                 int productID = productDAO.findProductIdByCode(item.getProduct());
                 item.getProduct().setName(productDAO.findProductNameById(productID, locale));
@@ -35,7 +34,6 @@ public class ReviewCart implements Command {
             }
             cart = reviewCart;
         }
-
         session.setAttribute(Constant.CART, cart);
 
         page = PATH_TO_REVIEW_CART_PAGE;
