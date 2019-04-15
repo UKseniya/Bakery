@@ -45,11 +45,10 @@ public class ProductDAO extends AbstractDAO<Product> {
     private static final String LOCALE_ID = "locale_id";
     private static final String PRODUCT_ID = "product_id";
     private static final String CODE = "code";
-    private static final String PRICE = "price";
     private static final String STATUS_AVAILABLE = "available";
     private static final String STATUS_UNAVAILABLE = "n/a";
     private static final String STATUS_ID = "status_id";
-    private static final String PRODUCT_INSERTION_MESSAGE = "Product has been inserted ";
+    private static final String PRODUCT_INSERTION_MESSAGE = "The following product has been inserted:";
 
     @Override
     public List findAll() {
@@ -140,7 +139,7 @@ public class ProductDAO extends AbstractDAO<Product> {
                     product.setName(findProductNameById(productID, locale));
                     product.setDescription(findProductDescriptionById(productID, locale));
                     product.setCode(resultSet.getString(CODE));
-                    product.setPrice(resultSet.getDouble(PRICE));
+                    product.setPrice(resultSet.getDouble(Constant.PRODUCT_PRICE));
                     products.add(product);
                 }
             }
@@ -171,7 +170,7 @@ public class ProductDAO extends AbstractDAO<Product> {
                     product.setName(findProductNameById(productID, locale));
                     product.setDescription(findProductDescriptionById(productID, locale));
                     product.setCode(resultSet.getString(CODE));
-                    product.setPrice(resultSet.getDouble(PRICE));
+                    product.setPrice(resultSet.getDouble(Constant.PRODUCT_PRICE));
                     products.add(product);
                 }
             }
@@ -199,7 +198,7 @@ public class ProductDAO extends AbstractDAO<Product> {
                     product.setName(resultSet.getString(PRODUCT_NAME));
                     product.setDescription(resultSet.getString(DESCRIPTION));
                     product.setCode(resultSet.getString(CODE));
-                    product.setPrice(resultSet.getDouble(PRICE));
+                    product.setPrice(resultSet.getDouble(Constant.PRODUCT_PRICE));
                 }
             }
         } catch (SQLException e) {
@@ -374,7 +373,7 @@ public class ProductDAO extends AbstractDAO<Product> {
             preparedStatement.setInt(3, findStatusIDbyName(STATUS_AVAILABLE));
             preparedStatement.executeUpdate();
 
-            LOG.info(PRODUCT_INSERTION_MESSAGE + product.getId());
+            LOG.info(String.format(Constant.STRING_FORMAT, PRODUCT_INSERTION_MESSAGE, product.getId()));
             return true;
         } catch (SQLException e) {
             LOG.error(String.format(Constant.STRING_FORMAT, Constant.SQL_ERROR, e.toString()));

@@ -59,7 +59,7 @@ public class CommandFactory {
     private static String getAction(HttpServletRequest request) {
         String receivedCommand = request.getParameter(COMMAND);
 
-        if (!(receivedCommand == null || receivedCommand.isEmpty()) && receivedCommand != action) {
+        if (!(receivedCommand == null || receivedCommand.isEmpty()) && !receivedCommand.equals(action)) {
             action = receivedCommand.toUpperCase();
         }
 

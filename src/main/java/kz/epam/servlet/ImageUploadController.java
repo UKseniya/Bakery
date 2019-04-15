@@ -68,9 +68,9 @@ public class ImageUploadController extends HttpServlet {
             try {
                 List<FileItem> items = upload.parseRequest(request);
 
-                Iterator iterator = items.iterator();
+                Iterator <FileItem> iterator = items.iterator();
                 while (iterator.hasNext()) {
-                    FileItem item = (FileItem) iterator.next();
+                    FileItem item = iterator.next();
 
                     if (!item.isFormField()) {
                         String fileName = item.getName();

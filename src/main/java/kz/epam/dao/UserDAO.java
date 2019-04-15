@@ -39,7 +39,7 @@ public class UserDAO extends AbstractDAO<User> {
     private static final String LAST_NAME = "last_name";
     private static final String ROLE_NAME = "role_name";
     private static final String ROLE_ID = "role_id";
-    private static final String USER_INSERTED_MESSAGE = "User has been inserted:";
+    private static final String USER_INSERTED_MESSAGE = "The following user has been registered:";
 
     public String findPasswordByLogin(String login) {
         String password = null;
