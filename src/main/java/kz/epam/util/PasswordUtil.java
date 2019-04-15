@@ -1,5 +1,7 @@
 package kz.epam.util;
 
+import kz.epam.constant.Constant;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
@@ -16,7 +18,7 @@ public final class PasswordUtil {
     private static final String UTILITY_CLASS_MESSAGE = "Utility Class";
     private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private static final String SECRET_KEY_FACTORY = "PBKDF2WithHmacSHA1";
-    private static final String ERROR_MESSAGE = "Error while hashing a password: ";
+    private static final String ERROR_MESSAGE = "Error while hashing a password:";
     private static final int ITERATIONS = 10000;
     private static final int KEY_LENGTH = 256;
 
@@ -39,31 +41,28 @@ public final class PasswordUtil {
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(SECRET_KEY_FACTORY);
             return keyFactory.generateSecret(spec).getEncoded();
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new AssertionError(ERROR_MESSAGE + e.getMessage(), e);
+            throw new AssertionError(String.format(Constant.STRING_FORMAT, ERROR_MESSAGE, e.toString()));
         } finally {
             spec.clearPassword();
         }
     }
 
     public static String generateSecurePassword(String password, String salt) {
-        String returnValue = null;
+        String securedPassword;
         byte[] securePassword = hash(password.toCharArray(), salt.getBytes());
 
-        returnValue = Base64.getEncoder().encodeToString(securePassword);
+        securedPassword = Base64.getEncoder().encodeToString(securePassword);
 
-        return returnValue;
+        return securedPassword;
     }
 
     public static boolean verifyUserPassword(String providedPassword,
                                              String securedPassword, String salt) {
-        boolean returnValue = false;
+        boolean passwordVerified;
 
-        // Generate New secure password with the same salt
         String newSecurePassword = generateSecurePassword(providedPassword, salt);
+        passwordVerified = newSecurePassword.equalsIgnoreCase(securedPassword);
 
-        // Check if two passwords are equal
-        returnValue = newSecurePassword.equalsIgnoreCase(securedPassword);
-
-        return returnValue;
+        return passwordVerified;
     }
 }

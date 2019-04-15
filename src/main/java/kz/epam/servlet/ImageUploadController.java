@@ -7,6 +7,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,14 +23,14 @@ import java.util.Locale;
 
 public class ImageUploadController extends HttpServlet {
 
+    private static final Logger LOG = Logger.getRootLogger();
     private static final String UPLOAD_DIR = "picture";
     private static final String CONTEXT_TYPE = "text/plain;charset=UTF-8";
     private static final String MIME_IMAGE_JPEG = "image/jpeg";
     private static final String MIME_IMAGE_PNG = "image/png";
     private static final String INCORRECT_FILE_TYPE = "error.image";
     private static final String INCORRECT_FILE_TYPE_MESSAGE = "imageError";
-    private static final String MESSAGE = "message";
-    private static final String MESSAGE_TEXT = "There was an error: ";
+    private static final String MESSAGE_TEXT = "There was an error:";
     private static final String PATH_TO_PICTURE_UPLOAD = ConfigManager.getInstance().getProperty("path.page.upload.picture");
     private static final String PATH_TO_CONFIRMATION = ConfigManager.getInstance().getProperty("path.page.product.added.confirmation");
 
@@ -86,20 +87,16 @@ public class ImageUploadController extends HttpServlet {
                         item.write(uploadedFile);
                             page = PATH_TO_CONFIRMATION;
                         } else {
-
                             request.setAttribute(INCORRECT_FILE_TYPE_MESSAGE,
                                     MessageManager.getInstance(locale).getProperty(INCORRECT_FILE_TYPE));
                             page = PATH_TO_PICTURE_UPLOAD;
                         }
-
                     }
                 }
                 RequestDispatcher dispatcher = request.getRequestDispatcher(page);
                 dispatcher.forward(request, response);
-
             } catch (Exception ex) {
-                request.setAttribute(MESSAGE,
-                        MESSAGE_TEXT + ex.getMessage());
+                LOG.error(String.format(Constant.STRING_FORMAT, MESSAGE_TEXT, ex.toString()));
             }
 
         }

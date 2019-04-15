@@ -46,5 +46,6 @@ public class BakeryController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + page);
 
         }
+
     }
 }
