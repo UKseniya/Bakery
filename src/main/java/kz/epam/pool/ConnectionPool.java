@@ -70,6 +70,7 @@ public class ConnectionPool {
         return connection;
     }
 
+//    TODO: throw a custom exception to avoid null return
     private Connection newConnection() {
         Connection connection;
         try {
