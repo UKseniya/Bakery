@@ -6,6 +6,8 @@ import kz.epam.pool.ConnectionPool;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -19,6 +21,7 @@ public class IncomeDAO extends AbstractDAO<Income> {
     private static final String SQL_FIND_INCOME_FOR_CERTAIN_YEAR = "SELECT * FROM income WHERE year = ?";
 
     private static final Logger LOG = Logger.getRootLogger();
+    private static final String MONTH_FORMAT = "MMMM";
     private static final String TOTAL_INCOME = "total_income";
     private static final String ANNUAL_INCOME = "annual_income";
     private static final String MONTH = "month";
@@ -92,8 +95,10 @@ public class IncomeDAO extends AbstractDAO<Income> {
                 while (resultSet.next()) {
                     Calendar calendar = Calendar.getInstance();
                     int databaseMonth = resultSet.getInt(MONTH);
-                    calendar.set(Calendar.MONTH, databaseMonth - 1);
-                    String monthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG_STANDALONE, locale);
+                    DateFormat formatter = new SimpleDateFormat(MONTH_FORMAT, locale);
+                    calendar.set(Calendar.DAY_OF_MONTH, 1);
+                    calendar.set(Calendar.MONTH, databaseMonth-1);
+                    String monthName = formatter.format(calendar.getTime());
                     Income income = new Income();
                     income.setSum(resultSet.getDouble(TOTAL_INCOME));
                     income.setMonth(monthName);
